@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Web Development – Shahjahan Shah</title>
+  <meta name="description" content="Web development services: portfolio websites, business websites, landing pages and custom front-end projects." />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="web.html">
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      font-family: "Poppins", sans-serif;
+      text-align: center;
+      padding: 60px 10%;
+    }
+
+    .section-title {
+      font-size: 2.4rem;
+      margin-bottom: 40px;
+    }
+
+    .web-item {
+      margin-bottom: 60px;
+    }
+
+    .web-item h3 {
+      font-size: 1.6rem;
+      margin-bottom: 15px;
+      color: #ffb400;
+    }
+
+    .web-item img {
+      width: 100%;
+      max-width: 800px;
+      border-radius: 14px;
+      box-shadow: 0 0 20px rgba(255, 180, 0, 0.3);
+      transition: transform 0.3s ease;
+    }
+
+    .web-item img:hover {
+      transform: scale(1.03);
+    }
+
+    .btn {
+      background: #ffb400;
+      color: #111;
+      border: none;
+      padding: 14px 40px;
+      border-radius: 50px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 4px 15px rgba(255, 180, 0, 0.4);
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn:hover {
+      background: #ffc933;
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(255, 200, 50, 0.5);
+    }
+  </style>
+</head>
+
+<body>
+  <section class="section">
+    <h2 class="section-title">💻 Web Development</h2>
+    <p>Modern, responsive, and fast websites built for performance and style.</p>
+
+    <div class="web-item">
+      <h3>Portfolio Websites</h3>
+      <div class="card-figure" style="max-width:900px;margin:0 auto 24px;">
+        <picture>
+          <source type="image/webp" srcset="images/webp/portfolio.webp">
+          <img src="portfolio.jpg" alt="Portfolio Website" loading="lazy">
+        </picture>
+      </div>
+    </div>
+
+    <div class="web-item">
+      <h3>Business / Agency Websites</h3>
+      <div class="card-figure" style="max-width:900px;margin:0 auto 24px;">
+        <picture>
+          <source type="image/webp" srcset="images/webp/business.webp">
+          <img src="business.jpg" alt="Business Website" loading="lazy">
+        </picture>
+      </div>
+    </div>
+
+    <div class="web-item">
+      <h3>Landing Pages</h3>
+      <div class="card-figure" style="max-width:900px;margin:0 auto 24px;">
+        <picture>
+          <source type="image/webp" srcset="images/webp/landing.webp">
+          <img src="landing.jpg" alt="Landing Page" loading="lazy">
+        </picture>
+      </div>
+    </div>
+
+    <div class="web-item">
+      <h3>Custom Frontend Projects</h3>
+      <div class="card-figure" style="max-width:900px;margin:0 auto 24px;">
+        <picture>
+          <source type="image/webp" srcset="images/webp/frontend.webp">
+          <img src="frontend.jpg" alt="Custom Frontend Projects" loading="lazy">
+        </picture>
+      </div>
+    </div>
+
+    <a href="index.html" class="btn" style="margin-top:30px;">⬅ Back to Portfolio</a>
+  </section>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio Website Project – Shahjahan Shah</title>
+  <meta name="description" content="Portfolio website project showcasing responsive, modern design and GSAP animations." />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="project1.html">
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <section class="section">
+    <h2 class="section-title">Portfolio Website</h2>
+
+    <p>This portfolio was designed and developed to showcase responsive, modern UI with subtle animation using GSAP. The goal was to create a fast, accessible experience highlighting projects and services.</p>
+
+    <div class="project-meta">
+      <p><strong>Role:</strong> Designer & Front-end Developer</p>
+      <p><strong>Tech:</strong> HTML5, CSS3, Vanilla JS, GSAP</p>
+      <p><strong>Deliverables:</strong> Responsive website, project pages, contact form, deployment-ready build.
+      </p>
+    </div>
+
+    <h3>Challenge</h3>
+    <p>The main challenge was balancing visual polish (glass effect, hero imagery) with performance and accessibility. Images were optimized and lazy-loaded. Focus states and a skip-link were added for keyboard users.</p>
+
+    <h3>Highlights</h3>
+    <ul>
+      <li>Responsive grid layout for projects and services.</li>
+      <li>Light / dark mode toggle.</li>
+      <li>Modal preview for quick project inspection.</li>
+      <li>Netlify-ready form integration (Netlify Forms) for easy contact submissions.</li>
+    </ul>
+
+    <div class="service-gallery">
+      <div class="card-figure" style="max-width:900px; margin:0 auto 18px;">
+        <picture>
+          <source type="image/webp" srcset="images/webp/portfolio1.webp">
+          <img src="portfolio1.jpg" alt="Hero and header section" loading="lazy">
+        </picture>
+      </div>
+      <div class="card-figure" style="max-width:900px; margin:0 auto 18px;">
+        <picture>
+          <source type="image/webp" srcset="images/webp/portfolio2.webp">
+          <img src="portfolio2.jpg" alt="Projects grid" loading="lazy">
+        </picture>
+      </div>
+      <div class="card-figure" style="max-width:900px; margin:0 auto 18px;">
+        <picture>
+          <source type="image/webp" srcset="images/webp/portfolio3.webp">
+          <img src="portfolio3.jpg" alt="Project case study" loading="lazy">
+        </picture>
+      </div>
+    </div>
+
+    <p style="margin-top:20px;"><a href="index.html" class="btn">⬅ Back to Portfolio</a>
+    <a class="btn" href="#" onclick="window.open('https://example.com','_blank');return false;" style="margin-left:12px;">Live demo</a></p>
+  </section>
+</body>
+</html>

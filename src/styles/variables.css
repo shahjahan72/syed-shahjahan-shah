@@ -1,0 +1,42 @@
+:root {
+    /* Colors */
+    --bg-primary: #050505;
+    --bg-secondary: #0f0f11;
+    --bg-tertiary: #18181b;
+
+    --text-primary: #ffffff;
+    --text-secondary: #a1a1aa;
+    --text-muted: #52525b;
+
+    --accent-primary: #8b5cf6;
+    /* Violet */
+    --accent-secondary: #ec4899;
+    /* Pink */
+    --accent-glow: rgba(139, 92, 246, 0.5);
+
+    --border-light: rgba(255, 255, 255, 0.1);
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.05);
+
+    /* Spacing */
+    --container-width: 1200px;
+    --header-height: 80px;
+
+    /* Animation */
+    --transition-fast: 0.2s ease;
+    --transition-medium: 0.4s ease;
+}
+
+html.light {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f4f4f5;
+    --bg-tertiary: #e4e4e7;
+
+    --text-primary: #18181b;
+    --text-secondary: #52525b;
+    --text-muted: #a1a1aa;
+
+    --border-light: rgba(0, 0, 0, 0.1);
+    --glass-bg: rgba(0, 0, 0, 0.03);
+    --glass-border: rgba(0, 0, 0, 0.05);
+}

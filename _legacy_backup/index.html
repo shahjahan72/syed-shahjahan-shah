@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Syed Shahjahan Shah | Portfolio</title>
+  <meta name="description" content="Syed Shahjahan Shah — Front-End Developer & Creative Designer. Modern, responsive portfolio showcasing web, graphic and printing projects." />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="index.html">
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Syed Shahjahan Shah | Portfolio" />
+  <meta property="og:description" content="Front-End Developer & Creative Designer. Modern, responsive portfolio showcasing web, graphic and printing projects." />
+  <meta property="og:image" content="image.png" />
+  <meta property="og:url" content="index.html" />
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="main.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet" />
+</head>
+
+<body>
+  <header>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <nav class="navbar">
+      <div class="logo">Syed<span>Shahjahan</span></div>
+      <button id="navToggle" class="nav-toggle" aria-label="Toggle menu">☰</button>
+      <ul id="primary-navigation" class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#blogs">Blogs</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="socials">
+        <a href="#"><i class="ri-instagram-line"></i></a>
+        <a href="#"><i class="ri-linkedin-box-line"></i></a>
+        <a href="#"><i class="ri-github-line"></i></a>
+        <a href="#"><i class="ri-behance-line"></i></a>
+      </div>
+      <button id="modeToggle">🌙</button>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <img src="images/image.png" alt="Background" class="bg" />
+    <div class="glass">
+      <h1>Syed Shahjahan Shah</h1>
+      <p class="tagline">Front-End Developer | Creative Designer</p>
+      <div class="cta-row">
+        <button class="btn" data-target="#projects">Discover My Work</button>
+        <button class="btn" data-target="#services">View My Services</button>
+      </div>
+    </div>
+  </section>
+
+  <main id="main">
+    <!-- ABOUT -->
+    <section id="about" class="section">
+      <h2>About Me</h2>
+      <p>I’m a passionate front-end developer focused on creating modern, responsive, and user-friendly designs that stand out.</p>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services" class="section">
+      <h2>Services</h2>
+      <div class="cards-grid">
+        <a class="service-card" href="web.html">
+          <div class="card-figure">
+            <img src="images/portfolio2.png" alt="Web Design" />
+          </div>
+          <div class="card-body">
+            <h3>Web Design</h3>
+            <p class="card-sub">Modern, responsive websites built for performance and style.</p>
+            <div class="card-meta">
+              <span class="badge">Web</span><span class="card-sub">HTML · CSS · JS</span>
+            </div>
+          </div>
+        </a>
+
+        <a class="service-card" href="printing.html">
+          <div class="card-figure">
+            <img src="images/cards.png" alt="Printing" />
+          </div>
+          <div class="card-body">
+            <h3>Printing & Merchandise</h3>
+            <p class="card-sub">Business cards, banners, flyers and high-quality print solutions.</p>
+            <div class="card-meta">
+              <span class="badge">Print</span><span class="card-sub">Banners · Flyers · Merch</span>
+            </div>
+          </div>
+        </a>
+
+        <a class="service-card" href="graphic.html">
+          <div class="card-figure">
+            <img src="images/social media.png" alt="Graphic Design" />
+          </div>
+          <div class="card-body">
+            <h3>Graphic Designing</h3>
+            <p class="card-sub">Logo, branding and social media creatives that communicate your message.</p>
+            <div class="card-meta">
+              <span class="badge">Branding</span><span class="card-sub">Logo · Social · Visuals</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" class="section">
+      <h2>Projects</h2>
+      <div class="cards-grid">
+        <a class="project-card" href="project1.html">
+          <div class="card-figure">
+            <img src="images/portfolio.jpg" alt="Portfolio Website" />
+          </div>
+          <div class="card-body">
+            <h3>Portfolio Website</h3>
+            <p class="card-sub">A clean portfolio built with HTML, CSS, JS and GSAP animations.</p>
+            <div class="card-meta">
+              <span class="badge">Case Study</span><span class="card-sub">UX · Animation</span>
+            </div>
+          </div>
+        </a>
+
+        <a class="project-card" href="project2.html">
+          <div class="card-figure">
+            <img src="images/portfolio3.png" alt="Landing Page" />
+          </div>
+          <div class="card-body">
+            <h3>Business Landing Page</h3>
+            <p class="card-sub">High-converting landing pages focused on clarity and conversion.</p>
+            <div class="card-meta">
+              <span class="badge">Landing</span><span class="card-sub">Conversion · CRO</span>
+            </div>
+          </div>
+        </a>
+
+        <a class="project-card" href="project3.html">
+          <div class="card-figure">
+            <img src="images/business.jpg" alt="Custom Web Solutions" />
+          </div>
+          <div class="card-body">
+            <h3>Custom Web Solutions</h3>
+            <p class="card-sub">Tailored front-end projects and UI solutions for clients.</p>
+            <div class="card-meta">
+              <span class="badge">Custom</span><span class="card-sub">UI · Integrations</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- BLOGS SECTION -->
+    <section id="blogs" class="blogs-section">
+      <div class="container">
+        <h2 class="section-title">Latest Blogs</h2>
+        <div class="blog-grid">
+          <div class="blog-card">
+            <img src="images/blog-printing.jpg" alt="Printing Services" class="blog-img">
+            <div class="blog-content">
+              <h3>Professional Printing Se Brand Identity Kaise Behtar Hoti Hai</h3>
+              <p>Aaj ke digital daur me har brand online nazar to aata hai, lekin jo cheez haath me feel hoti hai, uska impact kahin zyada gehra hota hai...</p>
+              <a href="blog-printing.html" class="read-more">Read More</a>
+            </div>
+          </div>
+
+          <div class="blog-card">
+            <img src="images/blog-designing.jpg" alt="Designing Services" class="blog-img">
+            <div class="blog-content">
+              <h3>Creative Designing Se Brand Ko Pehchan Kaise Milti Hai</h3>
+              <p>Design sirf sundar visuals ka naam nahi, ye aapke brand ki zubaan hoti hai. Pritify Studio me hum design ko yaad rehne layak banate hain...</p>
+              <a href="blog-designing.html" class="read-more">Read More</a>
+            </div>
+          </div>
+
+          <div class="blog-card">
+            <img src="images/blog-web.jpg" alt="Web Development" class="blog-img">
+            <div class="blog-content">
+              <h3>Why Every Brand Needs a Website | Web Development in 2025</h3>
+              <p>Social media par page banana aasaan hai, lekin brand banana sirf website se hota hai. Website hi aapka digital home hai...</p>
+              <a href="blog-web.html" class="read-more">Read More</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section">
+      <h2>Contact</h2>
+      <p>Want to work together? Send a message — or email me directly at 
+        <a href="https://mail.google.com/mail/u/0/?ogbl#inbox">syedshahjahanshah73@gmail.com</a>.
+      </p>
+      <form class="contact-form" name="contact" data-netlify="true">
+        <label>Name</label>
+        <input type="text" name="name" required>
+        <label>Email</label>
+        <input type="email" name="email" required>
+        <label>Message</label>
+        <textarea name="message" rows="5" required></textarea>
+        <button type="submit" class="btn">Send Message</button>
+      </form>
+    </section>
+
+    <footer>
+      <p>© 2025 Syed Shahjahan Shah. All Rights Reserved.</p>
+    </footer>
+  </main>
+</body>
+</html>

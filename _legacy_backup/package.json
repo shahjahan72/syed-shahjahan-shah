@@ -1,0 +1,17 @@
+{
+  "name": "shahjahan-portfolio",
+  "version": "1.0.0",
+  "description": "Portfolio site for Syed Shahjahan Shah - static site with basic build scripts",
+  "scripts": {
+    "build": "npm run imagemin && npm run make-webp && npm run minify && echo \"Build complete\"",
+    "imagemin": "imagemin images --out-dir=images",
+    "make-webp": "imagemin images/* --plugin=imagemin-webp --out-dir=images/webp",
+    "minify": "csso style.css --output style.min.css && terser main.js -o main.min.js --compress --mangle"
+  },
+  "devDependencies": {
+    "imagemin-cli": "^7.0.1",
+    "imagemin-webp": "^7.0.0",
+    "csso-cli": "^4.0.3",
+    "terser": "^5.0.0"
+  }
+}
