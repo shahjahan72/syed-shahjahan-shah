@@ -20,6 +20,7 @@ const Contact = () => {
                         initial={{ opacity: 0, x: -20 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
+                        className="mobile-center"
                     >
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -52,7 +53,7 @@ const Contact = () => {
                                 </div>
                             </div>
 
-                            <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem', flexWrap: 'wrap' }}>
+                            <div className="mobile-flex-center" style={{ display: 'flex', gap: '1rem', marginTop: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
                                 <a href="https://github.com/shahjahan72" target="_blank" rel="noopener noreferrer" style={{ padding: '1rem', background: 'var(--bg-tertiary)', borderRadius: '50%', color: 'var(--text-primary)', transition: 'transform 0.2s', display: 'flex' }}>
                                     <Github />
                                 </a>

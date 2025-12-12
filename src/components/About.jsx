@@ -9,6 +9,7 @@ const About = () => {
                     initial={{ opacity: 0, x: -50 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
+                    className="mobile-center"
                 >
                     <h2 style={{
                         fontSize: '2.5rem',
@@ -40,7 +41,7 @@ const About = () => {
 
                     {/* Skills */}
                     <h3 style={{ fontSize: '1.5rem', color: 'var(--text-primary)', marginBottom: '1.5rem' }}>Skills & Top Services</h3>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+                    <div className="mobile-flex-center" style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
                         {['Web Development', 'React.js', 'Digital Printing', 'Offset Printing', 'Graphic Design', 'Adobe Photoshop', 'Adobe Illustrator', 'Urdu InPage'].map(skill => (
                             <span key={skill} style={{
                                 padding: '0.5rem 1rem',
@@ -62,6 +63,7 @@ const About = () => {
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
                     style={{ position: 'relative' }}
+                    className="mobile-center"
                 >
                     <div style={{
                         width: '100%',

@@ -87,7 +87,7 @@ const Projects = () => {
                 </motion.h2>
 
                 {/* Filter Controls */}
-                <div style={{ display: 'flex', gap: '1rem', marginBottom: '3rem', flexWrap: 'wrap' }}>
+                <div className="mobile-flex-center" style={{ display: 'flex', gap: '1rem', marginBottom: '3rem', flexWrap: 'wrap', justifyContent: 'center' }}>
                     {categories.map(cat => (
                         <button
                             key={cat}
