@@ -110,9 +110,8 @@ const Projects = () => {
 
                 <motion.div
                     layout
+                    className="responsive-grid"
                     style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
                         gap: '2rem'
                     }}
                 >

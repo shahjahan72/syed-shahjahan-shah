@@ -2,8 +2,8 @@ import { motion } from 'framer-motion';
 
 const About = () => {
     return (
-        <section id="about" style={{ padding: '8rem 2rem', background: 'var(--bg-primary)' }}>
-            <div style={{ maxWidth: 'var(--container-width)', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '4rem', alignItems: 'center' }}>
+        <section id="about" style={{ padding: '8rem 2rem', background: 'var(--bg-primary)' }} className="container-padding">
+            <div className="responsive-grid" style={{ maxWidth: 'var(--container-width)', margin: '0 auto', alignItems: 'center', gap: '4rem' }}>
 
                 <motion.div
                     initial={{ opacity: 0, x: -50 }}

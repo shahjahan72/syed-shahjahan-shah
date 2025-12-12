@@ -81,3 +81,31 @@ button {
     display: none !important;
   }
 }
+
+/* Responsive Grid Utilities */
+.responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.responsive-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .responsive-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .responsive-two-col {
+    grid-template-columns: 1fr !important;
+  }
+
+  .container-padding {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}

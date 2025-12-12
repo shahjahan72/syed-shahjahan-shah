@@ -15,7 +15,7 @@ const Contact = () => {
                     <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>Have a project in mind? Let's build something together.</p>
                 </motion.div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '4rem' }}>
+                <div className="responsive-grid" style={{ gap: '4rem' }}>
                     <motion.div
                         initial={{ opacity: 0, x: -20 }}
                         whileInView={{ opacity: 1, x: 0 }}
@@ -28,7 +28,7 @@ const Contact = () => {
                                 </div>
                                 <div>
                                     <h4 style={{ color: 'var(--text-primary)', marginBottom: '0.25rem' }}>Email</h4>
-                                    <p style={{ color: 'var(--text-secondary)' }}>syedshahjahanshah73@gmail.com</p>
+                                    <p style={{ color: 'var(--text-secondary)', wordBreak: 'break-all' }}>syedshahjahanshah73@gmail.com</p>
                                 </div>
                             </div>
 
@@ -52,7 +52,7 @@ const Contact = () => {
                                 </div>
                             </div>
 
-                            <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+                            <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem', flexWrap: 'wrap' }}>
                                 <a href="https://github.com/shahjahan72" target="_blank" rel="noopener noreferrer" style={{ padding: '1rem', background: 'var(--bg-tertiary)', borderRadius: '50%', color: 'var(--text-primary)', transition: 'transform 0.2s', display: 'flex' }}>
                                     <Github />
                                 </a>
@@ -79,7 +79,7 @@ const Contact = () => {
                         viewport={{ once: true }}
                         style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
                     >
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                        <div className="responsive-two-col">
                             <input
                                 type="text"
                                 placeholder="Name"
