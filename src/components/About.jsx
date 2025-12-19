@@ -62,23 +62,23 @@ const About = () => {
                     initial={{ opacity: 0, scale: 0.8 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
-                    style={{ position: 'relative' }}
+                    style={{ position: 'relative', maxWidth: '400px', margin: '0 auto', width: '100%' }}
                     className="mobile-center"
                 >
                     <div style={{
+                        position: 'absolute',
+                        top: '20px',
+                        left: '20px',
                         width: '100%',
-                        height: '400px',
+                        height: '100%',
                         background: 'linear-gradient(45deg, var(--accent-primary), var(--accent-secondary))',
                         borderRadius: '2rem',
                         opacity: 0.1,
-                        position: 'absolute',
-                        top: '20px',
-                        right: '20px',
                         zIndex: 0
                     }} />
                     <div style={{
                         width: '100%',
-                        height: '400px',
+                        aspectRatio: '3/4',
                         background: 'var(--bg-tertiary)',
                         borderRadius: '2rem',
                         border: '1px solid var(--border-light)',
@@ -89,7 +89,7 @@ const About = () => {
                         alignItems: 'center',
                         justifyContent: 'center'
                     }}>
-                        <img src="/about_profile.png" alt="Shahjahan Shah" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <img src="/about_profile.png" alt="Shahjahan Shah" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }} />
                     </div>
                 </motion.div>
 
