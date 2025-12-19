@@ -124,9 +124,18 @@ button {
   }
 
   /* Center flex items in column on mobile */
+  /* Center flex items in column on mobile */
   .mobile-flex-center {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  /* Helper for strict vertical stacking if needed */
+  .mobile-flex-col {
+    display: flex;
+    flex-direction: column !important;
     align-items: center !important;
   }
 }

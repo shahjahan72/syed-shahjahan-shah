@@ -27,15 +27,11 @@ const About = () => {
                         I have a strong background in Graphic Design and Customer Service, ensuring high-quality results in every project.
                     </p>
 
-                    {/* Stats */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '2rem', marginBottom: '3rem' }}>
-                        <div>
-                            <h4 style={{ color: 'var(--text-primary)', fontSize: '1.25rem', marginBottom: '0.5rem' }}>Experience</h4>
-                            <p style={{ color: 'var(--text-muted)' }}>4+ Years</p>
-                        </div>
-                        <div>
-                            <h4 style={{ color: 'var(--text-primary)', fontSize: '1.25rem', marginBottom: '0.5rem' }}>Education</h4>
-                            <p style={{ color: 'var(--text-muted)' }}>Matriculation (Jamia Tul Madina)</p>
+                    {/* Stats - Experience Only */}
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '3rem' }}>
+                        <div style={{ textAlign: 'center' }}>
+                            <h4 style={{ color: 'var(--text-primary)', fontSize: '1.5rem', marginBottom: '0.5rem' }}>Experience</h4>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '1.2rem' }}>4+ Years</p>
                         </div>
                     </div>
 

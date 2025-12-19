@@ -23,31 +23,31 @@ const Contact = () => {
                         className="mobile-center"
                     >
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                <div style={{ padding: '1rem', background: 'var(--bg-tertiary)', borderRadius: '50%', color: 'var(--accent-primary)' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', justifyContent: 'center' }}>
+                                <div style={{ padding: '1rem', background: 'var(--bg-tertiary)', borderRadius: '50%', color: 'var(--accent-primary)', flexShrink: 0 }}>
                                     <Mail />
                                 </div>
-                                <div>
+                                <div style={{ textAlign: 'left' }}>
                                     <h4 style={{ color: 'var(--text-primary)', marginBottom: '0.25rem' }}>Email</h4>
                                     <p style={{ color: 'var(--text-secondary)', wordBreak: 'break-all' }}>syedshahjahanshah73@gmail.com</p>
                                 </div>
                             </div>
 
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                <div style={{ padding: '1rem', background: 'var(--bg-tertiary)', borderRadius: '50%', color: 'var(--accent-primary)' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', justifyContent: 'center' }}>
+                                <div style={{ padding: '1rem', background: 'var(--bg-tertiary)', borderRadius: '50%', color: 'var(--accent-primary)', flexShrink: 0 }}>
                                     <Phone />
                                 </div>
-                                <div>
+                                <div style={{ textAlign: 'left' }}>
                                     <h4 style={{ color: 'var(--text-primary)', marginBottom: '0.25rem' }}>Phone</h4>
                                     <p style={{ color: 'var(--text-secondary)' }}>+92 (348) 1342505</p>
                                 </div>
                             </div>
 
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                                <div style={{ padding: '1rem', background: 'var(--bg-tertiary)', borderRadius: '50%', color: 'var(--accent-primary)' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', justifyContent: 'center' }}>
+                                <div style={{ padding: '1rem', background: 'var(--bg-tertiary)', borderRadius: '50%', color: 'var(--accent-primary)', flexShrink: 0 }}>
                                     <MapPin />
                                 </div>
-                                <div>
+                                <div style={{ textAlign: 'left' }}>
                                     <h4 style={{ color: 'var(--text-primary)', marginBottom: '0.25rem' }}>Location</h4>
                                     <p style={{ color: 'var(--text-secondary)' }}>karachi,pakistan</p>
                                 </div>
