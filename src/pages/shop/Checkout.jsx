@@ -104,10 +104,18 @@ const Checkout = () => {
                         </div>
                         <div className="space-y-4 text-sm text-white/80">
                             <p>Please transfer the total amount to one of the following accounts:</p>
-                            <div className="bg-black/20 p-4 rounded-xl font-mono">
-                                <div className="mb-2"><span className="text-white/50">Meezan Bank:</span> <span className="text-white select-all">0101010102932</span> (Syed Shahjahan)</div>
-                                <div className="mb-2"><span className="text-white/50">EasyPaisa:</span> <span className="text-white select-all">0300-1234567</span></div>
-                                <div><span className="text-white/50">JazzCash:</span> <span className="text-white select-all">0300-1234567</span></div>
+                            <div className="bg-black/20 p-4 rounded-xl font-mono text-xs md:text-sm">
+                                <div className="mb-4">
+                                    <span className="text-electric-blue font-bold block mb-1">Meezan Bank</span>
+                                    <div className="text-white/80">Title: <span className="text-white select-all font-bold">SHAHJAHAN SHAH</span></div>
+                                    <div className="text-white/80">Account: <span className="text-white select-all">10320113121281</span></div>
+                                    <div className="text-white/80">IBAN: <span className="text-white select-all">PK98MEZN0010320113121281</span></div>
+                                    <div className="text-white/50 text-[10px] mt-1">KHY E TANZEEM BRANCH</div>
+                                </div>
+                                <div>
+                                    <span className="text-electric-blue font-bold block mb-1">JazzCash</span>
+                                    <div className="text-white/80">Number: <span className="text-white select-all font-bold">03253368345</span></div>
+                                </div>
                             </div>
                             <p>After transfer, take a screenshot and keep it ready for verification.</p>
                         </div>
