@@ -31,7 +31,7 @@ const Checkout = () => {
         const message = `*NEW ORDER ALERT* %0A%0A*Customer:* ${formData.name}%0A*Phone:* ${formData.phone}%0A*Address:* ${formData.address}, ${formData.city}%0A%0A*Order Details:*%0A${orderItems}%0A%0A*Total Amount:* Rs. ${cartTotal.toLocaleString()} %0A%0A_Please verify payment screenshot sent separately._`;
 
         // Open WhatsApp
-        window.open(`https://wa.me/923001234567?text=${message}`, '_blank');
+        window.open(`https://wa.me/923481342505?text=${message}`, '_blank');
 
         setTimeout(() => {
             setIsSuccess(true);

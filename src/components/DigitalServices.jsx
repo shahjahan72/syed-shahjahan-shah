@@ -36,7 +36,7 @@ const DigitalServices = () => {
 
     const handleConsult = (serviceName) => {
         const message = `Hi, I'm interested in your *${serviceName}* service. I'd like to discuss a project.`;
-        window.open(`https://wa.me/923001234567?text=${message}`, '_blank');
+        window.open(`https://wa.me/923481342505?text=${message}`, '_blank');
     };
 
     return (

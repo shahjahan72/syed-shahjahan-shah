@@ -124,7 +124,7 @@ const ProductDetail = () => {
         } else {
             message = `Hi, I need a bulk quote for *${product.title} (${product.id})*. %0A dimensions: ${dimensions.width}x${dimensions.height} ft %0A Qty: ${customQty} %0A Approx Area: ${(dimensions.width * dimensions.height * customQty)} sqft.`;
         }
-        window.open(`https://wa.me/923001234567?text=${message}`, '_blank');
+        window.open(`https://wa.me/923481342505?text=${message}`, '_blank');
     };
 
     return (
