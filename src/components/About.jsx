@@ -2,94 +2,61 @@ import { motion } from 'framer-motion';
 
 const About = () => {
     return (
-        <section id="about" style={{ padding: '8rem 2rem', background: 'var(--bg-primary)' }} className="container-padding">
-            <div className="responsive-grid" style={{ maxWidth: 'var(--container-width)', margin: '0 auto', alignItems: 'center', gap: '4rem' }}>
-
-                <motion.div
-                    initial={{ opacity: 0, x: -50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    className="mobile-center"
-                >
-                    <h2 style={{
-                        fontSize: '2.5rem',
-                        marginBottom: '2rem',
-                        color: 'var(--text-primary)',
-                    }}>
-                        About Me
-                    </h2>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', marginBottom: '1.5rem', lineHeight: '1.7' }}>
-                        As a dedicated and proactive professional, I have honed my skills through diverse experiences in IT.
-                        I thrive in dynamic environments and consistently deliver results that exceed expectations.
+        <section className="px-6 md:px-20 max-w-7xl mx-auto py-20 relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ margin: "-100px" }}
+                transition={{ duration: 0.8 }}
+            >
+                <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tighter">
+                    More than just <br />
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple to-electric-blue">code.</span>
+                </h2>
+                <div className="space-y-6 text-white/70 text-lg font-light leading-relaxed">
+                    <p>
+                        I'm a self-taught developer and designer based in Karachi with a passion for building digital products that look as good as they feel.
                     </p>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', marginBottom: '2rem', lineHeight: '1.7' }}>
-                        My ability to adapt and my passion for continuous learning have been key drivers in my career success.
-                        I have a strong background in Graphic Design and Customer Service, ensuring high-quality results in every project.
+                    <p>
+                        My journey started with simple HTML pages and evolved into complex, interactive web applications. I obsess over micro-interactions, clean architectural patterns, and pushing the browser to its limits.
                     </p>
+                    <p>
+                        When I'm not coding, you can find me exploring new coffee spots, gaming, or experimenting with 3D art in Blender.
+                    </p>
+                </div>
 
-                    {/* Stats - Experience Only */}
-                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '3rem' }}>
-                        <div style={{ textAlign: 'center' }}>
-                            <h4 style={{ color: 'var(--text-primary)', fontSize: '1.5rem', marginBottom: '0.5rem' }}>Experience</h4>
-                            <p style={{ color: 'var(--text-muted)', fontSize: '1.2rem' }}>4+ Years</p>
-                        </div>
+                <div className="mt-8 flex gap-8">
+                    <div>
+                        <h4 className="text-3xl font-bold text-white">3+</h4>
+                        <p className="text-xs uppercase tracking-widest text-white/40 mt-1">Years Exp.</p>
                     </div>
-
-                    {/* Skills */}
-                    <h3 style={{ fontSize: '1.5rem', color: 'var(--text-primary)', marginBottom: '1.5rem' }}>Skills & Top Services</h3>
-                    <div className="mobile-flex-center" style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
-                        {['Web Development', 'React.js', 'Digital Printing', 'Offset Printing', 'Graphic Design', 'Adobe Photoshop', 'Adobe Illustrator', 'Urdu InPage'].map(skill => (
-                            <span key={skill} style={{
-                                padding: '0.5rem 1rem',
-                                background: 'var(--bg-tertiary)',
-                                borderRadius: '20px',
-                                color: 'var(--text-primary)',
-                                fontSize: '0.9rem',
-                                border: '1px solid var(--border-light)'
-                            }}>
-                                {skill}
-                            </span>
-                        ))}
+                    <div>
+                        <h4 className="text-3xl font-bold text-white">20+</h4>
+                        <p className="text-xs uppercase tracking-widest text-white/40 mt-1">Projects</p>
                     </div>
-
-                </motion.div>
-
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    style={{ position: 'relative', maxWidth: '400px', margin: '0 auto', width: '100%' }}
-                    className="mobile-center"
-                >
-                    <div style={{
-                        position: 'absolute',
-                        top: '20px',
-                        left: '20px',
-                        width: '100%',
-                        height: '100%',
-                        background: 'linear-gradient(45deg, var(--accent-primary), var(--accent-secondary))',
-                        borderRadius: '2rem',
-                        opacity: 0.1,
-                        zIndex: 0
-                    }} />
-                    <div style={{
-                        width: '100%',
-                        aspectRatio: '3/4',
-                        background: 'var(--bg-tertiary)',
-                        borderRadius: '2rem',
-                        border: '1px solid var(--border-light)',
-                        position: 'relative',
-                        zIndex: 1,
-                        overflow: 'hidden',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}>
-                        <img src="/about_profile.png" alt="Shahjahan Shah" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }} />
+                    <div>
+                        <h4 className="text-3xl font-bold text-white">100%</h4>
+                        <p className="text-xs uppercase tracking-widest text-white/40 mt-1">Commitment</p>
                     </div>
-                </motion.div>
+                </div>
+            </motion.div>
 
-            </div>
+            <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ margin: "-100px" }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="relative"
+            >
+                <div className="aspect-square rounded-full bg-gradient-to-tr from-neon-purple/20 to-electric-blue/20 blur-3xl absolute inset-0 -z-10 animate-pulse" />
+                <div className="glass-card aspect-square rounded-[2rem] overflow-hidden rotate-3 hover:rotate-0 transition-transform duration-500 ease-out border-white/10">
+                    <img
+                        src="https://images.unsplash.com/photo-1555099962-4199c345e5dd?q=80&w=2670&auto=format&fit=crop"
+                        alt="Workspace"
+                        className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity hover:scale-105 duration-700"
+                    />
+                </div>
+            </motion.div>
         </section>
     );
 };

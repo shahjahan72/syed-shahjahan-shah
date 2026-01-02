@@ -1,27 +1,38 @@
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import About from './components/About';
-import Services from './components/Services';
-import Projects from './components/Projects';
-import Contact from './components/Contact';
-import Footer from './components/Footer';
-import FloatingWhatsApp from './components/FloatingWhatsApp';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { CartProvider } from './context/CartContext';
+import Navigation from './components/Navigation';
+import CustomCursor from './components/CustomCursor';
 
-function App() {
+// Pages
+import Portfolio from './pages/Portfolio';
+import ShopLanding from './pages/shop/ShopLanding';
+import ProductDetail from './pages/shop/ProductDetail';
+import Checkout from './pages/shop/Checkout';
+
+const App = () => {
   return (
-    <div className="app" style={{ background: 'var(--bg-primary)', minHeight: '100vh', color: 'var(--text-primary)' }}>
-      <Navbar />
-      <main>
-        <Hero />
-        <About />
-        <Services />
-        <Projects />
-        <Contact />
-      </main>
-      <Footer />
-      <FloatingWhatsApp />
-    </div>
-  )
-}
+    <Router>
+      <CartProvider>
+        <main className="relative min-h-screen w-full bg-deep-black text-white selection:bg-neon-purple/30">
+          <CustomCursor />
 
-export default App
+          {/* Noise Overlay Global */}
+          <div className="noise-bg" />
+
+          <Navigation />
+
+          <Routes>
+            <Route path="/" element={<Portfolio />} />
+            <Route path="/shop" element={<ShopLanding />} />
+            <Route path="/shop/product/:id" element={<ProductDetail />} />
+            <Route path="/shop/checkout" element={<Checkout />} />
+          </Routes>
+
+        </main>
+      </CartProvider>
+    </Router>
+  );
+};
+
+export default App;
