@@ -20,7 +20,7 @@ const ShopLanding = () => {
                 className="text-center mb-16"
             >
                 <span className="text-neon-purple font-mono uppercase tracking-widest text-sm mb-2 block">
-                    Professional Printing Services
+                    Printify Studio PK
                 </span>
                 <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
                     Print <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple to-electric-blue">Anything.</span><br />

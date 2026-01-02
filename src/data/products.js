@@ -18,6 +18,12 @@ export const categories = [
         image: 'https://images.unsplash.com/photo-1606166187734-a433e10e5762?q=80&w=1470&auto=format&fit=crop',
     },
     {
+        id: 'wedding',
+        name: 'Wedding Cards',
+        description: 'Shadi cards designs: Luxury boxes, floral, and traditional invites.',
+        image: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=1470&auto=format&fit=crop',
+    },
+    {
         id: 'gifts',
         name: 'Personalized Gifts',
         description: 'Mugs, T-shirts aur promotional items.',
@@ -273,6 +279,68 @@ export const products = [
                 { label: '1 Book', value: 1 },
                 { label: '5 Books', value: 5 },
                 { label: '10 Books', value: 10 },
+            ]
+        }
+    },
+
+    // --- Wedding Cards ---
+    {
+        id: 'luxury-box-card',
+        categoryId: 'wedding',
+        title: 'Luxury Box Invitation',
+        description: 'Premium heavy board box with gold foiling and velvet finish.',
+        price: 350, // Per Card
+        unit: 'fixed',
+        image: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=1470&auto=format&fit=crop',
+        options: {
+            material: [
+                { name: 'Velvet Finish', multiplier: 1.0 },
+                { name: 'Suede Finish', multiplier: 1.2 },
+            ],
+            quantity: [
+                { label: '100 Cards', value: 100 },
+                { label: '250 Cards', value: 250 },
+                { label: '500 Cards', value: 500 },
+            ]
+        }
+    },
+    {
+        id: 'floral-invitation',
+        categoryId: 'wedding',
+        title: 'Floral Modern Invite',
+        description: 'Elegant single card with envelope and floral aesthetic.',
+        price: 80, // Per Card
+        unit: 'fixed',
+        image: 'https://images.unsplash.com/photo-1607190074257-dd4b7af0d0f5?q=80&w=1470&auto=format&fit=crop',
+        options: {
+            material: [
+                { name: '300gsm Art Card', multiplier: 1.0 },
+                { name: 'Textured Paper', multiplier: 1.5 },
+            ],
+            quantity: [
+                { label: '100 Cards', value: 100 },
+                { label: '300 Cards', value: 300 },
+                { label: '500 Cards', value: 500 },
+            ]
+        }
+    },
+    {
+        id: 'budget-card',
+        categoryId: 'wedding',
+        title: 'Traditional Red Card',
+        description: 'Classic economical wedding card with golden motifs.',
+        price: 45, // Per Card
+        unit: 'fixed',
+        image: 'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=1470&auto=format&fit=crop',
+        options: {
+            material: [
+                { name: 'Standard Card', multiplier: 1.0 },
+                { name: 'Gloss Finish', multiplier: 1.2 },
+            ],
+            quantity: [
+                { label: '100 Cards', value: 100 },
+                { label: '500 Cards', value: 500 },
+                { label: '1000 Cards', value: 1000 },
             ]
         }
     },
