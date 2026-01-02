@@ -285,12 +285,14 @@ export const products = [
 
     // --- Wedding Cards ---
     {
-        id: 'luxury-box-card',
+        id: 'WC-101',
         categoryId: 'wedding',
-        title: 'Luxury Box Invitation',
+        title: 'Luxury Box Invitation (WC-101)',
         description: 'Premium heavy board box with gold foiling and velvet finish.',
         price: 350, // Per Card
         unit: 'fixed',
+        moq: 50,
+        printingCharge: 1000,
         image: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=1470&auto=format&fit=crop',
         options: {
             material: [
@@ -298,6 +300,7 @@ export const products = [
                 { name: 'Suede Finish', multiplier: 1.2 },
             ],
             quantity: [
+                { label: '50 Cards', value: 50 },
                 { label: '100 Cards', value: 100 },
                 { label: '250 Cards', value: 250 },
                 { label: '500 Cards', value: 500 },
@@ -305,12 +308,14 @@ export const products = [
         }
     },
     {
-        id: 'floral-invitation',
+        id: 'WC-102',
         categoryId: 'wedding',
-        title: 'Floral Modern Invite',
+        title: 'Floral Modern Invite (WC-102)',
         description: 'Elegant single card with envelope and floral aesthetic.',
         price: 80, // Per Card
         unit: 'fixed',
+        moq: 100,
+        printingCharge: 1000,
         image: 'https://images.unsplash.com/photo-1607190074257-dd4b7af0d0f5?q=80&w=1470&auto=format&fit=crop',
         options: {
             material: [
@@ -325,12 +330,14 @@ export const products = [
         }
     },
     {
-        id: 'budget-card',
+        id: 'WC-103',
         categoryId: 'wedding',
-        title: 'Traditional Red Card',
+        title: 'Traditional Red Card (WC-103)',
         description: 'Classic economical wedding card with golden motifs.',
         price: 45, // Per Card
         unit: 'fixed',
+        moq: 100,
+        printingCharge: 1000,
         image: 'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=1470&auto=format&fit=crop',
         options: {
             material: [

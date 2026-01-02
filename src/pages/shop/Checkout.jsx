@@ -14,10 +14,13 @@ const Checkout = () => {
 
         // Prepare WhatsApp Message
         const orderItems = cart.map((item, i) => {
-            let details = `*${i + 1}. ${item.title}* %0A   Material: ${item.selectedMaterial.name}`;
+            let details = `*${i + 1}. ${item.title} (${item.productID || 'N/A'})* %0A   Material: ${item.selectedMaterial.name}`;
 
             if (item.weddingDetails) {
-                details += `%0A   Event: ${item.weddingDetails.bride} & ${item.weddingDetails.groom} on ${item.weddingDetails.date} at ${item.weddingDetails.venue}`;
+                details += `%0A   Event: ${item.weddingDetails.bride} & ${item.weddingDetails.groom}`;
+                if (item.weddingDetails.date) details += ` on ${item.weddingDetails.date}`;
+                if (item.weddingDetails.venue) details += ` at ${item.weddingDetails.venue}`;
+                if (item.weddingDetails.family) details += `%0A   Extra/Family: ${item.weddingDetails.family}`;
             }
 
             details += ` %0A   Qty: ${item.unit === 'sqft' ? item.selectedQuantity.value + ' Copies (' + item.dimensions.width + 'x' + item.dimensions.height + ' ft)' : item.selectedQuantity.label}`;
