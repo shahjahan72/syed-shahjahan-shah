@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { products, pricingConfig } from '../../data/products';
 import { useCart } from '../../context/CartContext';
-import { Upload, ShoppingCart, MessageCircle, Check, ArrowLeft, Ruler, AlertCircle, PenTool, Hash } from 'lucide-react';
+import { Upload, ShoppingCart, MessageCircle, Check, ArrowLeft, Ruler, AlertCircle, PenTool, Hash, ImageIcon } from 'lucide-react';
 
 const ProductDetail = () => {
     const { id } = useParams();
@@ -21,7 +21,7 @@ const ProductDetail = () => {
 
     // Wedding Specific States
     const [weddingDetails, setWeddingDetails] = useState({ bride: '', groom: '', date: '', venue: '', family: '' });
-    const [customWeddingDesignFile, setCustomWeddingDesignFile] = useState(null);
+    const [customWeddingFiles, setCustomWeddingFiles] = useState([]);
 
     // Pricing States
     const [price, setPrice] = useState(0);
@@ -46,7 +46,13 @@ const ProductDetail = () => {
         let setupFee = 0;
         let isQuote = false;
 
-        // --- LOGIC 1: SQFT ITEMS ---
+        // Custom flow (Quote based)
+        if (product.isCustom) {
+            setPrice(0);
+            return;
+        }
+
+        // SQFT ITEMS
         if (product.unit === 'sqft') {
             const width = dimensions.width || 0;
             const height = dimensions.height || 0;
@@ -72,14 +78,13 @@ const ProductDetail = () => {
                 }
             }
         }
-        // --- LOGIC 2: FIXED ITEMS ---
+        // FIXED ITEMS (Wedding, Cards, etc.)
         else {
             if (quantityOption && product.categoryId === 'wedding') {
                 // Wedding Logic
                 const cardPrice = product.price * material.multiplier;
                 const quantity = quantityOption.value;
-                const printingCharge = product.printingCharge || 0; // Configured charge
-
+                const printingCharge = product.printingCharge || 0;
                 total = (cardPrice * quantity) + printingCharge;
             }
             else if (quantityOption) {
@@ -112,16 +117,15 @@ const ProductDetail = () => {
         navigate('/shop/checkout');
     };
 
-    const handleBulkQuote = () => {
-        const message = `Hi, I need a bulk quote for *${product.title} (${product.id})*. %0A dimensions: ${dimensions.width}x${dimensions.height} ft %0A Qty: ${customQty} %0A Approx Area: ${(dimensions.width * dimensions.height * customQty)} sqft.`;
+    const handleWhatsAppQuote = () => {
+        let message = '';
+        if (product.isCustom) {
+            message = `Hi, I have a specific custom design for a Wedding Card (Inspired by Instagram/Video). %0A I have uploaded the reference images on the site. Please provide a quote.`;
+        } else {
+            message = `Hi, I need a bulk quote for *${product.title} (${product.id})*. %0A dimensions: ${dimensions.width}x${dimensions.height} ft %0A Qty: ${customQty} %0A Approx Area: ${(dimensions.width * dimensions.height * customQty)} sqft.`;
+        }
         window.open(`https://wa.me/923001234567?text=${message}`, '_blank');
     };
-
-    const handleCustomDesignRequest = () => {
-        const message = `Hi, I have a specific custom design for a Wedding Card. %0A I have uploaded the reference images on the site. Please provide a quote.`;
-        // In a real app we would upload the file first. Here we just open WhatsApp.
-        window.open(`https://wa.me/923001234567?text=${message}`, '_blank');
-    }
 
     return (
         <div className="min-h-screen pt-28 pb-20 px-6 max-w-7xl mx-auto">
@@ -137,55 +141,25 @@ const ProductDetail = () => {
                         animate={{ opacity: 1, scale: 1 }}
                         className="rounded-3xl overflow-hidden border border-white/10 aspect-square relative"
                     >
-                        <img src={product.image} alt={product.title} className="w-full h-full object-cover" />
-                        <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold border border-white/10 flex items-center gap-2">
-                            <Hash size={12} /> {product.id}
-                        </div>
+                        {product.isCustom ? (
+                            <div className="w-full h-full bg-gradient-to-br from-neon-purple/20 to-black flex flex-col items-center justify-center p-12 text-center">
+                                <PenTool size={80} className="text-neon-purple mb-6" />
+                                <h2 className="text-3xl font-bold mb-2">Custom Design Request</h2>
+                                <p className="text-white/60">Share your inspiration pictures or videos, and we'll bring them to life with premium printing.</p>
+                            </div>
+                        ) : (
+                            <img src={product.image} alt={product.title} className="w-full h-full object-cover" />
+                        )}
+                        {!product.isCustom && (
+                            <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold border border-white/10 flex items-center gap-2">
+                                <Hash size={12} /> {product.id}
+                            </div>
+                        )}
                         <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/90 to-transparent">
                             <h1 className="text-4xl font-bold">{product.title}</h1>
                             <p className="text-white/70 mt-2">{product.description}</p>
-                            {product.unit === 'sqft' && <div className="mt-4 inline-block bg-electric-blue/20 text-electric-blue px-3 py-1 rounded-full text-xs font-bold border border-electric-blue/30">
-                                Dynamic Pricing Active: More Area = Less Price/Sqft
-                            </div>}
                         </div>
                     </motion.div>
-
-                    {/* Custom Design Request Block for Wedding */}
-                    {product.categoryId === 'wedding' && (
-                        <div className="bg-gradient-to-r from-neon-purple/10 to-electric-blue/10 border border-white/10 p-6 rounded-2xl">
-                            <h3 className="text-xl font-bold mb-2 flex items-center gap-2">
-                                <PenTool size={20} className="text-neon-purple" />
-                                Have a specific design?
-                            </h3>
-                            <p className="text-white/60 text-sm mb-4">
-                                Don't like our catalog? Send us your own design inspiration (Instagram/Video) and we'll print it.
-                            </p>
-
-                            <div className="mb-4 bg-black/20 border border-dashed border-white/20 rounded-xl p-4 text-center">
-                                <input
-                                    type="file"
-                                    onChange={(e) => setCustomWeddingDesignFile(e.target.files[0])}
-                                    className="hidden"
-                                    id="custom-design-upload"
-                                    multiple
-                                />
-                                <label htmlFor="custom-design-upload" className="cursor-pointer block">
-                                    {customWeddingDesignFile ? (
-                                        <span className="text-electric-blue font-bold">{customWeddingDesignFile.name} (and others)</span>
-                                    ) : (
-                                        <span className="text-white/50 text-sm">Upload Reference Image/Video</span>
-                                    )}
-                                </label>
-                            </div>
-
-                            <button
-                                onClick={handleCustomDesignRequest}
-                                className="w-full py-3 bg-white text-black font-bold rounded-xl hover:bg-neon-purple hover:text-white transition-all"
-                            >
-                                Request Price Quote on WhatsApp
-                            </button>
-                        </div>
-                    )}
                 </div>
 
                 {/* Configuration Side */}
@@ -196,202 +170,150 @@ const ProductDetail = () => {
                 >
                     <div className="bg-[#111] border border-white/10 p-8 rounded-3xl space-y-8">
 
-                        {/* ID Display in Form */}
-                        <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                            <span className="text-white/50 font-mono">Product ID</span>
-                            <span className="text-white font-bold font-mono tracking-widest">{product.id}</span>
-                        </div>
+                        {!product.isCustom && (
+                            <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                                <span className="text-white/50 font-mono">Selected Design ID</span>
+                                <span className="text-neon-purple font-bold font-mono tracking-widest">{product.id}</span>
+                            </div>
+                        )}
 
                         {/* Material Selector */}
-                        <div>
-                            <label className="text-sm text-white/50 uppercase tracking-wider font-bold mb-3 block">1. Select Material</label>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                {product.options.material.map((m) => (
-                                    <button
-                                        key={m.name}
-                                        onClick={() => setMaterial(m)}
-                                        className={`p-4 rounded-xl border text-left transition-all flex justify-between items-center ${material?.name === m.name ? 'border-electric-blue bg-electric-blue/10 text-white' : 'border-white/10 text-white/50 hover:bg-white/5'}`}
-                                    >
-                                        <span className="font-medium">{m.name}</span>
-                                        {m.multiplier !== 1 && <span className="text-xs bg-white/10 px-2 py-1 rounded">x{m.multiplier} Cost</span>}
-                                    </button>
-                                ))}
+                        {!product.isCustom && (
+                            <div>
+                                <label className="text-sm text-white/50 uppercase tracking-wider font-bold mb-3 block">1. Select Card Quality</label>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    {product.options.material.map((m) => (
+                                        <button
+                                            key={m.name}
+                                            onClick={() => setMaterial(m)}
+                                            className={`p-4 rounded-xl border text-left transition-all flex justify-between items-center ${material?.name === m.name ? 'border-neon-purple bg-neon-purple/10 text-white' : 'border-white/10 text-white/50 hover:bg-white/5'}`}
+                                        >
+                                            <span className="font-medium">{m.name}</span>
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
-                        </div>
+                        )}
 
-                        {/* Size / Quantity Selector */}
-                        <div>
-                            <label className="text-sm text-white/50 uppercase tracking-wider font-bold mb-3 block">2. Dimensions & Quantity</label>
-
-                            {/* Wedding Specific Inputs */}
-                            {product.categoryId === 'wedding' && (
-                                <div className="space-y-4 mb-6 pb-6 border-b border-white/10">
-                                    <div>
-                                        <label className="text-sm text-white/70 mb-2 block">Bride & Groom Names</label>
-                                        <div className="grid grid-cols-2 gap-3">
-                                            <input
-                                                type="text"
-                                                placeholder="Groom Name"
-                                                value={weddingDetails.groom}
-                                                onChange={(e) => setWeddingDetails({ ...weddingDetails, groom: e.target.value })}
-                                                className="bg-black border border-white/20 rounded-xl p-3 text-white focus:border-electric-blue outline-none"
-                                            />
-                                            <input
-                                                type="text"
-                                                placeholder="Bride Name"
-                                                value={weddingDetails.bride}
-                                                onChange={(e) => setWeddingDetails({ ...weddingDetails, bride: e.target.value })}
-                                                className="bg-black border border-white/20 rounded-xl p-3 text-white focus:border-electric-blue outline-none"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label className="text-sm text-white/70 mb-2 block">Event Details</label>
-                                        <input
-                                            type="date"
-                                            value={weddingDetails.date}
-                                            onChange={(e) => setWeddingDetails({ ...weddingDetails, date: e.target.value })}
-                                            className="w-full bg-black border border-white/20 rounded-xl p-3 text-white focus:border-electric-blue outline-none mb-3"
-                                        />
-                                        <input
-                                            type="text"
-                                            placeholder="Venue Location"
-                                            value={weddingDetails.venue}
-                                            onChange={(e) => setWeddingDetails({ ...weddingDetails, venue: e.target.value })}
-                                            className="w-full bg-black border border-white/20 rounded-xl p-3 text-white focus:border-electric-blue outline-none"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="text-sm text-white/70 mb-2 block">Family Names / Extra Text</label>
-                                        <textarea
-                                            placeholder="Parents' names, RSVP details, or specific Quranic verses..."
-                                            value={weddingDetails.family}
-                                            onChange={(e) => setWeddingDetails({ ...weddingDetails, family: e.target.value })}
-                                            className="w-full bg-black border border-white/20 rounded-xl p-3 text-white focus:border-electric-blue outline-none h-24 resize-none"
-                                        />
-                                    </div>
+                        {/* Wedding Fields */}
+                        {product.categoryId === 'wedding' && (
+                            <div className="space-y-4">
+                                <label className="text-sm text-white/50 uppercase tracking-wider font-bold block">Printing Details</label>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <input
+                                        type="text"
+                                        placeholder="Groom Name (Dulha)"
+                                        value={weddingDetails.groom}
+                                        onChange={(e) => setWeddingDetails({ ...weddingDetails, groom: e.target.value })}
+                                        className="bg-black border border-white/20 rounded-xl p-3 text-white focus:border-neon-purple outline-none"
+                                    />
+                                    <input
+                                        type="text"
+                                        placeholder="Bride Name (Dulhan)"
+                                        value={weddingDetails.bride}
+                                        onChange={(e) => setWeddingDetails({ ...weddingDetails, bride: e.target.value })}
+                                        className="bg-black border border-white/20 rounded-xl p-3 text-white focus:border-neon-purple outline-none"
+                                    />
                                 </div>
-                            )}
-
-                            {product.unit === 'sqft' ? (
-                                <div className="space-y-4">
-                                    <div className="flex gap-4">
-                                        <div className="flex-1">
-                                            <div className="flex items-center gap-2 mb-2 text-sm text-white/70">
-                                                <Ruler size={16} /> Width (ft)
-                                            </div>
-                                            <input
-                                                type="number"
-                                                min="1"
-                                                value={dimensions.width || ''}
-                                                onChange={(e) => setDimensions({ ...dimensions, width: parseFloat(e.target.value) })}
-                                                className="w-full bg-black border border-white/20 rounded-xl p-4 text-white focus:border-electric-blue outline-none"
-                                                placeholder="e.g. 5"
-                                            />
-                                        </div>
-                                        <div className="flex-1">
-                                            <div className="flex items-center gap-2 mb-2 text-sm text-white/70">
-                                                <Ruler size={16} /> Height (ft)
-                                            </div>
-                                            <input
-                                                type="number"
-                                                min="1"
-                                                value={dimensions.height || ''}
-                                                onChange={(e) => setDimensions({ ...dimensions, height: parseFloat(e.target.value) })}
-                                                className="w-full bg-black border border-white/20 rounded-xl p-4 text-white focus:border-electric-blue outline-none"
-                                                placeholder="e.g. 3"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label className="text-sm text-white/70 mb-2 block">Number of Copies</label>
-                                        <input
-                                            type="number"
-                                            min="1"
-                                            value={customQty}
-                                            onChange={(e) => setCustomQty(parseInt(e.target.value))}
-                                            className="w-full bg-black border border-white/20 rounded-xl p-4 text-white focus:border-electric-blue outline-none"
-                                        />
-                                    </div>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <input
+                                        type="date"
+                                        value={weddingDetails.date}
+                                        onChange={(e) => setWeddingDetails({ ...weddingDetails, date: e.target.value })}
+                                        className="bg-black border border-white/20 rounded-xl p-3 text-white focus:border-neon-purple outline-none"
+                                    />
+                                    <input
+                                        type="text"
+                                        placeholder="Venue / City"
+                                        value={weddingDetails.venue}
+                                        onChange={(e) => setWeddingDetails({ ...weddingDetails, venue: e.target.value })}
+                                        className="bg-black border border-white/20 rounded-xl p-3 text-white focus:border-neon-purple outline-none"
+                                    />
                                 </div>
-                            ) : (
-                                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                <textarea
+                                    placeholder="Family Names (Parents/Grandparents) or extra details..."
+                                    value={weddingDetails.family}
+                                    onChange={(e) => setWeddingDetails({ ...weddingDetails, family: e.target.value })}
+                                    className="w-full bg-black border border-white/20 rounded-xl p-3 text-white focus:border-neon-purple outline-none h-24 resize-none"
+                                />
+                            </div>
+                        )}
+
+                        {/* Quantity Selector */}
+                        {!product.isCustom && (
+                            <div>
+                                <label className="text-sm text-white/50 uppercase tracking-wider font-bold mb-3 block">Quantity (Min {product.moq || 1})</label>
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                                     {product.options.quantity && product.options.quantity.map((q) => (
                                         <button
                                             key={q.value}
                                             onClick={() => setQuantityOption(q)}
-                                            className={`p-4 rounded-xl border text-center transition-all ${quantityOption?.value === q.value ? 'border-electric-blue bg-electric-blue/10 text-white' : 'border-white/10 text-white/50 hover:bg-white/5'}`}
+                                            className={`p-4 rounded-xl border text-center transition-all ${quantityOption?.value === q.value ? 'border-neon-purple bg-neon-purple/10 text-white' : 'border-white/10 text-white/50 hover:bg-white/5'}`}
                                         >
                                             {q.label}
                                         </button>
                                     ))}
                                 </div>
-                            )}
-                        </div>
+                            </div>
+                        )}
 
-                        {/* File Upload (Standard) */}
-                        {product.categoryId !== 'wedding' && (
+                        {/* File Upload for Custom Request */}
+                        {(product.isCustom || product.categoryId !== 'wedding') && (
                             <div>
-                                <label className="text-sm text-white/50 uppercase tracking-wider font-bold mb-3 block">3. Upload Design</label>
-                                <div className="border-2 border-dashed border-white/10 rounded-2xl p-8 text-center hover:border-electric-blue/50 hover:bg-electric-blue/5 transition-all relative">
+                                <label className="text-sm text-white/50 uppercase tracking-wider font-bold mb-3 block">
+                                    {product.isCustom ? 'Upload Reference (Images/Videos)' : 'Upload Design'}
+                                </label>
+                                <div className="border-2 border-dashed border-white/10 rounded-2xl p-8 text-center hover:border-neon-purple/50 hover:bg-none transition-all relative">
                                     <input
                                         type="file"
-                                        onChange={(e) => setFile(e.target.files[0])}
+                                        onChange={(e) => {
+                                            if (product.isCustom) {
+                                                setCustomWeddingFiles(Array.from(e.target.files));
+                                            } else {
+                                                setFile(e.target.files[0]);
+                                            }
+                                        }}
+                                        multiple={product.isCustom}
                                         className="absolute inset-0 opacity-0 cursor-pointer"
                                     />
-                                    {file ? (
-                                        <div className="text-electric-blue flex flex-col items-center">
-                                            <Check size={32} className="mb-2" />
-                                            <span className="font-bold">{file.name}</span>
-                                        </div>
-                                    ) : (
-                                        <div className="text-white/40 flex flex-col items-center">
-                                            <Upload size={32} className="mb-4" />
-                                            <span className="font-medium">Drag & Drop or Click to Upload</span>
-                                        </div>
-                                    )}
+                                    <div className="text-white/40 flex flex-col items-center">
+                                        <Upload size={32} className="mb-4" />
+                                        <span className="font-medium">
+                                            {product.isCustom
+                                                ? (customWeddingFiles.length > 0 ? `${customWeddingFiles.length} files selected` : 'Drop images/videos here')
+                                                : (file ? file.name : 'Click to Upload Design')
+                                            }
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         )}
 
                         {/* Summary Footer */}
                         <div className="pt-6 border-t border-white/10">
-                            {showBulkQuote ? (
-                                <div className="text-center">
-                                    <div className="bg-electric-blue/10 border border-electric-blue/30 p-4 rounded-xl mb-4">
-                                        <p className="text-electric-blue font-bold">Volume Order Detected!</p>
-                                        <p className="text-sm text-white/70">For orders above {pricingConfig.thresholds.bulk} sq.ft, we offer special rates.</p>
-                                    </div>
-                                    <button
-                                        onClick={handleBulkQuote}
-                                        className="w-full py-5 rounded-xl font-bold text-lg bg-[#25D366] text-white hover:bg-[#1fae53] flex items-center justify-center gap-2 transition-all"
-                                    >
-                                        <MessageCircle size={20} />
-                                        Get Bulk Quote on WhatsApp
-                                    </button>
-                                </div>
+                            {product.isCustom ? (
+                                <button
+                                    onClick={handleWhatsAppQuote}
+                                    className="w-full py-5 rounded-xl font-bold text-lg bg-[#25D366] text-white hover:bg-[#1fae53] flex items-center justify-center gap-2 transition-all shadow-[0_0_20px_rgba(37,211,102,0.2)]"
+                                >
+                                    <MessageCircle size={20} />
+                                    Request Quote on WhatsApp
+                                </button>
                             ) : (
                                 <>
-                                    <div className="flex items-end justify-between mb-4">
+                                    <div className="flex items-end justify-between mb-6">
                                         <div>
                                             <span className="text-sm text-white/50">Total Estimation</span>
                                             <div className="text-4xl font-bold text-white tracking-tight">
                                                 Rs. {price.toLocaleString()}
                                             </div>
                                             {product.categoryId === 'wedding' && (
-                                                <div className="text-xs text-white/50 mt-1">
-                                                    Includes Rs.{product.printingCharge || 'custom'} Printing & Setup Charges
+                                                <div className="text-xs text-neon-purple mt-1 flex items-center gap-1">
+                                                    <Check size={12} /> Includes Rs.{product.printingCharge} Printing Charge
                                                 </div>
                                             )}
                                         </div>
                                     </div>
-
-                                    {isSetupFeeApplied && (
-                                        <div className="flex items-center gap-2 text-orange-400 text-xs mb-4 bg-orange-500/10 p-2 rounded-lg border border-orange-500/20">
-                                            <AlertCircle size={14} />
-                                            <span>Rs. {pricingConfig.setupFee} Setup Fee Applied (Small Order)</span>
-                                        </div>
-                                    )}
 
                                     <button
                                         onClick={handleAddToCart}

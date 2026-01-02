@@ -285,6 +285,24 @@ export const products = [
 
     // --- Wedding Cards ---
     {
+        id: 'WC-CUSTOM',
+        categoryId: 'wedding',
+        title: 'Custom / Instagram Design',
+        description: 'Have a specific design from Instagram or a video? Upload your reference and get a custom quote on WhatsApp.',
+        price: 0,
+        unit: 'fixed',
+        isCustom: true,
+        image: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=1470&auto=format&fit=crop', // Placeholder
+        options: {
+            material: [
+                { name: 'Custom Request', multiplier: 1.0 },
+            ],
+            quantity: [
+                { label: 'Discuss on WhatsApp', value: 0 },
+            ]
+        }
+    },
+    {
         id: 'WC-101',
         categoryId: 'wedding',
         title: 'Luxury Box Invitation (WC-101)',

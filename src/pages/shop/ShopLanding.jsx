@@ -53,7 +53,30 @@ const ShopLanding = () => {
 
             {/* Products Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {filteredProducts.map((product, index) => (
+                {/* Special Custom Design Card for Wedding */}
+                {activeCategory === 'wedding' && (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="group relative bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] border border-dashed border-neon-purple/50 rounded-2xl overflow-hidden hover:border-neon-purple transition-all duration-300 flex flex-col items-center justify-center p-8 text-center"
+                    >
+                        <div className="w-20 h-20 rounded-full bg-neon-purple/10 flex items-center justify-center mb-6 text-neon-purple group-hover:scale-110 transition-transform">
+                            <Filter size={40} />
+                        </div>
+                        <h3 className="text-2xl font-bold mb-3">Custom / Instagram Design</h3>
+                        <p className="text-white/60 text-sm mb-8">
+                            Have a specific design from Instagram or a video? <br />
+                            Upload your reference and get a custom quote.
+                        </p>
+                        <Link to="/shop/product/WC-CUSTOM" className="w-full">
+                            <button className="w-full py-3 bg-neon-purple text-white rounded-full font-bold hover:bg-white hover:text-black transition-all">
+                                Upload Reference
+                            </button>
+                        </Link>
+                    </motion.div>
+                )}
+
+                {filteredProducts.filter(p => !p.isCustom).map((product, index) => (
                     <motion.div
                         key={product.id}
                         layout
@@ -69,6 +92,13 @@ const ShopLanding = () => {
                                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                             />
                             <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors" />
+
+                            {/* ID Tag for Wedding Cards */}
+                            {product.categoryId === 'wedding' && (
+                                <div className="absolute top-4 left-4 bg-neon-purple px-3 py-1 rounded-md text-[10px] font-black tracking-tighter shadow-lg z-10 uppercase">
+                                    ID: {product.id}
+                                </div>
+                            )}
 
                             {/* Badge */}
                             <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold border border-white/10">
@@ -93,7 +123,7 @@ const ShopLanding = () => {
                                 </span>
                                 <Link to={`/shop/product/${product.id}`}>
                                     <button className="flex items-center gap-2 px-4 py-2 bg-white text-black rounded-full font-bold text-sm hover:bg-neon-purple hover:text-white transition-all">
-                                        Configure <ArrowRight size={16} />
+                                        Select Design <ArrowRight size={16} />
                                     </button>
                                 </Link>
                             </div>
