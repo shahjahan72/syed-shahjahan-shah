@@ -13,9 +13,17 @@ const Checkout = () => {
         e.preventDefault();
 
         // Prepare WhatsApp Message
-        const orderItems = cart.map((item, i) =>
-            `*${i + 1}. ${item.title}* %0A   Material: ${item.selectedMaterial.name} %0A   Qty: ${item.unit === 'sqft' ? item.selectedQuantity.value + ' Copies (' + item.dimensions.width + 'x' + item.dimensions.height + ' ft)' : item.selectedQuantity.label} %0A   Price: Rs. ${item.totalPrice.toLocaleString()}`
-        ).join('%0A%0A');
+        const orderItems = cart.map((item, i) => {
+            let details = `*${i + 1}. ${item.title}* %0A   Material: ${item.selectedMaterial.name}`;
+
+            if (item.weddingDetails) {
+                details += `%0A   Event: ${item.weddingDetails.bride} & ${item.weddingDetails.groom} on ${item.weddingDetails.date} at ${item.weddingDetails.venue}`;
+            }
+
+            details += ` %0A   Qty: ${item.unit === 'sqft' ? item.selectedQuantity.value + ' Copies (' + item.dimensions.width + 'x' + item.dimensions.height + ' ft)' : item.selectedQuantity.label}`;
+            details += ` %0A   Price: Rs. ${item.totalPrice.toLocaleString()}`;
+            return details;
+        }).join('%0A%0A');
 
         const message = `*NEW ORDER ALERT* %0A%0A*Customer:* ${formData.name}%0A*Phone:* ${formData.phone}%0A*Address:* ${formData.address}, ${formData.city}%0A%0A*Order Details:*%0A${orderItems}%0A%0A*Total Amount:* Rs. ${cartTotal.toLocaleString()} %0A%0A_Please verify payment screenshot sent separately._`;
 

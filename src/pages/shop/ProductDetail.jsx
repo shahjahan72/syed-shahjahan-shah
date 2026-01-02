@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { products, pricingConfig } from '../../data/products';
 import { useCart } from '../../context/CartContext';
-import { Upload, ShoppingCart, MessageCircle, Check, ArrowLeft, Ruler, AlertCircle } from 'lucide-react';
+import { Upload, ShoppingCart, MessageCircle, Check, ArrowLeft, Ruler, AlertCircle, PenTool } from 'lucide-react';
 
 const ProductDetail = () => {
     const { id } = useParams();
@@ -18,6 +18,10 @@ const ProductDetail = () => {
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
     const [customQty, setCustomQty] = useState(1);
     const [file, setFile] = useState(null);
+
+    // Wedding Specific States
+    const [weddingDetails, setWeddingDetails] = useState({ bride: '', groom: '', date: '', venue: '' });
+    const [customWeddingDesignFile, setCustomWeddingDesignFile] = useState(null);
 
     // Pricing States
     const [price, setPrice] = useState(0);
@@ -42,7 +46,7 @@ const ProductDetail = () => {
         let setupFee = 0;
         let isQuote = false;
 
-        // --- LOGIC 1: SQFT ITEMS (Panaflex, Backlit, etc.) ---
+        // --- LOGIC 1: SQFT ITEMS ---
         if (product.unit === 'sqft') {
             const width = dimensions.width || 0;
             const height = dimensions.height || 0;
@@ -51,24 +55,16 @@ const ProductDetail = () => {
             const totalArea = areaPerItem * qty;
 
             if (totalArea > 0) {
-                // Check for Bulk Quote
                 if (totalArea > pricingConfig.thresholds.bulk) {
                     isQuote = true;
                 } else {
-                    // Determine Profit Margin Multiplier
-                    let margin = pricingConfig.margins.small; // Default 100%
+                    let margin = pricingConfig.margins.small;
+                    if (totalArea > pricingConfig.thresholds.medium) margin = pricingConfig.margins.large;
+                    else if (totalArea > pricingConfig.thresholds.small) margin = pricingConfig.margins.medium;
 
-                    if (totalArea > pricingConfig.thresholds.medium) {
-                        margin = pricingConfig.margins.large; // 40%
-                    } else if (totalArea > pricingConfig.thresholds.small) {
-                        margin = pricingConfig.margins.medium; // 60%
-                    }
-
-                    // Calculate Base Cost + Profit
-                    const baseTotal = product.baseCost * totalArea; // Raw cost
+                    const baseTotal = product.baseCost * totalArea;
                     total = baseTotal * margin * material.multiplier;
 
-                    // Setup Fee for very small orders
                     if (totalArea < pricingConfig.setupFeeThreshold) {
                         setupFee = pricingConfig.setupFee;
                         total += setupFee;
@@ -78,19 +74,18 @@ const ProductDetail = () => {
         }
         // --- LOGIC 2: FIXED ITEMS (Cards, Mugs, etc.) ---
         else {
-            if (quantityOption) {
-                // Simple logic for now: Price in data is selling price. Multiplier applies.
-                // If we wanted dynamic scaling here, we'd need baseCost per item in data.
-                // Using existing 'price' field as effective selling price for base quantity.
-                // Assuming linear scaling for simplicity + material multiplier.
-                const basePrice = product.price;
-                // Normalize price per unit based on first option? 
-                // Let's assume product.price matches the first quantity option roughly.
-                // Better: product.price is "Base Price".
-                // If quantityOption.value increases, price increases.
-                // Let's stick to simple multiplier logic for fixed items as requested focus was typically on SQFT scaling.
+            if (quantityOption && product.categoryId === 'wedding') {
+                // Wedding Logic: (Price * Qty) + PrintingCharge
+                // Assume Price in Data is Per Card Base Price
+                // Multiplier applies to Card Quality
+                const cardPrice = product.price * material.multiplier;
+                const quantity = quantityOption.value;
+                const printingCharge = 2000; // Fixed printing setup charge for plates
 
-                // However, let's just use the product price * ratio logic from before for consistency
+                total = (cardPrice * quantity) + printingCharge;
+            }
+            else if (quantityOption) {
+                // Standard Logic for other Fixed Items
                 const baseQty = product.options.quantity[0].value;
                 const ratio = quantityOption.value / baseQty;
                 total = product.price * ratio * material.multiplier;
@@ -101,7 +96,7 @@ const ProductDetail = () => {
         setIsSetupFeeApplied(setupFee > 0);
         setShowBulkQuote(isQuote);
 
-    }, [product, material, dimensions, customQty, quantityOption]);
+    }, [product, material, dimensions, customQty, quantityOption, weddingDetails]);
 
     if (!product) return <div className="text-white text-center pt-40">Product not found</div>;
 
@@ -112,7 +107,8 @@ const ProductDetail = () => {
             selectedQuantity: product.unit === 'sqft' ? { label: `${customQty} Copies`, value: customQty } : quantityOption,
             dimensions: product.unit === 'sqft' ? dimensions : null,
             totalPrice: price,
-            file: file ? file.name : null
+            file: file ? file.name : null,
+            weddingDetails: product.categoryId === 'wedding' ? weddingDetails : null
         };
         addToCart(item);
         navigate('/shop/checkout');
@@ -122,6 +118,11 @@ const ProductDetail = () => {
         const message = `Hi, I need a bulk quote for *${product.title}*. %0A dimensions: ${dimensions.width}x${dimensions.height} ft %0A Qty: ${customQty} %0A Approx Area: ${(dimensions.width * dimensions.height * customQty)} sqft.`;
         window.open(`https://wa.me/923001234567?text=${message}`, '_blank');
     };
+
+    const handleCustomDesignRequest = () => {
+        const message = `Hi, I have a specific custom design for a Wedding Card. %0A I will attach the reference image/video in this chat.`;
+        window.open(`https://wa.me/923001234567?text=${message}`, '_blank');
+    }
 
     return (
         <div className="min-h-screen pt-28 pb-20 px-6 max-w-7xl mx-auto">
@@ -146,6 +147,42 @@ const ProductDetail = () => {
                             </div>}
                         </div>
                     </motion.div>
+
+                    {/* Custom Design Request Block for Wedding */}
+                    {product.categoryId === 'wedding' && (
+                        <div className="bg-gradient-to-r from-neon-purple/10 to-electric-blue/10 border border-white/10 p-6 rounded-2xl">
+                            <h3 className="text-xl font-bold mb-2 flex items-center gap-2">
+                                <PenTool size={20} className="text-neon-purple" />
+                                Have a specific design?
+                            </h3>
+                            <p className="text-white/60 text-sm mb-4">
+                                Don't like our catalog? Send us your own design inspiration (Image/Video) and we'll print it.
+                            </p>
+
+                            <div className="mb-4 bg-black/20 border border-dashed border-white/20 rounded-xl p-4 text-center">
+                                <input
+                                    type="file"
+                                    onChange={(e) => setCustomWeddingDesignFile(e.target.files[0])}
+                                    className="hidden"
+                                    id="custom-design-upload"
+                                />
+                                <label htmlFor="custom-design-upload" className="cursor-pointer block">
+                                    {customWeddingDesignFile ? (
+                                        <span className="text-electric-blue font-bold">{customWeddingDesignFile.name}</span>
+                                    ) : (
+                                        <span className="text-white/50 text-sm">Upload Reference Image</span>
+                                    )}
+                                </label>
+                            </div>
+
+                            <button
+                                onClick={handleCustomDesignRequest}
+                                className="w-full py-3 bg-white text-black font-bold rounded-xl hover:bg-neon-purple hover:text-white transition-all"
+                            >
+                                Request Price Quote on WhatsApp
+                            </button>
+                        </div>
+                    )}
                 </div>
 
                 {/* Configuration Side */}
@@ -176,6 +213,57 @@ const ProductDetail = () => {
                         {/* Size / Quantity Selector */}
                         <div>
                             <label className="text-sm text-white/50 uppercase tracking-wider font-bold mb-3 block">2. Dimensions & Quantity</label>
+
+                            {/* Wedding Specific Inputs */}
+                            {product.categoryId === 'wedding' && (
+                                <div className="space-y-4 mb-6 pb-6 border-b border-white/10">
+                                    <div>
+                                        <label className="text-sm text-white/70 mb-2 block">Bride & Groom Names</label>
+                                        <input
+                                            type="text"
+                                            placeholder="e.g. Ali & Fatima"
+                                            value={weddingDetails.bride + (weddingDetails.groom ? ' & ' + weddingDetails.groom : '')}
+                                            // Simplistic handling, let's separate inputs for better UX
+                                            className="hidden"
+                                        />
+                                        <div className="grid grid-cols-2 gap-3">
+                                            <input
+                                                type="text"
+                                                placeholder="Groom Name"
+                                                value={weddingDetails.groom}
+                                                onChange={(e) => setWeddingDetails({ ...weddingDetails, groom: e.target.value })}
+                                                className="bg-black border border-white/20 rounded-xl p-3 text-white focus:border-electric-blue outline-none"
+                                            />
+                                            <input
+                                                type="text"
+                                                placeholder="Bride Name"
+                                                value={weddingDetails.bride}
+                                                onChange={(e) => setWeddingDetails({ ...weddingDetails, bride: e.target.value })}
+                                                className="bg-black border border-white/20 rounded-xl p-3 text-white focus:border-electric-blue outline-none"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="text-sm text-white/70 mb-2 block">Event Date</label>
+                                        <input
+                                            type="date"
+                                            value={weddingDetails.date}
+                                            onChange={(e) => setWeddingDetails({ ...weddingDetails, date: e.target.value })}
+                                            className="w-full bg-black border border-white/20 rounded-xl p-3 text-white focus:border-electric-blue outline-none"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="text-sm text-white/70 mb-2 block">Venue</label>
+                                        <input
+                                            type="text"
+                                            placeholder="e.g. PC Hotel, Karachi"
+                                            value={weddingDetails.venue}
+                                            onChange={(e) => setWeddingDetails({ ...weddingDetails, venue: e.target.value })}
+                                            className="w-full bg-black border border-white/20 rounded-xl p-3 text-white focus:border-electric-blue outline-none"
+                                        />
+                                    </div>
+                                </div>
+                            )}
 
                             {product.unit === 'sqft' ? (
                                 <div className="space-y-4">
@@ -217,9 +305,6 @@ const ProductDetail = () => {
                                             className="w-full bg-black border border-white/20 rounded-xl p-4 text-white focus:border-electric-blue outline-none"
                                         />
                                     </div>
-                                    <div className="text-right text-sm text-white/40">
-                                        Total Area: {(dimensions.width * dimensions.height * (customQty || 0)).toFixed(2)} sq.ft
-                                    </div>
                                 </div>
                             ) : (
                                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -236,28 +321,30 @@ const ProductDetail = () => {
                             )}
                         </div>
 
-                        {/* File Upload */}
-                        <div>
-                            <label className="text-sm text-white/50 uppercase tracking-wider font-bold mb-3 block">3. Upload Design</label>
-                            <div className="border-2 border-dashed border-white/10 rounded-2xl p-8 text-center hover:border-electric-blue/50 hover:bg-electric-blue/5 transition-all relative">
-                                <input
-                                    type="file"
-                                    onChange={(e) => setFile(e.target.files[0])}
-                                    className="absolute inset-0 opacity-0 cursor-pointer"
-                                />
-                                {file ? (
-                                    <div className="text-electric-blue flex flex-col items-center">
-                                        <Check size={32} className="mb-2" />
-                                        <span className="font-bold">{file.name}</span>
-                                    </div>
-                                ) : (
-                                    <div className="text-white/40 flex flex-col items-center">
-                                        <Upload size={32} className="mb-4" />
-                                        <span className="font-medium">Drag & Drop or Click to Upload</span>
-                                    </div>
-                                )}
+                        {/* File Upload (Standard) - Only show if not Custom Flow? Actually always show for logo etc if needed */}
+                        {product.categoryId !== 'wedding' && (
+                            <div>
+                                <label className="text-sm text-white/50 uppercase tracking-wider font-bold mb-3 block">3. Upload Design</label>
+                                <div className="border-2 border-dashed border-white/10 rounded-2xl p-8 text-center hover:border-electric-blue/50 hover:bg-electric-blue/5 transition-all relative">
+                                    <input
+                                        type="file"
+                                        onChange={(e) => setFile(e.target.files[0])}
+                                        className="absolute inset-0 opacity-0 cursor-pointer"
+                                    />
+                                    {file ? (
+                                        <div className="text-electric-blue flex flex-col items-center">
+                                            <Check size={32} className="mb-2" />
+                                            <span className="font-bold">{file.name}</span>
+                                        </div>
+                                    ) : (
+                                        <div className="text-white/40 flex flex-col items-center">
+                                            <Upload size={32} className="mb-4" />
+                                            <span className="font-medium">Drag & Drop or Click to Upload</span>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
-                        </div>
+                        )}
 
                         {/* Summary Footer */}
                         <div className="pt-6 border-t border-white/10">
@@ -283,6 +370,11 @@ const ProductDetail = () => {
                                             <div className="text-4xl font-bold text-white tracking-tight">
                                                 Rs. {price.toLocaleString()}
                                             </div>
+                                            {product.categoryId === 'wedding' && (
+                                                <div className="text-xs text-white/50 mt-1">
+                                                    Includes Printing Setup Charges
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
 
