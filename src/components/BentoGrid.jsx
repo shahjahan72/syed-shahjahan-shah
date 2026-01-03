@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { ArrowUpRight, Github, Twitter, Linkedin, Star, Code } from 'lucide-react';
 
 const Card = ({ children, className, delay = 0 }) => (
