@@ -1,4 +1,4 @@
-import { weddingDesigns } from './weddingDesigns';
+import { weddingGroups } from './weddingGroups';
 
 export const categories = [
     {
@@ -39,7 +39,6 @@ export const categories = [
     }
 ];
 
-// --- DYNAMIC PRICING CONFIGURATION ---
 export const pricingConfig = {
     margins: {
         small: 2.0,   // 100% Profit 
@@ -56,34 +55,9 @@ export const pricingConfig = {
     setupFeeThreshold: 20
 };
 
-// --- Helper to Generate Wedding Products from Gallery Data ---
-const generatedWeddingProducts = weddingDesigns.map(design => ({
-    id: design.id,
-    categoryId: 'wedding',
-    title: design.title,
-    description: `Design ID: ${design.id}. Premium wedding invitation card. Customized with your details.`,
-    price: design.price,
-    unit: 'fixed',
-    moq: design.minOrder,
-    printingCharge: 1000, // Fixed charge for all premade cards
-    image: design.image,
-    options: {
-        material: [
-            { name: 'Standard Premium', multiplier: 1.0 },
-            { name: 'Textured Finish', multiplier: 1.2 },
-            { name: 'Velvet/Fancy', multiplier: 1.5 },
-        ],
-        quantity: [
-            { label: `${design.minOrder} Cards`, value: design.minOrder },
-            { label: `${design.minOrder * 2} Cards`, value: design.minOrder * 2 },
-            { label: `${design.minOrder * 5} Cards`, value: design.minOrder * 5 },
-            { label: `${design.minOrder * 10} Cards`, value: design.minOrder * 10 },
-        ]
-    }
-}));
-
 export const products = [
-    // --- 1. Outdoor Advertising (SQFT Items) ---
+    // ... (keep all outdoor/indoor items unchanged)
+    // ... (keep 1. Outdoor Advertising items)
     {
         id: 'panaflex',
         categoryId: 'outdoor',
@@ -105,7 +79,7 @@ export const products = [
         categoryId: 'outdoor',
         title: 'Backlit Board (Light Wala)',
         description: 'Raat ko light se chamakne wale boards. Premium Star Flex.',
-        baseCost: 30,
+        baseCost: 30, // Aapki cost per sq ft
         unit: 'sqft',
         image: 'https://images.unsplash.com/photo-1542204637-e67bc7d41e48?q=80&w=1935&auto=format&fit=crop',
         options: {
@@ -181,13 +155,14 @@ export const products = [
         }
     },
 
-    // --- Fixed Price Items ---
+
+    // --- Fixed Price Items (Packaging etc) ---
     {
         id: 'bottle-labels',
         categoryId: 'packaging',
         title: 'Bottle Labels',
         description: 'Waterproof stickers for Juice, Water, or Oil bottles.',
-        price: 500,
+        price: 500, // Base selling price for min order
         unit: 'fixed',
         image: 'https://images.unsplash.com/photo-1616941842751-cb9e4ae5c325?q=80&w=1470&auto=format&fit=crop',
         options: {
@@ -304,7 +279,7 @@ export const products = [
         }
     },
 
-    // --- Wedding Cards (Generated + Custom) ---
+    // --- Wedding Cards (Groups + Custom) ---
     {
         id: 'WC-CUSTOM',
         categoryId: 'wedding',
@@ -323,7 +298,7 @@ export const products = [
             ]
         }
     },
-    ...generatedWeddingProducts,
+    ...weddingGroups,
 
     // --- Gifts & Others ---
     {

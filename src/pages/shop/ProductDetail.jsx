@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { products, pricingConfig } from '../../data/products';
 import { useCart } from '../../context/CartContext';
-import { Upload, ShoppingCart, MessageCircle, Check, ArrowLeft, Ruler, AlertCircle, PenTool, Hash, ImageIcon } from 'lucide-react';
+import { Upload, ShoppingCart, MessageCircle, Check, ArrowLeft, Ruler, AlertCircle, PenTool, Hash, Maximize2, X } from 'lucide-react';
 
 const ProductDetail = () => {
     const { id } = useParams();
@@ -11,6 +11,10 @@ const ProductDetail = () => {
     const { addToCart } = useCart();
 
     const product = products.find(p => p.id === id);
+
+    // Template Gallery State
+    const [selectedTemplate, setSelectedTemplate] = useState(null);
+    const [lightboxImage, setLightboxImage] = useState(null);
 
     // Form States
     const [material, setMaterial] = useState(null);
@@ -83,12 +87,15 @@ const ProductDetail = () => {
         }
         // FIXED ITEMS (Wedding, Cards, etc.)
         else {
-            if (quantityOption && product.categoryId === 'wedding') {
+            if (product.categoryId === 'wedding') {
                 // Wedding Logic
+                // Ensure quantity comes from quantityOption OR customQty depending on UI availability
+                const qty = quantityOption ? quantityOption.value : customQty;
                 const cardPrice = product.price * material.multiplier;
-                const quantity = quantityOption.value;
                 const printingCharge = product.printingCharge || 0;
-                total = (cardPrice * quantity) + printingCharge;
+
+                // If sub-template selected, price logic is same: Group Base Price * Qty + Printing
+                total = (cardPrice * qty) + printingCharge;
             }
             else if (product.options.quantity && quantityOption) {
                 const baseQty = product.options.quantity[0].value;
@@ -96,8 +103,6 @@ const ProductDetail = () => {
                 total = product.price * ratio * material.multiplier;
             }
             else {
-                // Fallback for simple fixed items without quantity array or using customQty
-                // Not currently used by existing data but good for safety
                 total = product.price * customQty * material.multiplier;
             }
         }
@@ -108,18 +113,20 @@ const ProductDetail = () => {
 
     }, [product, material, dimensions, customQty, quantityOption, weddingDetails]);
 
+
     if (!product) return <div className="text-white text-center pt-40">Product not found</div>;
 
     const handleAddToCart = () => {
         const item = {
             ...product,
-            productID: product.id,
+            productID: selectedTemplate ? `${product.id}-${selectedTemplate.id}` : product.id,
             selectedMaterial: material,
             selectedQuantity: product.unit === 'sqft' ? { label: `${customQty} Copies`, value: customQty } : (quantityOption || { label: `${customQty} Units`, value: customQty }),
             dimensions: product.unit === 'sqft' ? dimensions : null,
             totalPrice: price,
             file: file ? file.name : null,
-            weddingDetails: product.categoryId === 'wedding' ? weddingDetails : null
+            weddingDetails: product.categoryId === 'wedding' ? weddingDetails : null,
+            designMetadata: selectedTemplate // Persist the picked design object
         };
         addToCart(item);
         navigate('/shop/checkout');
@@ -135,10 +142,93 @@ const ProductDetail = () => {
         window.open(`https://wa.me/923481342505?text=${message}`, '_blank');
     };
 
+    // If it is a TEMPLATE GROUP (Wedding) and NO template is selected, show the Gallery
+    if (product.isTemplateGroup && !selectedTemplate) {
+        return (
+            <div className="min-h-screen pt-28 pb-20 px-6 max-w-7xl mx-auto">
+                <button onClick={() => navigate('/shop')} className="flex items-center gap-2 text-white/50 hover:text-white mb-8 transition-colors">
+                    <ArrowLeft size={20} /> Back to Shop
+                </button>
+
+                <div className="text-center mb-12">
+                    <h1 className="text-4xl font-bold mb-4">{product.title} Gallery</h1>
+                    <p className="text-white/60 max-w-2xl mx-auto">{product.description}</p>
+                    <div className="mt-4 flex justify-center gap-4 text-sm font-mono text-neon-purple">
+                        <span>Base Price: Rs. {product.price}</span>
+                        <span>•</span>
+                        <span>MOQ: {product.moq} Cards</span>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    {/* Simulated Template Generation */}
+                    {Array.from({ length: product.totalDesigns || 12 }).map((_, i) => {
+                        const designId = `${product.templatePrefix}-${String(i + 1).padStart(3, '0')}`;
+                        return (
+                            <motion.div
+                                key={i}
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: i * 0.05 }}
+                                className="group relative bg-[#111] border border-white/10 rounded-xl overflow-hidden cursor-pointer hover:border-neon-purple/50 transition-all"
+                                onClick={() => setSelectedTemplate({ id: designId, index: i })}
+                            >
+                                <div className="aspect-[3/4] overflow-hidden relative">
+                                    <img
+                                        src={`${product.baseImageInfo}&sig=${i}`} // Randomized sig for variety
+                                        alt={designId}
+                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                    />
+                                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors" />
+
+                                    {/* Design ID Overlay */}
+                                    <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/90 to-transparent flex justify-between items-end">
+                                        <span className="font-mono text-xs font-bold text-white bg-black/50 px-2 py-1 rounded">{designId}</span>
+                                        <button
+                                            className="p-2 bg-white/10 hover:bg-white/30 rounded-full backdrop-blur-md transition-colors"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setLightboxImage(`${product.baseImageInfo}&sig=${i}`);
+                                            }}
+                                        >
+                                            <Maximize2 size={14} />
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className="p-3 text-center">
+                                    <button className="text-sm font-bold text-white/80 group-hover:text-neon-purple transition-colors">Select Design</button>
+                                </div>
+                            </motion.div>
+                        );
+                    })}
+                </div>
+
+                {/* Lightbox */}
+                <AnimatePresence>
+                    {lightboxImage && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="fixed inset-0 z-50 bg-black/90 backdrop-blur-xl flex items-center justify-center p-4"
+                            onClick={() => setLightboxImage(null)}
+                        >
+                            <button className="absolute top-4 right-4 text-white/50 hover:text-white">
+                                <X size={32} />
+                            </button>
+                            <img src={lightboxImage} className="max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl border border-white/10" alt="Zoom" />
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
+        );
+    }
+
+    // Default or Configuration View (Once Template is selected OR for normal products)
     return (
         <div className="min-h-screen pt-28 pb-20 px-6 max-w-7xl mx-auto">
-            <button onClick={() => navigate('/shop')} className="flex items-center gap-2 text-white/50 hover:text-white mb-8 transition-colors">
-                <ArrowLeft size={20} /> Back to Shop
+            <button onClick={() => selectedTemplate ? setSelectedTemplate(null) : navigate('/shop')} className="flex items-center gap-2 text-white/50 hover:text-white mb-8 transition-colors">
+                <ArrowLeft size={20} /> {selectedTemplate ? 'Back to Gallery' : 'Back to Shop'}
             </button>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
@@ -156,11 +246,15 @@ const ProductDetail = () => {
                                 <p className="text-white/60">Share your inspiration pictures or videos, and we'll bring them to life with premium printing.</p>
                             </div>
                         ) : (
-                            <img src={product.image} alt={product.title} className="w-full h-full object-cover" />
+                            <img
+                                src={selectedTemplate ? `${product.baseImageInfo}&sig=${selectedTemplate.index}` : product.image}
+                                alt={product.title}
+                                className="w-full h-full object-cover"
+                            />
                         )}
                         {!product.isCustom && (
                             <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold border border-white/10 flex items-center gap-2">
-                                <Hash size={12} /> {product.id}
+                                <Hash size={12} /> {selectedTemplate ? selectedTemplate.id : product.id}
                             </div>
                         )}
                         <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/90 to-transparent">
@@ -181,7 +275,7 @@ const ProductDetail = () => {
                         {!product.isCustom && (
                             <div className="flex items-center justify-between border-b border-white/10 pb-4">
                                 <span className="text-white/50 font-mono">Selected Design ID</span>
-                                <span className="text-neon-purple font-bold font-mono tracking-widest">{product.id}</span>
+                                <span className="text-neon-purple font-bold font-mono tracking-widest">{selectedTemplate ? selectedTemplate.id : product.id}</span>
                             </div>
                         )}
 
@@ -307,7 +401,15 @@ const ProductDetail = () => {
                                         ))}
                                     </div>
                                 ) : (
-                                    // Manual Quantity (e.g. Copies of a flex)
+                                    // Manual Quantity for NON-SQFT items only if options missing
+                                    // For SQFT items, quantity (copies) is handled above in "copies" logic.
+                                    // BUT: Panaflex needs Copies + Size.
+                                    // Current UI logic: SQFT section has copies.
+                                    // Fixed items (wedding) logic: Quantity Option.
+                                    // If we are here, it's either fixed without options OR Panaflex fallback?
+                                    // Logic correction: Panaflex sets 'customQty' in the "Copies" input in size section?
+                                    // Let's ensure copies input is available if it's NOT sqft OR if options available
+                                    // Actually, let's keep it simple: If options exist, show buttons. If not, and not custom, show number input.
                                     <div className="flex items-center bg-black border border-white/20 rounded-xl p-3 w-full md:w-1/3 focus-within:border-neon-purple transition-colors">
                                         <input
                                             type="number"
@@ -316,7 +418,7 @@ const ProductDetail = () => {
                                             onChange={(e) => setCustomQty(parseInt(e.target.value) || 1)}
                                             className="bg-transparent w-full text-white outline-none font-mono text-lg text-center"
                                         />
-                                        <span className="text-white/30 text-sm ml-2">Copies</span>
+                                        <span className="text-white/30 text-sm ml-2">Units</span>
                                     </div>
                                 )}
                             </div>
