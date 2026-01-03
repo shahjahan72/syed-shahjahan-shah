@@ -37,11 +37,11 @@ const BentoGrid = () => {
                         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
                     <div className="relative z-20 h-full flex flex-col justify-end p-8">
-                        <h3 className="text-3xl font-bold mb-2 translate-y-4 group-hover:translate-y-0 transition-transform">E-Commerce Redesign</h3>
-                        <p className="text-white/70 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all delay-75">A complete overhaul of a fashion retailer's online presence using Next.js and Shopify.</p>
+                        <h3 className="text-3xl font-bold mb-2 translate-y-4 group-hover:translate-y-0 transition-transform">Full Stack Development</h3>
+                        <p className="text-white/70 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all delay-75">Building scalable web applications with modern technologies like React, Node.js, and Next.js.</p>
                     </div>
                     <div className="absolute top-6 right-6 z-20 bg-white/10 p-3 rounded-full backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all hover:bg-white text-black translate-y-2 group-hover:translate-y-0">
-                        <ArrowUpRight className="w-5 h-5 text-white group-hover:text-black" />
+                        <Code className="w-5 h-5 text-white group-hover:text-black" />
                     </div>
                 </Card>
 
@@ -103,13 +103,13 @@ const BentoGrid = () => {
                     <div className="relative z-10 flex items-center justify-between h-full p-2">
                         <div>
                             <div className="flex items-center gap-3 mb-2">
-                                <span className="bg-electric-blue/20 text-electric-blue text-xs font-bold px-2 py-1 rounded">2024</span>
-                                <h3 className="text-2xl font-bold">AI Dashboard</h3>
+                                <span className="bg-electric-blue/20 text-electric-blue text-xs font-bold px-2 py-1 rounded">Latest</span>
+                                <h3 className="text-2xl font-bold">Frontend Architecture</h3>
                             </div>
-                            <p className="text-white/60">Analytics platform with real-time data visualization.</p>
+                            <p className="text-white/60">Crafting robust and interactive user interfaces with clean code structures.</p>
                         </div>
                         <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-colors">
-                            <ArrowUpRight className="w-5 h-5" />
+                            <Code className="w-5 h-5" />
                         </div>
                     </div>
                 </Card>
