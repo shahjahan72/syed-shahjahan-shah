@@ -1,3 +1,5 @@
+import { weddingDesigns } from './weddingDesigns';
+
 export const categories = [
     {
         id: 'outdoor',
@@ -38,23 +40,47 @@ export const categories = [
 ];
 
 // --- DYNAMIC PRICING CONFIGURATION ---
-// Aap yahan se rates aur margins control kar sakte hain. "Base Cost" aapki khareed hai.
 export const pricingConfig = {
     margins: {
-        small: 2.0,   // 100% Profit (Multiplier 2.0)
-        medium: 1.6,  // 60% Profit (Multiplier 1.6)
-        large: 1.4,   // 40% Profit (Multiplier 1.4)
+        small: 2.0,   // 100% Profit 
+        medium: 1.6,  // 60% Profit
+        large: 1.4,   // 40% Profit
         bulk: 0       // Special case for manual quote
     },
     thresholds: {
-        small: 50,    // 0-50 sqft
-        medium: 200,  // 51-200 sqft
-        bulk: 1000    // Above 1000 sqft -> Custom Quote
+        small: 50,
+        medium: 200,
+        bulk: 1000
     },
-    setupFee: 200,    // Fixed charge for orders < 20 sqft
+    setupFee: 200,
     setupFeeThreshold: 20
 };
 
+// --- Helper to Generate Wedding Products from Gallery Data ---
+const generatedWeddingProducts = weddingDesigns.map(design => ({
+    id: design.id,
+    categoryId: 'wedding',
+    title: design.title,
+    description: `Design ID: ${design.id}. Premium wedding invitation card. Customized with your details.`,
+    price: design.price,
+    unit: 'fixed',
+    moq: design.minOrder,
+    printingCharge: 1000, // Fixed charge for all premade cards
+    image: design.image,
+    options: {
+        material: [
+            { name: 'Standard Premium', multiplier: 1.0 },
+            { name: 'Textured Finish', multiplier: 1.2 },
+            { name: 'Velvet/Fancy', multiplier: 1.5 },
+        ],
+        quantity: [
+            { label: `${design.minOrder} Cards`, value: design.minOrder },
+            { label: `${design.minOrder * 2} Cards`, value: design.minOrder * 2 },
+            { label: `${design.minOrder * 5} Cards`, value: design.minOrder * 5 },
+            { label: `${design.minOrder * 10} Cards`, value: design.minOrder * 10 },
+        ]
+    }
+}));
 
 export const products = [
     // --- 1. Outdoor Advertising (SQFT Items) ---
@@ -63,7 +89,7 @@ export const products = [
         categoryId: 'outdoor',
         title: 'Panaflex Printing',
         description: 'Common flexible banners aur hoardings ke liye economical solution.',
-        baseCost: 15, // Aapki cost per sq ft
+        baseCost: 15,
         unit: 'sqft',
         image: 'https://images.unsplash.com/photo-1552554695-1f87b8973b18?q=80&w=1471&auto=format&fit=crop',
         options: {
@@ -79,7 +105,7 @@ export const products = [
         categoryId: 'outdoor',
         title: 'Backlit Board (Light Wala)',
         description: 'Raat ko light se chamakne wale boards. Premium Star Flex.',
-        baseCost: 30, // Aapki cost per sq ft
+        baseCost: 30,
         unit: 'sqft',
         image: 'https://images.unsplash.com/photo-1542204637-e67bc7d41e48?q=80&w=1935&auto=format&fit=crop',
         options: {
@@ -155,17 +181,13 @@ export const products = [
         }
     },
 
-
-    // --- Fixed Price Items (Pricing Strategy: Hardcoded or Bulk Discount Logic can be applied similarly) ---
-    // For fixed items, we use 'price' as the selling price directly for now, 
-    // but we can apply discounts if quantity > X.
-
+    // --- Fixed Price Items ---
     {
         id: 'bottle-labels',
         categoryId: 'packaging',
         title: 'Bottle Labels',
         description: 'Waterproof stickers for Juice, Water, or Oil bottles.',
-        price: 500, // Base selling price for min order
+        price: 500,
         unit: 'fixed',
         image: 'https://images.unsplash.com/photo-1616941842751-cb9e4ae5c325?q=80&w=1470&auto=format&fit=crop',
         options: {
@@ -180,7 +202,6 @@ export const products = [
             ]
         }
     },
-    // ... Keeping other fixed items same for now, but enabling logic in ProductDetail
     {
         id: 'die-cut-stickers',
         categoryId: 'packaging',
@@ -283,7 +304,7 @@ export const products = [
         }
     },
 
-    // --- Wedding Cards ---
+    // --- Wedding Cards (Generated + Custom) ---
     {
         id: 'WC-CUSTOM',
         categoryId: 'wedding',
@@ -292,7 +313,7 @@ export const products = [
         price: 0,
         unit: 'fixed',
         isCustom: true,
-        image: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=1470&auto=format&fit=crop', // Placeholder
+        image: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=1470&auto=format&fit=crop',
         options: {
             material: [
                 { name: 'Custom Request', multiplier: 1.0 },
@@ -302,73 +323,9 @@ export const products = [
             ]
         }
     },
-    {
-        id: 'WC-101',
-        categoryId: 'wedding',
-        title: 'Luxury Box Invitation (WC-101)',
-        description: 'Premium heavy board box with gold foiling and velvet finish.',
-        price: 350, // Per Card
-        unit: 'fixed',
-        moq: 50,
-        printingCharge: 1000,
-        image: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=1470&auto=format&fit=crop',
-        options: {
-            material: [
-                { name: 'Velvet Finish', multiplier: 1.0 },
-                { name: 'Suede Finish', multiplier: 1.2 },
-            ],
-            quantity: [
-                { label: '50 Cards', value: 50 },
-                { label: '100 Cards', value: 100 },
-                { label: '250 Cards', value: 250 },
-                { label: '500 Cards', value: 500 },
-            ]
-        }
-    },
-    {
-        id: 'WC-102',
-        categoryId: 'wedding',
-        title: 'Floral Modern Invite (WC-102)',
-        description: 'Elegant single card with envelope and floral aesthetic.',
-        price: 80, // Per Card
-        unit: 'fixed',
-        moq: 100,
-        printingCharge: 1000,
-        image: 'https://images.unsplash.com/photo-1607190074257-dd4b7af0d0f5?q=80&w=1470&auto=format&fit=crop',
-        options: {
-            material: [
-                { name: '300gsm Art Card', multiplier: 1.0 },
-                { name: 'Textured Paper', multiplier: 1.5 },
-            ],
-            quantity: [
-                { label: '100 Cards', value: 100 },
-                { label: '300 Cards', value: 300 },
-                { label: '500 Cards', value: 500 },
-            ]
-        }
-    },
-    {
-        id: 'WC-103',
-        categoryId: 'wedding',
-        title: 'Traditional Red Card (WC-103)',
-        description: 'Classic economical wedding card with golden motifs.',
-        price: 45, // Per Card
-        unit: 'fixed',
-        moq: 100,
-        printingCharge: 1000,
-        image: 'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=1470&auto=format&fit=crop',
-        options: {
-            material: [
-                { name: 'Standard Card', multiplier: 1.0 },
-                { name: 'Gloss Finish', multiplier: 1.2 },
-            ],
-            quantity: [
-                { label: '100 Cards', value: 100 },
-                { label: '500 Cards', value: 500 },
-                { label: '1000 Cards', value: 1000 },
-            ]
-        }
-    },
+    ...generatedWeddingProducts,
+
+    // --- Gifts & Others ---
     {
         id: 'custom-tshirt',
         categoryId: 'gifts',
