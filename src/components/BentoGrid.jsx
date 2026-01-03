@@ -29,8 +29,10 @@ const BentoGrid = () => {
                 {/* Project 1 - Large */}
                 <Card className="md:col-span-2 md:row-span-2 group relative overflow-hidden !p-0 border-white/5">
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10" />
+                    {/* Placeholder for user to replace file */}
                     <img
-                        src="https://images.unsplash.com/photo-1481487532986-6e42bdec7d6d?q=80&w=2670&auto=format&fit=crop"
+                        src="/assets/portfolio/project1.jpg"
+                        onError={(e) => e.target.src = 'https://images.unsplash.com/photo-1481487532986-6e42bdec7d6d?q=80&w=2670&auto=format&fit=crop'}
                         alt="Project"
                         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
@@ -48,9 +50,15 @@ const BentoGrid = () => {
                     <div className="flex flex-col h-full justify-between">
                         <h3 className="text-xl font-bold text-white/50">Connect</h3>
                         <div className="flex gap-4 items-center mt-4">
-                            <a href="#" className="p-3 bg-white/5 rounded-full hover:bg-white hover:text-black transition-colors"><Github className="w-6 h-6" /></a>
-                            <a href="#" className="p-3 bg-white/5 rounded-full hover:bg-blue-400 hover:text-white transition-colors"><Twitter className="w-6 h-6" /></a>
-                            <a href="#" className="p-3 bg-white/5 rounded-full hover:bg-blue-600 hover:text-white transition-colors"><Linkedin className="w-6 h-6" /></a>
+                            <a href="https://www.instagram.com/printify_studio_pk/" target="_blank" className="p-3 bg-white/5 rounded-full hover:bg-pink-600 hover:text-white transition-colors" title="Instagram">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" x2="17.51" y1="6.5" y2="6.5" /></svg>
+                            </a>
+                            <a href="https://wa.me/923481342505" target="_blank" className="p-3 bg-white/5 rounded-full hover:bg-green-500 hover:text-white transition-colors" title="WhatsApp">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M16.95 7.05a10 10 0 0 0-14.14 0L2 2l5.05.81a10 10 0 0 0 14.14 0z" /></svg>
+                            </a>
+                            <a href="https://www.linkedin.com/in/shahjahan-shah/" target="_blank" className="p-3 bg-white/5 rounded-full hover:bg-blue-600 hover:text-white transition-colors" title="LinkedIn">
+                                <Linkedin className="w-6 h-6" />
+                            </a>
                         </div>
                     </div>
                 </Card>
