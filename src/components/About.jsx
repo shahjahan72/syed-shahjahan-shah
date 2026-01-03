@@ -51,7 +51,7 @@ const About = () => {
                 <div className="aspect-square rounded-full bg-gradient-to-tr from-neon-purple/20 to-electric-blue/20 blur-3xl absolute inset-0 -z-10 animate-pulse" />
                 <div className="glass-card aspect-square rounded-[2rem] overflow-hidden rotate-3 hover:rotate-0 transition-transform duration-500 ease-out border-white/10">
                     <img
-                        src="https://images.unsplash.com/photo-1555099962-4199c345e5dd?q=80&w=2670&auto=format&fit=crop"
+                        src="/assets/profile.jpg"
                         alt="Workspace"
                         className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity hover:scale-105 duration-700"
                     />
