@@ -365,14 +365,14 @@ const ProductDetail = () => {
                                 <div className="grid grid-cols-2 gap-3">
                                     <input
                                         type="text"
-                                        placeholder="Groom Name (Dulha)"
+                                        placeholder="Groom Name (e.g. Zubair)"
                                         value={weddingDetails.groom}
                                         onChange={(e) => setWeddingDetails({ ...weddingDetails, groom: e.target.value })}
                                         className="bg-black border border-white/20 rounded-xl p-3 text-white focus:border-neon-purple outline-none"
                                     />
                                     <input
                                         type="text"
-                                        placeholder="Bride Name (Dulhan)"
+                                        placeholder="Bride Name (e.g. Ayesha)"
                                         value={weddingDetails.bride}
                                         onChange={(e) => setWeddingDetails({ ...weddingDetails, bride: e.target.value })}
                                         className="bg-black border border-white/20 rounded-xl p-3 text-white focus:border-neon-purple outline-none"
@@ -387,7 +387,7 @@ const ProductDetail = () => {
                                     />
                                     <input
                                         type="text"
-                                        placeholder="Venue / City"
+                                        placeholder="Venue (e.g. Marquee Name, Sharea Faisal)"
                                         value={weddingDetails.venue}
                                         onChange={(e) => setWeddingDetails({ ...weddingDetails, venue: e.target.value })}
                                         className="bg-black border border-white/20 rounded-xl p-3 text-white focus:border-neon-purple outline-none"

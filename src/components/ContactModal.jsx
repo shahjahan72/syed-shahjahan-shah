@@ -39,7 +39,7 @@ const ContactModal = ({ isOpen, onClose }) => {
                             <label className="text-xs uppercase tracking-wider font-bold text-white/40 ml-2">Name</label>
                             <input
                                 type="text"
-                                placeholder="John Doe"
+                                placeholder="e.g. Ahmed Raza"
                                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-neon-purple/50 transition-colors text-white placeholder:text-white/20"
                             />
                         </div>
@@ -48,7 +48,7 @@ const ContactModal = ({ isOpen, onClose }) => {
                             <label className="text-xs uppercase tracking-wider font-bold text-white/40 ml-2">Email</label>
                             <input
                                 type="email"
-                                placeholder="john@example.com"
+                                placeholder="e.g. ahmed.raza@example.com"
                                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-neon-purple/50 transition-colors text-white placeholder:text-white/20"
                             />
                         </div>

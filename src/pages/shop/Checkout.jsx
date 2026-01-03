@@ -170,6 +170,7 @@ const Checkout = () => {
                             <label className="block text-sm text-white/60 mb-2">Address</label>
                             <textarea
                                 required
+                                placeholder="e.g. Shop #12, Rex Center, Saddar, Karachi"
                                 value={formData.address}
                                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                                 className="w-full bg-black/40 border border-white/10 rounded-xl p-3 focus:border-electric-blue focus:outline-none h-24 resize-none"
@@ -180,6 +181,7 @@ const Checkout = () => {
                             <input
                                 required
                                 type="text"
+                                placeholder="e.g. Karachi"
                                 value={formData.city}
                                 onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                                 className="w-full bg-black/40 border border-white/10 rounded-xl p-3 focus:border-electric-blue focus:outline-none"

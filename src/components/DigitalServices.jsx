@@ -6,7 +6,7 @@ const services = [
     {
         icon: <Code2 size={32} />,
         title: "Website Development",
-        description: "Custom, high-performance websites built with React, Next.js, and modern tech. From portfolios to e-commerce.",
+        description: "Custom, high-performance websites built with React, Next.js. Example: E-commerce Site for Karachi Boutique.",
         tags: ["React", "Landing Pages", "E-commerce"],
         color: "text-neon-purple",
         bg: "bg-neon-purple/10",
@@ -15,7 +15,7 @@ const services = [
     {
         icon: <Share2 size={32} />,
         title: "Social Media Management",
-        description: "Grow your brand presence on Instagram, Facebook, and LinkedIn with strategic content and engagement.",
+        description: "Grow your brand presence on Instagram/Facebook. Example: Social Media Management for Lahore Cafe.",
         tags: ["Content Strategy", "Ads", "Growth"],
         color: "text-electric-blue",
         bg: "bg-electric-blue/10",
@@ -24,7 +24,7 @@ const services = [
     {
         icon: <PenTool size={32} />,
         title: "Graphic Design",
-        description: "Logo design, branding kits, and social media posts that make your business stand out visually.",
+        description: "Logo design and branding kits. Example: Corporate Identity for Islamabad Agency.",
         tags: ["Branding", "Logos", "UI/UX"],
         color: "text-neon-green",
         bg: "bg-neon-green/10",
