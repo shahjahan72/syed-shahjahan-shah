@@ -44,7 +44,7 @@ export const pricingConfig = {
         small: 2.0,   // 100% Profit 
         medium: 1.6,  // 60% Profit
         large: 1.4,   // 40% Profit
-        bulk: 0       // Special case for manual quote
+        bulk: 1.3     // 30% Profit (Auto Discount)
     },
     thresholds: {
         small: 50,
