@@ -36,6 +36,9 @@ const ProductDetail = () => {
         if (product && product.unit === 'fixed' && product.options.quantity) {
             setQuantityOption(product.options.quantity[0]);
         }
+        if (product && product.moq) {
+            setCustomQty(product.moq);
+        }
     }, [product]);
 
     // DYNAMIC PRICING ENGINE
@@ -87,10 +90,15 @@ const ProductDetail = () => {
                 const printingCharge = product.printingCharge || 0;
                 total = (cardPrice * quantity) + printingCharge;
             }
-            else if (quantityOption) {
+            else if (product.options.quantity && quantityOption) {
                 const baseQty = product.options.quantity[0].value;
                 const ratio = quantityOption.value / baseQty;
                 total = product.price * ratio * material.multiplier;
+            }
+            else {
+                // Fallback for simple fixed items without quantity array or using customQty
+                // Not currently used by existing data but good for safety
+                total = product.price * customQty * material.multiplier;
             }
         }
 
@@ -107,7 +115,7 @@ const ProductDetail = () => {
             ...product,
             productID: product.id,
             selectedMaterial: material,
-            selectedQuantity: product.unit === 'sqft' ? { label: `${customQty} Copies`, value: customQty } : quantityOption,
+            selectedQuantity: product.unit === 'sqft' ? { label: `${customQty} Copies`, value: customQty } : (quantityOption || { label: `${customQty} Units`, value: customQty }),
             dimensions: product.unit === 'sqft' ? dimensions : null,
             totalPrice: price,
             file: file ? file.name : null,
@@ -180,7 +188,7 @@ const ProductDetail = () => {
                         {/* Material Selector */}
                         {!product.isCustom && (
                             <div>
-                                <label className="text-sm text-white/50 uppercase tracking-wider font-bold mb-3 block">1. Select Card Quality</label>
+                                <label className="text-sm text-white/50 uppercase tracking-wider font-bold mb-3 block">1. Select Material/Quality</label>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                     {product.options.material.map((m) => (
                                         <button
@@ -191,6 +199,46 @@ const ProductDetail = () => {
                                             <span className="font-medium">{m.name}</span>
                                         </button>
                                     ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Dimensions for SQFT Items */}
+                        {product.unit === 'sqft' && !product.isCustom && (
+                            <div className="space-y-4">
+                                <label className="text-sm text-white/50 uppercase tracking-wider font-bold block">2. Enter Size (Feet)</label>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="text-xs text-white/40 mb-2 block">Width (ft)</label>
+                                        <div className="flex items-center bg-black border border-white/20 rounded-xl p-3 focus-within:border-neon-purple transition-colors">
+                                            <input
+                                                type="number"
+                                                min="1"
+                                                value={dimensions.width || ''}
+                                                onChange={(e) => setDimensions({ ...dimensions, width: parseFloat(e.target.value) || 0 })}
+                                                className="bg-transparent w-full text-white outline-none font-mono text-lg"
+                                                placeholder="0"
+                                            />
+                                            <Ruler size={16} className="text-white/30" />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="text-xs text-white/40 mb-2 block">Height (ft)</label>
+                                        <div className="flex items-center bg-black border border-white/20 rounded-xl p-3 focus-within:border-neon-purple transition-colors">
+                                            <input
+                                                type="number"
+                                                min="1"
+                                                value={dimensions.height || ''}
+                                                onChange={(e) => setDimensions({ ...dimensions, height: parseFloat(e.target.value) || 0 })}
+                                                className="bg-transparent w-full text-white outline-none font-mono text-lg"
+                                                placeholder="0"
+                                            />
+                                            <Ruler size={16} className="text-white/30" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="text-right text-xs text-white/40 font-mono">
+                                    Total Area: <span className="text-neon-purple">{(dimensions.width * dimensions.height).toFixed(2)} sq.ft</span>
                                 </div>
                             </div>
                         )}
@@ -242,18 +290,35 @@ const ProductDetail = () => {
                         {/* Quantity Selector */}
                         {!product.isCustom && (
                             <div>
-                                <label className="text-sm text-white/50 uppercase tracking-wider font-bold mb-3 block">Quantity (Min {product.moq || 1})</label>
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                                    {product.options.quantity && product.options.quantity.map((q) => (
-                                        <button
-                                            key={q.value}
-                                            onClick={() => setQuantityOption(q)}
-                                            className={`p-4 rounded-xl border text-center transition-all ${quantityOption?.value === q.value ? 'border-neon-purple bg-neon-purple/10 text-white' : 'border-white/10 text-white/50 hover:bg-white/5'}`}
-                                        >
-                                            {q.label}
-                                        </button>
-                                    ))}
-                                </div>
+                                <label className="text-sm text-white/50 uppercase tracking-wider font-bold mb-3 block">
+                                    Quantity {product.moq ? `(Min Order: ${product.moq})` : ''}
+                                </label>
+
+                                {product.options.quantity ? (
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                        {product.options.quantity.map((q) => (
+                                            <button
+                                                key={q.value}
+                                                onClick={() => setQuantityOption(q)}
+                                                className={`p-4 rounded-xl border text-center transition-all ${quantityOption?.value === q.value ? 'border-neon-purple bg-neon-purple/10 text-white' : 'border-white/10 text-white/50 hover:bg-white/5'}`}
+                                            >
+                                                {q.label}
+                                            </button>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    // Manual Quantity (e.g. Copies of a flex)
+                                    <div className="flex items-center bg-black border border-white/20 rounded-xl p-3 w-full md:w-1/3 focus-within:border-neon-purple transition-colors">
+                                        <input
+                                            type="number"
+                                            min={product.moq || 1}
+                                            value={customQty}
+                                            onChange={(e) => setCustomQty(parseInt(e.target.value) || 1)}
+                                            className="bg-transparent w-full text-white outline-none font-mono text-lg text-center"
+                                        />
+                                        <span className="text-white/30 text-sm ml-2">Copies</span>
+                                    </div>
+                                )}
                             </div>
                         )}
 
@@ -310,6 +375,11 @@ const ProductDetail = () => {
                                             {product.categoryId === 'wedding' && (
                                                 <div className="text-xs text-neon-purple mt-1 flex items-center gap-1">
                                                     <Check size={12} /> Includes Rs.{product.printingCharge} Printing Charge
+                                                </div>
+                                            )}
+                                            {isSetupFeeApplied && (
+                                                <div className="text-xs text-yellow-500 mt-1 flex items-center gap-1">
+                                                    <AlertCircle size={12} /> Small Order Setup Fee Applied
                                                 </div>
                                             )}
                                         </div>

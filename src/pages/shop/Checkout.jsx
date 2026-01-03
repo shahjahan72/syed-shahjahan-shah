@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 const Checkout = () => {
     const { cart, cartTotal, clearCart } = useCart();
-    const [formData, setFormData] = useState({ name: '', phone: '', address: '', city: '' });
+    const [formData, setFormData] = useState({ name: '', phone: '', address: '', city: '', transactionId: '' });
     const [isSuccess, setIsSuccess] = useState(false);
 
     const handleSubmit = (e) => {
@@ -28,7 +28,7 @@ const Checkout = () => {
             return details;
         }).join('%0A%0A');
 
-        const message = `*NEW ORDER ALERT* %0A%0A*Customer:* ${formData.name}%0A*Phone:* ${formData.phone}%0A*Address:* ${formData.address}, ${formData.city}%0A%0A*Order Details:*%0A${orderItems}%0A%0A*Total Amount:* Rs. ${cartTotal.toLocaleString()} %0A%0A_Please verify payment screenshot sent separately._`;
+        const message = `*NEW ORDER ALERT* %0A%0A*Customer:* ${formData.name}%0A*Phone:* ${formData.phone}%0A*Address:* ${formData.address}, ${formData.city}%0A%0A*Payment Info:*%0A*Transaction ID:* ${formData.transactionId || 'Not provided'}%0A%0A*Order Details:*%0A${orderItems}%0A%0A*Total Amount:* Rs. ${cartTotal.toLocaleString()} %0A%0A_Please verify payment screenshot sent separately._`;
 
         // Open WhatsApp
         window.open(`https://wa.me/923481342505?text=${message}`, '_blank');
@@ -177,11 +177,26 @@ const Checkout = () => {
                             />
                         </div>
 
-                        <div>
-                            <label className="block text-sm text-white/60 mb-2">Payment Proof (Screenshot)</label>
-                            <div className="relative border border-dashed border-white/20 rounded-xl p-4 text-center hover:border-electric-blue/50 transition-colors cursor-pointer bg-black/20">
-                                <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" accept="image/*" />
-                                <span className="text-sm text-white/50">Upload Receipt / Screenshot</span>
+                        {/* Transaction ID & Screenshot */}
+                        <div className="pt-4 border-t border-white/10 mt-4">
+                            <h4 className="font-bold text-white mb-4">Payment Verification</h4>
+                            <div className="mb-4">
+                                <label className="block text-sm text-white/60 mb-2">Transaction ID (TID / Reference)</label>
+                                <input
+                                    required
+                                    type="text"
+                                    placeholder="e.g. 5236781923"
+                                    value={formData.transactionId}
+                                    onChange={(e) => setFormData({ ...formData, transactionId: e.target.value })}
+                                    className="w-full bg-black/40 border border-white/10 rounded-xl p-3 focus:border-electric-blue focus:outline-none font-mono text-neon-green"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm text-white/60 mb-2">Payment Proof (Screenshot)</label>
+                                <div className="relative border border-dashed border-white/20 rounded-xl p-4 text-center hover:border-electric-blue/50 transition-colors cursor-pointer bg-black/20">
+                                    <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" accept="image/*" />
+                                    <span className="text-sm text-white/50">Upload Receipt / Screenshot</span>
+                                </div>
                             </div>
                         </div>
 
