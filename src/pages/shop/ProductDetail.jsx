@@ -135,9 +135,20 @@ const ProductDetail = () => {
     const handleWhatsAppQuote = () => {
         let message = '';
         if (product.isCustom) {
-            message = `Hi, I have a specific custom design for a Wedding Card (Inspired by Instagram/Video). %0A I have uploaded the reference images on the site. Please provide a quote.`;
+            message = `🔔 *Quote Request: Custom Design* %0A%0A📦 *Type:* ${product.title}%0A📝 *Requirement:* Based on uploaded reference.%0A%0A_I have shared the files on the site / will share here._`;
         } else {
-            message = `Hi, I need a bulk quote for *${product.title} (${product.id})*. %0A dimensions: ${dimensions.width}x${dimensions.height} ft %0A Qty: ${customQty} %0A Approx Area: ${(dimensions.width * dimensions.height * customQty)} sqft.`;
+            const designId = selectedTemplate ? selectedTemplate.id : product.id;
+            let details = `📦 *Product:* ${product.title} (${designId})`;
+
+            if (product.unit === 'sqft') {
+                details += `%0A📏 Size: ${dimensions.width}x${dimensions.height} ft`;
+                details += `%0A🔢 Copies: ${customQty}`;
+                details += `%0A📐 Area: ${(dimensions.width * dimensions.height * customQty)} sqft`;
+            } else {
+                details += `%0A🔢 Quantity: ${quantityOption ? quantityOption.label : customQty}`;
+            }
+
+            message = `🔔 *Quote Request: Bulk / Details* %0A%0A${details}%0A%0A_Please provide the final rate and delivery time._`;
         }
         window.open(`https://wa.me/923481342505?text=${message}`, '_blank');
     };

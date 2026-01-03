@@ -12,23 +12,32 @@ const Checkout = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Prepare WhatsApp Message
+        // 🔔 New Cleaner WhatsApp Template
         const orderItems = cart.map((item, i) => {
-            let details = `*${i + 1}. ${item.title} (${item.productID || 'N/A'})* %0A   Material: ${item.selectedMaterial.name}`;
+            const designId = item.designMetadata ? item.designMetadata.id : item.productID;
 
-            if (item.weddingDetails) {
-                details += `%0A   Event: ${item.weddingDetails.bride} & ${item.weddingDetails.groom}`;
-                if (item.weddingDetails.date) details += ` on ${item.weddingDetails.date}`;
-                if (item.weddingDetails.venue) details += ` at ${item.weddingDetails.venue}`;
-                if (item.weddingDetails.family) details += `%0A   Extra/Family: ${item.weddingDetails.family}`;
+            let details = `📦 *${item.title}*`;
+            details += `%0A   🆔 ID: ${designId}`;
+
+            if (item.unit === 'sqft') {
+                details += `%0A   📏 Size: ${item.dimensions.width}x${item.dimensions.height} ft`;
+                details += `%0A   🔢 Copies: ${item.selectedQuantity.value}`;
+            } else {
+                details += `%0A   🔢 Quantity: ${item.selectedQuantity.label || item.selectedQuantity.value}`;
             }
 
-            details += ` %0A   Qty: ${item.unit === 'sqft' ? item.selectedQuantity.value + ' Copies (' + item.dimensions.width + 'x' + item.dimensions.height + ' ft)' : item.selectedQuantity.label}`;
-            details += ` %0A   Price: Rs. ${item.totalPrice.toLocaleString()}`;
-            return details;
-        }).join('%0A%0A');
+            if (item.weddingDetails) {
+                details += `%0A   📝 *Details:*`;
+                if (item.weddingDetails.groom) details += ` Dulha: ${item.weddingDetails.groom},`;
+                if (item.weddingDetails.bride) details += ` Dulhan: ${item.weddingDetails.bride}`;
+                if (item.weddingDetails.date) details += `%0A   📅 Date: ${item.weddingDetails.date}`;
+            }
 
-        const message = `*NEW ORDER ALERT* %0A%0A*Customer:* ${formData.name}%0A*Phone:* ${formData.phone}%0A*Address:* ${formData.address}, ${formData.city}%0A%0A*Payment Info:*%0A*Transaction ID:* ${formData.transactionId || 'Not provided'}%0A%0A*Order Details:*%0A${orderItems}%0A%0A*Total Amount:* Rs. ${cartTotal.toLocaleString()} %0A%0A_Please verify payment screenshot sent separately._`;
+            details += `%0A   💰 Price: Rs. ${item.totalPrice.toLocaleString()}`;
+            return details;
+        }).join('%0A-----------------------------%0A');
+
+        const message = `🔔 *New Order: Printify Studio PK* %0A%0A👤 *Customer:* ${formData.name}%0A📍 *Address:* ${formData.address}, ${formData.city}%0A📱 *Contact:* ${formData.phone}%0A%0A${orderItems}%0A%0A💰 *Grand Total: Rs. ${cartTotal.toLocaleString()}*%0A%0A💳 *Transaction ID:* ${formData.transactionId || 'Not provided'}%0A%0A_Please confirm this order._`;
 
         // Open WhatsApp
         window.open(`https://wa.me/923481342505?text=${message}`, '_blank');
