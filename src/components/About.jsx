@@ -53,6 +53,8 @@ const About = () => {
                     <img
                         src="/assets/profile.jpg"
                         alt="Workspace"
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity hover:scale-105 duration-700"
                     />
                 </div>

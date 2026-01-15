@@ -17,7 +17,7 @@ const Hero = ({ onHireClick }) => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2, duration: 0.8 }}
-                    className="text-6xl md:text-8xl font-bold mt-4 leading-[0.9] tracking-tighter"
+                    className="text-5xl sm:text-6xl md:text-8xl font-bold mt-4 leading-[0.9] tracking-tighter"
                 >
                     I craft digital <br />
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple to-electric-blue">experiences</span> that <br />

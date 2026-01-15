@@ -63,13 +63,13 @@ export const products = [
         categoryId: 'outdoor',
         title: 'Panaflex Printing',
         description: 'Common flexible banners aur hoardings ke liye economical solution.',
-        baseCost: 15,
+        baseCost: 27,
         unit: 'sqft',
-        image: 'https://images.unsplash.com/photo-1552554695-1f87b8973b18?q=80&w=1471&auto=format&fit=crop',
+        image: '/assets/products/01_penaflex_banner.jpg',
         options: {
             material: [
-                { name: 'China Flex (Standard)', multiplier: 1.0 },
-                { name: 'Star Flex (Heavy)', multiplier: 1.3 },
+                { name: 'China Flex (Normal)', multiplier: 1.0 },
+                { name: 'UV / Star UV Print', multiplier: 1.37 }, // Approx 37/27
             ],
             sizeType: 'custom'
         }
@@ -79,13 +79,13 @@ export const products = [
         categoryId: 'outdoor',
         title: 'Backlit Board (Light Wala)',
         description: 'Raat ko light se chamakne wale boards. Premium Star Flex.',
-        baseCost: 30, // Aapki cost per sq ft
+        baseCost: 160, // Skin Change base
         unit: 'sqft',
-        image: 'https://images.unsplash.com/photo-1542204637-e67bc7d41e48?q=80&w=1935&auto=format&fit=crop',
+        image: '/assets/products/02_backlit_board.jpg',
         options: {
             material: [
-                { name: 'Star Flex (Premium)', multiplier: 1.0 },
-                { name: 'UV Ultra (Long Life)', multiplier: 1.5 },
+                { name: 'Skin Change (Flex Only)', multiplier: 1.0 },
+                { name: 'New Board (Complete Box)', multiplier: 4.375 }, // 700/160
             ],
             sizeType: 'custom'
         }
@@ -97,7 +97,7 @@ export const products = [
         description: 'Aam dukanon ke boards jo bahar se light hotay hain.',
         baseCost: 25,
         unit: 'sqft',
-        image: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=1470&auto=format&fit=crop',
+        image: '/assets/products/03_frontlit_board.jpg',
         options: {
             material: [
                 { name: 'Standard Frontlit', multiplier: 1.0 },
@@ -111,13 +111,15 @@ export const products = [
         categoryId: 'outdoor',
         title: 'Vinyl Printing',
         description: 'Windows, sheet metal ya boards par chipkane wali sheet.',
-        baseCost: 40,
+        baseCost: 80,
         unit: 'sqft',
-        image: 'https://images.unsplash.com/photo-1525909002-1b05e0c869d8?q=80&w=1470&auto=format&fit=crop',
+        image: '/assets/products/04_vinyl_print.jpg',
         options: {
             material: [
-                { name: 'Matte Vinyl', multiplier: 1.0 },
-                { name: 'Gloss Vinyl', multiplier: 1.0 },
+                { name: 'Gloss Vinyl (No Lamination)', multiplier: 1.0 },
+                { name: 'Gloss Vinyl + Lamination', multiplier: 1.5 }, // 120/80
+                { name: 'Matte Vinyl (No Lamination)', multiplier: 1.0 },
+                { name: 'Matte Vinyl + Lamination', multiplier: 1.5 },
             ],
             sizeType: 'custom'
         }
@@ -127,13 +129,13 @@ export const products = [
         categoryId: 'outdoor',
         title: 'One Way Vision',
         description: 'Sheeshay ke liye sticker - bahar se graphics, andar se clear view.',
-        baseCost: 55,
+        baseCost: 80,
         unit: 'sqft',
-        image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1470&auto=format&fit=crop',
+        image: '/assets/products/05_oneway_vision.jpg',
         options: {
             material: [
-                { name: 'Standard Perforated', multiplier: 1.0 },
-                { name: 'Premium High-Vis', multiplier: 1.2 },
+                { name: 'Standard (No Lamination)', multiplier: 1.0 },
+                { name: 'With Lamination', multiplier: 1.5 },
             ],
             sizeType: 'custom'
         }
@@ -143,13 +145,12 @@ export const products = [
         categoryId: 'indoor',
         title: 'Wall Wraps / Wallpapers',
         description: 'Complete wall branding for offices and homes.',
-        baseCost: 60,
+        baseCost: 57, // 37 print + 20 labor
         unit: 'sqft',
-        image: 'https://images.unsplash.com/photo-1507149833265-60c372daea22?q=80&w=1476&auto=format&fit=crop',
+        image: '/assets/products/06_custom_wallpaper.jpg',
         options: {
             material: [
-                { name: 'Matte Vinyl', multiplier: 1.0 },
-                { name: 'Textured Wallpaper', multiplier: 1.4 },
+                { name: 'UV Flex Texture (Smell-free)', multiplier: 1.0 },
             ],
             sizeType: 'custom'
         }
@@ -162,13 +163,14 @@ export const products = [
         categoryId: 'packaging',
         title: 'Bottle Labels',
         description: 'Waterproof stickers for Juice, Water, or Oil bottles.',
-        price: 500, // Base selling price for min order
+        price: 499, // Base selling price for min order
         unit: 'fixed',
-        image: 'https://images.unsplash.com/photo-1616941842751-cb9e4ae5c325?q=80&w=1470&auto=format&fit=crop',
+        image: '/assets/products/11_bottle_labels.jpg',
         options: {
             material: [
-                { name: 'Waterproof Vinyl', multiplier: 1.0 },
-                { name: 'Transparent Clear', multiplier: 1.2 },
+                { name: 'Paper Sticker + Lamination', multiplier: 1.0 },
+                { name: 'Vinyl Waterproof', multiplier: 1.5 },
+                { name: 'Die-Cut Vinyl', multiplier: 1.8 },
             ],
             quantity: [
                 { label: '100 Labels', value: 100 },
@@ -182,9 +184,9 @@ export const products = [
         categoryId: 'packaging',
         title: 'Die-Cut Stickers',
         description: 'Kisi bhi custom shape mein cut hone wale brand stickers.',
-        price: 800,
+        price: 799,
         unit: 'fixed',
-        image: 'https://images.unsplash.com/photo-1628135899222-3a56e9c2049f?q=80&w=1470&auto=format&fit=crop',
+        image: '/assets/products/12_diecut_stickers.jpg',
         options: {
             material: [
                 { name: 'Glossy Vinyl', multiplier: 1.0 },
@@ -204,7 +206,7 @@ export const products = [
         description: 'Brand logo ke sath paper ya cloth bags.',
         price: 2500,
         unit: 'fixed',
-        image: 'https://images.unsplash.com/photo-1597484661643-2f5fef640dd1?q=80&w=1470&auto=format&fit=crop',
+        image: '/assets/products/13_shopping_bags.jpg',
         options: {
             material: [
                 { name: 'Kraft Paper', multiplier: 1.0 },
@@ -223,19 +225,38 @@ export const products = [
         categoryId: 'stationery',
         title: 'Visiting Cards',
         description: 'Standard, Matte, ya UV spot finish mein cards.',
-        price: 1500,
+        price: 2000,
         unit: 'fixed',
-        image: 'https://images.unsplash.com/photo-1592318464654-e9a038597033?q=80&w=1470&auto=format&fit=crop',
+        image: '/assets/products/14_visiting_cards.jpg',
         options: {
             material: [
-                { name: 'Standard Gloss', multiplier: 1.0 },
-                { name: 'Matte Lamination', multiplier: 1.1 },
-                { name: 'Velvet Soft Touch', multiplier: 1.3 },
+                { name: 'Matte/Gloss Single Side', multiplier: 1.0 },
+                { name: 'Matte/Gloss Double Side', multiplier: 1.75 }, // 3499 / 1999
+                { name: 'Embossed / Spot UV (Double)', multiplier: 2.5 }, // 4999 / 1999
             ],
             quantity: [
+                { label: '1000 Cards', value: 1000 },
+                { label: '2000 Cards', value: 2000 },
+                { label: '5000 Cards', value: 5000 },
+            ]
+        }
+    },
+    {
+        id: 'pvc-cards',
+        categoryId: 'stationery',
+        title: 'Premium PVC Cards',
+        description: 'Atm card jesa sakht plastic card. Long life & waterproof.',
+        price: 2499, // 50rs * 50 cards min -> 2500 -> 2499
+        unit: 'fixed',
+        image: '/assets/products/14_visiting_cards.jpg',
+        options: {
+            material: [
+                { name: 'PVC Plastic Card', multiplier: 1.0 },
+            ],
+            quantity: [
+                { label: '50 Cards', value: 50 },
                 { label: '100 Cards', value: 100 },
                 { label: '500 Cards', value: 500 },
-                { label: '1000 Cards', value: 1000 },
             ]
         }
     },
@@ -246,7 +267,7 @@ export const products = [
         description: 'Marketing ke liye A4/A5 flyers. Z-fold or Tri-fold.',
         price: 2000,
         unit: 'fixed',
-        image: 'https://images.unsplash.com/photo-1586075935967-8bad02fb781b?q=80&w=2670&auto=format&fit=crop',
+        image: '/assets/products/15_brochure_flyer.jpg',
         options: {
             material: [
                 { name: '130gsm Paper', multiplier: 1.0 },
@@ -266,7 +287,7 @@ export const products = [
         description: 'Carbon copy invoice books apke logo ke sath.',
         price: 450,
         unit: 'fixed',
-        image: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1470&auto=format&fit=crop',
+        image: '/assets/products/16_bill_receipt_book.jpg',
         options: {
             material: [
                 { name: 'Standard NCR', multiplier: 1.0 },
@@ -306,9 +327,9 @@ export const products = [
         categoryId: 'gifts',
         title: 'T-Shirt Printing',
         description: 'Heat press ya screen printing. Company logo ya custom art.',
-        price: 850,
+        price: 849,
         unit: 'fixed',
-        image: 'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=1469&auto=format&fit=crop',
+        image: '/assets/products/08_tshirt_printing.jpg',
         options: {
             material: [
                 { name: 'Cotton Round Neck', multiplier: 1.0 },
@@ -328,7 +349,7 @@ export const products = [
         description: 'Personalized ceramic mugs.',
         price: 450,
         unit: 'fixed',
-        image: 'https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?q=80&w=1470&auto=format&fit=crop',
+        image: '/assets/products/07_mug_printing.jpg',
         options: {
             material: [
                 { name: 'Standard White', multiplier: 1.0 },
@@ -348,7 +369,7 @@ export const products = [
         description: 'Company branding promotional items.',
         price: 2500,
         unit: 'fixed',
-        image: 'https://images.unsplash.com/photo-1589330694186-e91b31273934?q=80&w=1470&auto=format&fit=crop',
+        image: '/assets/products/09_corporate_gifts.jpg',
         options: {
             material: [
                 { name: 'Plastic Pen + Keychain', multiplier: 1.0 },
@@ -365,13 +386,13 @@ export const products = [
         categoryId: 'indoor',
         title: 'Roll-up Standee',
         description: 'Portable advertising stand banners (2x5 ft standard).',
-        price: 1800,
+        price: 1499,
         unit: 'fixed',
-        image: 'https://images.unsplash.com/photo-1531973576160-7125cdcd63e7?q=80&w=2574&auto=format&fit=crop',
+        image: '/assets/products/10_rollup_standee.jpg',
         options: {
             material: [
-                { name: 'Standard Star Flex', multiplier: 1.0 },
-                { name: 'Textured Media', multiplier: 1.3 },
+                { name: 'X-Standee (Economy)', multiplier: 1.0 },     // 1500
+                { name: 'Roll-up Standee (Aluminum)', multiplier: 2.66 }, // 4000
             ],
             quantity: [
                 { label: '1 Standee', value: 1 },

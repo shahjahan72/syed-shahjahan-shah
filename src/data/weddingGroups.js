@@ -8,7 +8,12 @@ export const weddingGroups = [
         unit: 'fixed',
         moq: 100,
         printingCharge: 1000,
-        image: 'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=1470&auto=format&fit=crop',
+        image: '/assets/products/wedding_economy_main.jpg',
+        galleryImages: [
+            '/assets/wedding-gallery/eco_01.jpg',
+            '/assets/wedding-gallery/eco_02.jpg',
+            '/assets/wedding-gallery/eco_03.jpg'
+        ],
         isTemplateGroup: true,
         templatePrefix: 'ECO',
         totalDesigns: 20, // We will simulate 20 designs
@@ -35,7 +40,12 @@ export const weddingGroups = [
         unit: 'fixed',
         moq: 100,
         printingCharge: 1500,
-        image: 'https://images.unsplash.com/photo-1607190074257-dd4b7af0d0f5?q=80&w=1470&auto=format&fit=crop',
+        image: '/assets/products/wedding_premium_main.jpg',
+        galleryImages: [
+            '/assets/wedding-gallery/pre_01.jpg',
+            '/assets/wedding-gallery/pre_02.jpg',
+            '/assets/wedding-gallery/pre_03.jpg'
+        ],
         isTemplateGroup: true,
         templatePrefix: 'PRM',
         totalDesigns: 15,
@@ -61,7 +71,12 @@ export const weddingGroups = [
         unit: 'fixed',
         moq: 50,
         printingCharge: 2000,
-        image: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=1470&auto=format&fit=crop',
+        image: '/assets/products/wedding_luxury_main.jpg',
+        galleryImages: [
+            '/assets/wedding-gallery/lux_01.jpg',
+            '/assets/wedding-gallery/lux_02.jpg',
+            '/assets/wedding-gallery/lux_03.jpg'
+        ],
         isTemplateGroup: true,
         templatePrefix: 'LUX',
         totalDesigns: 10,

@@ -1,9 +1,0 @@
-[build]
-  publish = "index.html"
-  command = "npm run build"
-
-[context.production.environment]
-  NODE_ENV = "production"
-
-[redirects]
-# Add any redirects below if needed in future

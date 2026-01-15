@@ -45,19 +45,20 @@ const ProductDetail = () => {
         }
     }, [product]);
 
-    // DYNAMIC PRICING ENGINE
+    // DYNAMIC PRICING ENGINE - "99 Strategy"
     useEffect(() => {
         if (!product || !material) return;
 
         let total = 0;
         let setupFee = 0;
-        let isQuote = false;
 
         // Custom flow (Quote based)
         if (product.isCustom) {
             setPrice(0);
             return;
         }
+
+        // --- CALCULATION LOGIC ---
 
         // SQFT ITEMS
         if (product.unit === 'sqft') {
@@ -72,7 +73,7 @@ const ProductDetail = () => {
                 let margin = pricingConfig.margins.small;
 
                 if (totalArea > pricingConfig.thresholds.bulk) {
-                    margin = pricingConfig.margins.bulk; // Auto 30% margin
+                    margin = pricingConfig.margins.bulk;
                 } else if (totalArea > pricingConfig.thresholds.medium) {
                     margin = pricingConfig.margins.large;
                 } else if (totalArea > pricingConfig.thresholds.small) {
@@ -82,9 +83,8 @@ const ProductDetail = () => {
                 const baseTotal = product.baseCost * totalArea;
                 total = baseTotal * margin * material.multiplier;
 
-                // Mark if bulk pricing used for UI badge
                 if (totalArea > pricingConfig.thresholds.bulk) {
-                    setShowBulkQuote(true); // Using this as 'isBulk' state now
+                    setShowBulkQuote(true);
                 } else {
                     setShowBulkQuote(false);
                 }
@@ -95,16 +95,12 @@ const ProductDetail = () => {
                 }
             }
         }
-        // FIXED ITEMS (Wedding, Cards, etc.)
+        // FIXED ITEMS
         else {
             if (product.categoryId === 'wedding') {
-                // Wedding Logic
-                // Ensure quantity comes from quantityOption OR customQty depending on UI availability
                 const qty = quantityOption ? quantityOption.value : customQty;
                 const cardPrice = product.price * material.multiplier;
                 const printingCharge = product.printingCharge || 0;
-
-                // If sub-template selected, price logic is same: Group Base Price * Qty + Printing
                 total = (cardPrice * qty) + printingCharge;
             }
             else if (product.options.quantity && quantityOption) {
@@ -118,7 +114,27 @@ const ProductDetail = () => {
             setShowBulkQuote(false);
         }
 
-        setPrice(Math.round(total));
+        // --- 99 STRATEGY APPLICATION ---
+        // Strategy: Round UP to nearest 50, then minus 1.
+        // Example: 1540 -> 1550 -> 1549.
+        // Example: 1510 -> 1550 -> 1549.
+        // Example: 1560 -> 1600 -> 1599.
+        // This ensures profit safety while giving the '99' feel.
+        // Only apply if total > 100 to avoid weird small numbers.
+
+        let finalPrice = Math.round(total);
+
+        // If product already has fixed price ending in 99 (from our manual update), 
+        // and logic just multiplied by 1 (no ratio change), it might already be 99.
+        // But for calculated stuff (sqft), we need to force it.
+
+        if (finalPrice > 100) {
+            // Round to nearest 50
+            const rounded = Math.ceil(finalPrice / 50) * 50;
+            finalPrice = rounded - 1;
+        }
+
+        setPrice(finalPrice);
         setIsSetupFeeApplied(setupFee > 0);
 
     }, [product, material, dimensions, customQty, quantityOption, weddingDetails]);
@@ -181,10 +197,15 @@ const ProductDetail = () => {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    {/* Simulated Template Generation */}
-                    {Array.from({ length: product.totalDesigns || 12 }).map((_, i) => {
-                        const designId = `${product.templatePrefix}-${String(i + 1).padStart(3, '0')}`;
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                    {/* Template Gallery - Uses galleryImages if present, else simulates */}
+                    {(product.galleryImages || Array.from({ length: product.totalDesigns || 12 })).map((item, i) => {
+                        // If galleryImages exists, item is the path. If not, item is undefined (from Array.from)
+                        const imgSrc = product.galleryImages ? item : `${product.baseImageInfo}&sig=${i}`;
+                        const designId = product.galleryImages
+                            ? `${product.templatePrefix}-00${i + 1}`
+                            : `${product.templatePrefix}-${String(i + 1).padStart(3, '0')}`;
+
                         return (
                             <motion.div
                                 key={i}
@@ -192,12 +213,13 @@ const ProductDetail = () => {
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{ delay: i * 0.05 }}
                                 className="group relative bg-[#111] border border-white/10 rounded-xl overflow-hidden cursor-pointer hover:border-neon-purple/50 transition-all"
-                                onClick={() => setSelectedTemplate({ id: designId, index: i })}
+                                onClick={() => setSelectedTemplate({ id: designId, index: i, image: imgSrc })}
                             >
                                 <div className="aspect-[3/4] overflow-hidden relative">
                                     <img
-                                        src={`${product.baseImageInfo}&sig=${i}`} // Randomized sig for variety
+                                        src={imgSrc}
                                         alt={designId}
+                                        loading="lazy"
                                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                     />
                                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors" />
@@ -209,7 +231,7 @@ const ProductDetail = () => {
                                             className="p-2 bg-white/10 hover:bg-white/30 rounded-full backdrop-blur-md transition-colors"
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                setLightboxImage(`${product.baseImageInfo}&sig=${i}`);
+                                                setLightboxImage(imgSrc);
                                             }}
                                         >
                                             <Maximize2 size={14} />
@@ -268,7 +290,7 @@ const ProductDetail = () => {
                             </div>
                         ) : (
                             <img
-                                src={selectedTemplate ? `${product.baseImageInfo}&sig=${selectedTemplate.index}` : product.image}
+                                src={selectedTemplate ? (selectedTemplate.image || `${product.baseImageInfo}&sig=${selectedTemplate.index}`) : product.image}
                                 alt={product.title}
                                 className="w-full h-full object-cover"
                             />
@@ -278,9 +300,9 @@ const ProductDetail = () => {
                                 <Hash size={12} /> {selectedTemplate ? selectedTemplate.id : product.id}
                             </div>
                         )}
-                        <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/90 to-transparent">
-                            <h1 className="text-4xl font-bold">{product.title}</h1>
-                            <p className="text-white/70 mt-2">{product.description}</p>
+                        <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 bg-gradient-to-t from-black/90 to-transparent">
+                            <h1 className="text-3xl md:text-4xl font-bold leading-tight">{product.title}</h1>
+                            <p className="text-white/70 mt-2 text-sm md:text-base">{product.description}</p>
                         </div>
                     </motion.div>
                 </div>

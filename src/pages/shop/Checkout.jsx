@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { CheckCircle, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+import { siteConfig } from '../../config/siteConfig';
+
 const Checkout = () => {
     const { cart, cartTotal, clearCart } = useCart();
     const [formData, setFormData] = useState({ name: '', phone: '', address: '', city: '', transactionId: '' });
@@ -37,10 +39,10 @@ const Checkout = () => {
             return details;
         }).join('%0A-----------------------------%0A');
 
-        const message = `🔔 *New Order: Printify Studio PK* %0A%0A👤 *Customer:* ${formData.name}%0A📍 *Address:* ${formData.address}, ${formData.city}%0A📱 *Contact:* ${formData.phone}%0A%0A${orderItems}%0A%0A💰 *Grand Total: Rs. ${cartTotal.toLocaleString()}*%0A%0A💳 *Transaction ID:* ${formData.transactionId || 'Not provided'}%0A%0A_Please confirm this order._`;
+        const message = `🔔 *New Order: ${siteConfig.name}* %0A%0A👤 *Customer:* ${formData.name}%0A📍 *Address:* ${formData.address}, ${formData.city}%0A📱 *Contact:* ${formData.phone}%0A%0A${orderItems}%0A%0A🚚 *Delivery Fee:* Rs. ${siteConfig.fees.delivery}%0A💰 *Grand Total: Rs. ${(cartTotal + siteConfig.fees.delivery).toLocaleString()}*%0A%0A💳 *Transaction ID:* ${formData.transactionId || 'Not provided'}%0A%0A_Please confirm this order._`;
 
         // Open WhatsApp
-        window.open(`https://wa.me/923481342505?text=${message}`, '_blank');
+        window.open(`https://wa.me/${siteConfig.whatsapp.number}?text=${message}`, '_blank');
 
         setTimeout(() => {
             setIsSuccess(true);
@@ -109,10 +111,18 @@ const Checkout = () => {
                                     <div className="font-mono">Rs. {item.totalPrice.toLocaleString()}</div>
                                 </div>
                             ))}
+                            <div className="flex justify-between items-center pt-4 border-t border-white/10 text-white/70">
+                                <span>Subtotal</span>
+                                <span>Rs. {cartTotal.toLocaleString()}</span>
+                            </div>
+                            <div className="flex justify-between items-center text-neon-green">
+                                <span>Online Delivery Fee</span>
+                                <span>Rs. {siteConfig.fees.delivery}</span>
+                            </div>
                         </div>
                         <div className="mt-6 pt-4 border-t border-white/20 flex justify-between text-xl font-bold">
                             <span>Total</span>
-                            <span>Rs. {cartTotal.toLocaleString()}</span>
+                            <span>Rs. {(cartTotal + siteConfig.fees.delivery).toLocaleString()}</span>
                         </div>
                     </div>
 
@@ -126,15 +136,15 @@ const Checkout = () => {
                             <p>Please transfer the total amount to one of the following accounts:</p>
                             <div className="bg-black/20 p-4 rounded-xl font-mono text-xs md:text-sm">
                                 <div className="mb-4">
-                                    <span className="text-electric-blue font-bold block mb-1">Meezan Bank</span>
-                                    <div className="text-white/80">Title: <span className="text-white select-all font-bold">SHAHJAHAN SHAH</span></div>
-                                    <div className="text-white/80">Account: <span className="text-white select-all">10320113121281</span></div>
-                                    <div className="text-white/80">IBAN: <span className="text-white select-all">PK98MEZN0010320113121281</span></div>
-                                    <div className="text-white/50 text-[10px] mt-1">KHY E TANZEEM BRANCH</div>
+                                    <span className="text-electric-blue font-bold block mb-1">{siteConfig.banking.meezan.bankName}</span>
+                                    <div className="text-white/80">Title: <span className="text-white select-all font-bold">{siteConfig.banking.meezan.title}</span></div>
+                                    <div className="text-white/80">Account: <span className="text-white select-all">{siteConfig.banking.meezan.account}</span></div>
+                                    <div className="text-white/80">IBAN: <span className="text-white select-all">{siteConfig.banking.meezan.iban}</span></div>
+                                    <div className="text-white/50 text-[10px] mt-1">{siteConfig.banking.meezan.branch}</div>
                                 </div>
                                 <div>
-                                    <span className="text-electric-blue font-bold block mb-1">JazzCash</span>
-                                    <div className="text-white/80">Number: <span className="text-white select-all font-bold">03253368345</span></div>
+                                    <span className="text-electric-blue font-bold block mb-1">{siteConfig.banking.jazzcash.name}</span>
+                                    <div className="text-white/80">Number: <span className="text-white select-all font-bold">{siteConfig.banking.jazzcash.number}</span></div>
                                 </div>
                             </div>
                             <p>After transfer, take a screenshot and keep it ready for verification.</p>
