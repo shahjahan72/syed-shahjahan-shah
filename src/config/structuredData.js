@@ -2,12 +2,12 @@ export const structuredData = {
   organization: {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "Printify Studio PK",
+    "name": "PRNT",
     "url": "https://printifystudio.pk/",
-    "logo": "https://printifystudio.pk/assets/profile.jpg",
+    "logo": "https://printifystudio.pk/assets/brand-logo.jpg",
     "sameAs": [
-      "https://instagram.com/syedshahjahan",
-      "https://linkedin.com/in/syedshahjahan"
+      "https://instagram.com/prnt.pk",
+      "https://linkedin.com/company/prnt-pk"
     ],
     "contactPoint": {
       "@type": "ContactPoint",
@@ -17,12 +17,12 @@ export const structuredData = {
       "availableLanguage": "en"
     }
   },
-  
+
   localBusiness: {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "name": "Printify Studio PK",
-    "image": "https://printifystudio.pk/assets/profile.jpg",
+    "name": "PRNT Studio",
+    "image": "https://printifystudio.pk/assets/brand-logo.jpg",
     "address": {
       "@type": "PostalAddress",
       "addressLocality": "Karachi",
@@ -36,7 +36,7 @@ export const structuredData = {
   webSite: {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "Syed Shahjahan Shah | Creative Developer & Printing Services",
+    "name": "PRNT | Premium Printing & Bespoke Design Services",
     "url": "https://printifystudio.pk/",
     "potentialAction": {
       "@type": "SearchAction",

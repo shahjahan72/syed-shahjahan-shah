@@ -1,47 +1,48 @@
 import React, { useState } from 'react';
 import { useCart } from '../../context/CartContext';
-import { motion } from 'framer-motion';
-import { CheckCircle, AlertCircle } from 'lucide-react';
-import { Link } from 'react-router-dom';
-
+import { motion, AnimatePresence } from 'framer-motion';
+import { CheckCircle, AlertCircle, ArrowLeft, ShoppingBag, CreditCard, Truck, ShieldCheck } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import { siteConfig } from '../../config/siteConfig';
 
 const Checkout = () => {
     const { cart, cartTotal, clearCart } = useCart();
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({ name: '', phone: '', address: '', city: '', transactionId: '' });
     const [isSuccess, setIsSuccess] = useState(false);
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // 🔔 New Cleaner WhatsApp Template
         const orderItems = cart.map((item, i) => {
             const designId = item.designMetadata ? item.designMetadata.id : item.productID;
-
             let details = `📦 *${item.title}*`;
             details += `%0A   🆔 ID: ${designId}`;
-
-            if (item.unit === 'sqft') {
-                details += `%0A   📏 Size: ${item.dimensions.width}x${item.dimensions.height} ft`;
-                details += `%0A   🔢 Copies: ${item.selectedQuantity.value}`;
+            if (item.unit === 'sqft' && item.dimensions) {
+                details += `%0A   📏 Size: ${item.dimensions.width || 0}x${item.dimensions.height || 0} ft%0A   🔢 Copies: ${item.selectedQuantity?.value || item.quantity || 1}`;
             } else {
-                details += `%0A   🔢 Quantity: ${item.selectedQuantity.label || item.selectedQuantity.value}`;
+                details += `%0A   🔢 Quantity: ${item.selectedQuantity?.label || item.selectedQuantity?.value || item.quantity || 1}`;
             }
-
             if (item.weddingDetails) {
-                details += `%0A   📝 *Details:*`;
+                details += `%0A   📝 *Wedding:*`;
                 if (item.weddingDetails.groom) details += ` Dulha: ${item.weddingDetails.groom},`;
                 if (item.weddingDetails.bride) details += ` Dulhan: ${item.weddingDetails.bride}`;
-                if (item.weddingDetails.date) details += `%0A   📅 Date: ${item.weddingDetails.date}`;
             }
-
+            if (item.selectedPackage) {
+                details += `%0A   📦 *Package:* ${item.selectedPackage.name}`;
+            }
+            if (item.designMode === 'personalize' && item.personalization) {
+                details += `%0A   ✏️ *Personalize:* "${item.personalization.text}" (${item.personalization.logoPosition})`;
+            }
+            if (item.designMode === 'upload' && item.file) {
+                details += `%0A   📎 *File:* Attached (${item.file})`;
+            }
             details += `%0A   💰 Price: Rs. ${item.totalPrice.toLocaleString()}`;
             return details;
         }).join('%0A-----------------------------%0A');
 
         const message = `🔔 *New Order: ${siteConfig.name}* %0A%0A👤 *Customer:* ${formData.name}%0A📍 *Address:* ${formData.address}, ${formData.city}%0A📱 *Contact:* ${formData.phone}%0A%0A${orderItems}%0A%0A🚚 *Delivery Fee:* Rs. ${siteConfig.fees.delivery}%0A💰 *Grand Total: Rs. ${(cartTotal + siteConfig.fees.delivery).toLocaleString()}*%0A%0A💳 *Transaction ID:* ${formData.transactionId || 'Not provided'}%0A%0A_Please confirm this order._`;
 
-        // Open WhatsApp
         window.open(`https://wa.me/${siteConfig.whatsapp.number}?text=${message}`, '_blank');
 
         setTimeout(() => {
@@ -52,23 +53,24 @@ const Checkout = () => {
 
     if (isSuccess) {
         return (
-            <div className="min-h-screen flex items-center justify-center p-6 text-center">
-                <motion.div
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    className="bg-white/5 border border-white/10 p-10 rounded-3xl max-w-md w-full"
-                >
-                    <div className="flex justify-center mb-6">
-                        <CheckCircle size={64} className="text-neon-green" color="#00ff9d" />
+            <div className="min-h-screen bg-brand-white flex items-center justify-center p-6 text-center">
+                <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-white p-16 soft-shadow max-w-lg w-full">
+                    <div className="flex justify-center mb-10">
+                        <div className="w-20 h-20 bg-brand-black text-white rounded-full flex items-center justify-center">
+                            <CheckCircle size={40} strokeWidth={1} />
+                        </div>
                     </div>
-                    <h2 className="text-3xl font-bold mb-4">Order Placed!</h2>
-                    <p className="text-white/60 mb-8">
+                    <h2 className="text-4xl font-serif mb-6 text-brand-black">Order Placed</h2>
+                    <p className="text-brand-black/40 text-sm leading-relaxed mb-12">
                         Thank you for your order, {formData.name}. <br />
-                        We have opened WhatsApp for you to send the details and payment proof.
+                        We have initiated the confirmation on WhatsApp. Our team will reach out shortly to finalize the design assets.
                     </p>
-                    <Link to="/shop">
-                        <button className="px-8 py-3 bg-white text-black rounded-full font-bold">Continue Shopping</button>
-                    </Link>
+                    <button
+                        onClick={() => navigate('/')}
+                        className="w-full bg-brand-black text-white py-5 text-[10px] font-bold tracking-[0.3em] uppercase hover:bg-brand-accent transition-colors"
+                    >
+                        Return to Collection
+                    </button>
                 </motion.div>
             </div>
         );
@@ -76,158 +78,149 @@ const Checkout = () => {
 
     if (cart.length === 0) {
         return (
-            <div className="min-h-screen pt-40 px-6 text-center">
-                <h2 className="text-3xl font-bold mb-4">Your Cart is Empty</h2>
-                <Link to="/shop">
-                    <button className="px-8 py-3 bg-white text-black rounded-full font-bold">Go to Shop</button>
+            <div className="min-h-screen bg-brand-white pt-48 px-6 text-center">
+                <ShoppingBag size={48} strokeWidth={1} className="mx-auto mb-8 opacity-20" />
+                <h2 className="text-3xl font-serif mb-10">Your bag is empty</h2>
+                <Link to="/">
+                    <button className="bg-brand-black text-white px-12 py-5 text-[10px] font-bold tracking-[0.3em] uppercase hover:bg-brand-accent transition-colors">Start Shopping</button>
                 </Link>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen pt-32 pb-20 px-6 max-w-6xl mx-auto">
-            <h1 className="text-4xl font-bold mb-8">Checkout</h1>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                {/* Order Summary */}
+        <div className="min-h-screen bg-brand-white pt-32 pb-40 px-6 max-w-[1400px] mx-auto">
+            <div className="flex items-center justify-between mb-20 border-b border-brand-black/5 pb-10">
                 <div>
-                    <div className="bg-white/5 border border-white/10 p-6 rounded-2xl mb-6">
-                        <h3 className="text-xl font-bold mb-4">Order Summary</h3>
-                        <div className="space-y-4">
+                    <span className="text-[10px] tracking-[0.4em] uppercase text-brand-black/30 font-bold mb-4 block">Secure Checkout</span>
+                    <h1 className="text-5xl font-serif tracking-tight">Order Details</h1>
+                </div>
+                <Link to="/" className="text-[10px] font-bold tracking-[0.2em] uppercase text-brand-black/30 hover:text-brand-black transition-colors flex items-center gap-2">
+                    <ArrowLeft size={16} /> Continue Selection
+                </Link>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-24">
+                {/* Summary & Payment */}
+                <div className="lg:col-span-5 space-y-16">
+                    <section>
+                        <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-brand-black/40 mb-10 border-b border-brand-black/5 pb-4">01. Bag Summary</h3>
+                        <div className="space-y-10">
                             {cart.map((item, idx) => (
-                                <div key={idx} className="flex justify-between items-start border-b border-white/10 pb-4 last:border-0 last:pb-0">
-                                    <div>
-                                        <div className="font-bold">{item.title}</div>
-                                        <div className="text-sm text-white/50">
-                                            {item.selectedMaterial.name} <br />
-                                            {item.unit === 'sqft'
-                                                ? `${item.dimensions.width}x${item.dimensions.height} ft | ${item.selectedQuantity.value} Copies`
-                                                : item.selectedQuantity.label
-                                            }
-                                        </div>
-                                        {item.file && <div className="text-xs text-electric-blue mt-1">File: {item.file}</div>}
+                                <div key={idx} className="flex gap-8 group">
+                                    <div className="w-24 h-32 bg-white flex-shrink-0 overflow-hidden soft-shadow">
+                                        <img src={item.previewImage || item.image || (item.designMetadata?.image)} alt={item.title} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
                                     </div>
-                                    <div className="font-mono">Rs. {item.totalPrice.toLocaleString()}</div>
+                                    <div className="flex-1 flex flex-col justify-between py-2">
+                                        <div>
+                                            <h4 className="text-lg font-serif mb-1">{item.title}</h4>
+                                            <p className="text-[9px] font-bold tracking-widest uppercase text-brand-black/30">
+                                                {item.selectedPackage ? `Package: ${item.selectedPackage.name}` : (item.selectedMaterial?.name || 'Standard')} • {item.unit === 'sqft' && item.dimensions ? `${item.dimensions.width || 0}x${item.dimensions.height || 0} ft` : item.selectedQuantity?.label || item.selectedQuantity?.value || `${item.quantity || 1} Units`}
+                                            </p>
+                                            {item.designMode === 'personalize' && item.personalization && (
+                                                <p className="text-[8px] font-bold tracking-wider text-brand-accent uppercase mt-2">
+                                                    Personalize: "{item.personalization.text}"
+                                                </p>
+                                            )}
+                                            {item.designMode === 'upload' && item.file && (
+                                                <p className="text-[8px] font-bold tracking-wider text-brand-accent uppercase mt-2">
+                                                    Artwork: {item.file}
+                                                </p>
+                                            )}
+                                        </div>
+                                        <span className="text-base font-medium">Rs. {(item.totalPrice || 0).toLocaleString()}</span>
+                                    </div>
                                 </div>
                             ))}
-                            <div className="flex justify-between items-center pt-4 border-t border-white/10 text-white/70">
-                                <span>Subtotal</span>
-                                <span>Rs. {cartTotal.toLocaleString()}</span>
-                            </div>
-                            <div className="flex justify-between items-center text-neon-green">
-                                <span>Online Delivery Fee</span>
-                                <span>Rs. {siteConfig.fees.delivery}</span>
-                            </div>
                         </div>
-                        <div className="mt-6 pt-4 border-t border-white/20 flex justify-between text-xl font-bold">
-                            <span>Total</span>
-                            <span>Rs. {(cartTotal + siteConfig.fees.delivery).toLocaleString()}</span>
-                        </div>
-                    </div>
+                    </section>
 
-                    {/* Payment Instructions */}
-                    <div className="bg-electric-blue/10 border border-electric-blue/30 p-6 rounded-2xl">
-                        <div className="flex items-center gap-3 mb-4 text-electric-blue">
-                            <AlertCircle size={24} />
-                            <h3 className="font-bold text-lg">Manual Payment Instructions</h3>
+                    <section className="bg-white p-10 soft-shadow space-y-8">
+                        <div className="flex justify-between items-center text-sm tracking-wide">
+                            <span className="text-brand-black/40">Subtotal</span>
+                            <span className="font-medium">Rs. {cartTotal.toLocaleString()}</span>
                         </div>
-                        <div className="space-y-4 text-sm text-white/80">
-                            <p>Please transfer the total amount to one of the following accounts:</p>
-                            <div className="bg-black/20 p-4 rounded-xl font-mono text-xs md:text-sm">
-                                <div className="mb-4">
-                                    <span className="text-electric-blue font-bold block mb-1">{siteConfig.banking.meezan.bankName}</span>
-                                    <div className="text-white/80">Title: <span className="text-white select-all font-bold">{siteConfig.banking.meezan.title}</span></div>
-                                    <div className="text-white/80">Account: <span className="text-white select-all">{siteConfig.banking.meezan.account}</span></div>
-                                    <div className="text-white/80">IBAN: <span className="text-white select-all">{siteConfig.banking.meezan.iban}</span></div>
-                                    <div className="text-white/50 text-[10px] mt-1">{siteConfig.banking.meezan.branch}</div>
-                                </div>
-                                <div>
-                                    <span className="text-electric-blue font-bold block mb-1">{siteConfig.banking.jazzcash.name}</span>
-                                    <div className="text-white/80">Number: <span className="text-white select-all font-bold">{siteConfig.banking.jazzcash.number}</span></div>
+                        <div className="flex justify-between items-center text-sm tracking-wide">
+                            <span className="text-brand-black/40">Shipping</span>
+                            <span className="font-medium">Rs. {siteConfig.fees.delivery}</span>
+                        </div>
+                        <div className="pt-8 border-t border-brand-black/5 flex justify-between items-end">
+                            <span className="text-[10px] font-bold tracking-[0.3em] uppercase text-brand-black/60">Total</span>
+                            <span className="text-4xl font-serif text-brand-black">Rs. {(cartTotal + siteConfig.fees.delivery).toLocaleString()}</span>
+                        </div>
+                    </section>
+
+                    <section className="space-y-8">
+                        <div className="flex items-center gap-3 text-brand-black">
+                            <CreditCard size={18} strokeWidth={1.5} />
+                            <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase">02. Manual Payment</h3>
+                        </div>
+                        <div className="p-10 border border-brand-black/5 space-y-10">
+                            <div className="space-y-4">
+                                <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-brand-black/40 block">{siteConfig.banking.meezan.bankName}</span>
+                                <div className="space-y-1">
+                                    <p className="text-sm font-medium select-all text-brand-black">{siteConfig.banking.meezan.title}</p>
+                                    <p className="text-xs text-brand-black/60 select-all">{siteConfig.banking.meezan.iban}</p>
                                 </div>
                             </div>
-                            <p>After transfer, take a screenshot and keep it ready for verification.</p>
+                            <div className="space-y-4 pt-10 border-t border-brand-black/5">
+                                <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-brand-black/40 block">{siteConfig.banking.jazzcash.name}</span>
+                                <p className="text-sm font-medium select-all text-brand-black">{siteConfig.banking.jazzcash.number}</p>
+                            </div>
                         </div>
-                    </div>
+                    </section>
                 </div>
 
-                {/* Shipping Form */}
-                <form onSubmit={handleSubmit} className="bg-white/5 border border-white/10 p-8 rounded-3xl h-fit">
-                    <h3 className="text-xl font-bold mb-6">Shipping Details</h3>
-                    <div className="space-y-4">
-                        <div>
-                            <label className="block text-sm text-white/60 mb-2">Full Name</label>
-                            <input
-                                required
-                                type="text"
-                                value={formData.name}
-                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                className="w-full bg-black/40 border border-white/10 rounded-xl p-3 focus:border-electric-blue focus:outline-none"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm text-white/60 mb-2">WhatsApp Number</label>
-                            <input
-                                required
-                                type="tel"
-                                value={formData.phone}
-                                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                className="w-full bg-black/40 border border-white/10 rounded-xl p-3 focus:border-electric-blue focus:outline-none"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm text-white/60 mb-2">Address</label>
-                            <textarea
-                                required
-                                placeholder="e.g. Shop #12, Rex Center, Saddar, Karachi"
-                                value={formData.address}
-                                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                                className="w-full bg-black/40 border border-white/10 rounded-xl p-3 focus:border-electric-blue focus:outline-none h-24 resize-none"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm text-white/60 mb-2">City</label>
-                            <input
-                                required
-                                type="text"
-                                placeholder="e.g. Karachi"
-                                value={formData.city}
-                                onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                                className="w-full bg-black/40 border border-white/10 rounded-xl p-3 focus:border-electric-blue focus:outline-none"
-                            />
-                        </div>
-
-                        {/* Transaction ID & Screenshot */}
-                        <div className="pt-4 border-t border-white/10 mt-4">
-                            <h4 className="font-bold text-white mb-4">Payment Verification</h4>
-                            <div className="mb-4">
-                                <label className="block text-sm text-white/60 mb-2">Transaction ID (TID / Reference)</label>
-                                <input
-                                    required
-                                    type="text"
-                                    placeholder="e.g. 5236781923"
-                                    value={formData.transactionId}
-                                    onChange={(e) => setFormData({ ...formData, transactionId: e.target.value })}
-                                    className="w-full bg-black/40 border border-white/10 rounded-xl p-3 focus:border-electric-blue focus:outline-none font-mono text-neon-green"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm text-white/60 mb-2">Payment Proof (Screenshot)</label>
-                                <div className="relative border border-dashed border-white/20 rounded-xl p-4 text-center hover:border-electric-blue/50 transition-colors cursor-pointer bg-black/20">
-                                    <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" accept="image/*" />
-                                    <span className="text-sm text-white/50">Upload Receipt / Screenshot</span>
+                {/* Form */}
+                <div className="lg:col-span-7">
+                    <form onSubmit={handleSubmit} className="space-y-16">
+                        <section className="space-y-10">
+                            <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-brand-black/40 mb-10 border-b border-brand-black/5 pb-4">03. Recipient Information</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                                <div className="space-y-4">
+                                    <label className="text-[10px] font-bold tracking-[0.2em] uppercase text-brand-black/40">FullName</label>
+                                    <input required type="text" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} className="w-full bg-transparent border-b border-brand-black/10 py-4 focus:border-brand-black outline-none transition-colors text-sm font-medium text-brand-black placeholder:text-brand-black/20" />
+                                </div>
+                                <div className="space-y-4">
+                                    <label className="text-[10px] font-bold tracking-[0.2em] uppercase text-brand-black/40">WhatsApp Number</label>
+                                    <input required type="tel" value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} className="w-full bg-transparent border-b border-brand-black/10 py-4 focus:border-brand-black outline-none transition-colors text-sm font-medium text-brand-black placeholder:text-brand-black/20" />
                                 </div>
                             </div>
-                        </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                                <div className="space-y-4">
+                                    <label className="text-[10px] font-bold tracking-[0.2em] uppercase text-brand-black/40">Province/State</label>
+                                    <input required type="text" value={formData.city} onChange={e => setFormData({ ...formData, city: e.target.value })} className="w-full bg-transparent border-b border-brand-black/10 py-4 focus:border-brand-black outline-none transition-colors text-sm font-medium text-brand-black placeholder:text-brand-black/20" />
+                                </div>
+                                <div className="space-y-4">
+                                    <label className="text-[10px] font-bold tracking-[0.2em] uppercase text-brand-black/40">Full Address</label>
+                                    <input required type="text" value={formData.address} onChange={e => setFormData({ ...formData, address: e.target.value })} className="w-full bg-transparent border-b border-brand-black/10 py-4 focus:border-brand-black outline-none transition-colors text-sm font-medium text-brand-black placeholder:text-brand-black/20" />
+                                </div>
+                            </div>
+                        </section>
 
-                        <div className="pt-6">
-                            <button type="submit" className="w-full bg-white text-black font-bold py-4 rounded-xl hover:bg-neon-purple hover:text-white transition-all">
-                                Confirm & Order via WhatsApp
+                        <section className="space-y-10">
+                            <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-brand-black/40 mb-10 border-b border-brand-black/5 pb-4">04. Payment Verification</h3>
+                            <div className="space-y-4">
+                                <label className="text-[10px] font-bold tracking-[0.2em] uppercase text-brand-black/30">Transaction ID</label>
+                                <input required type="text" placeholder="REF-XXXXXX" value={formData.transactionId} onChange={e => setFormData({ ...formData, transactionId: e.target.value })} className="w-full bg-transparent border-b border-brand-black/10 py-4 focus:border-brand-black outline-none transition-colors text-sm font-medium placeholder:opacity-20" />
+                            </div>
+                            <div className="group relative border border-brand-black/5 p-16 text-center hover:border-brand-black transition-colors cursor-pointer bg-white">
+                                <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" />
+                                <Truck size={24} strokeWidth={1} className="mx-auto mb-4 opacity-20 group-hover:opacity-100 transition-opacity" />
+                                <span className="text-[10px] font-bold tracking-widest uppercase opacity-40 group-hover:opacity-100 transition-opacity">Upload Payment Receipt</span>
+                            </div>
+                        </section>
+
+                        <div className="pt-20 space-y-10">
+                            <div className="flex items-center gap-4 text-brand-black/30 uppercase tracking-[0.2em] text-[9px] font-bold">
+                                <ShieldCheck size={14} /> Encrypted Transmission via WhatsApp Secure
+                            </div>
+                            <button type="submit" className="w-full bg-brand-black text-white py-8 text-[11px] font-bold tracking-[0.4em] uppercase hover:bg-brand-accent transition-colors">
+                                Complete Commission
                             </button>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     );

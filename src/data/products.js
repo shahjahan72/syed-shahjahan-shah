@@ -36,6 +36,12 @@ export const categories = [
         name: 'Indoor & Large Format',
         description: 'Standees, banners aur wallpapers.',
         image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1470&auto=format&fit=crop',
+    },
+    {
+        id: 'design',
+        name: 'Brand Identity & Design',
+        description: 'Professional logo design aur startup branding packages.',
+        image: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1470&auto=format&fit=crop',
     }
 ];
 
@@ -61,11 +67,13 @@ export const products = [
     {
         id: 'panaflex',
         categoryId: 'outdoor',
+        status: 'popular',
         title: 'Panaflex Printing',
         description: 'Common flexible banners aur hoardings ke liye economical solution.',
         baseCost: 27,
         unit: 'sqft',
         image: '/assets/products/01_penaflex_banner.jpg',
+        priceRange: "Rs. 27 - Rs. 37 / sqft",
         options: {
             material: [
                 { name: 'China Flex (Normal)', multiplier: 1.0 },
@@ -77,11 +85,13 @@ export const products = [
     {
         id: 'backlit-board',
         categoryId: 'outdoor',
+        status: 'hot',
         title: 'Backlit Board (Light Wala)',
         description: 'Raat ko light se chamakne wale boards. Premium Star Flex.',
         baseCost: 160, // Skin Change base
         unit: 'sqft',
         image: '/assets/products/02_backlit_board.jpg',
+        priceRange: "Rs. 160 - Rs. 700 / sqft",
         options: {
             material: [
                 { name: 'Skin Change (Flex Only)', multiplier: 1.0 },
@@ -98,6 +108,7 @@ export const products = [
         baseCost: 25,
         unit: 'sqft',
         image: '/assets/products/03_frontlit_board.jpg',
+        priceRange: "Rs. 25 - Rs. 30 / sqft",
         options: {
             material: [
                 { name: 'Standard Frontlit', multiplier: 1.0 },
@@ -114,6 +125,7 @@ export const products = [
         baseCost: 80,
         unit: 'sqft',
         image: '/assets/products/04_vinyl_print.jpg',
+        priceRange: "Rs. 80 - Rs. 120 / sqft",
         options: {
             material: [
                 { name: 'Gloss Vinyl (No Lamination)', multiplier: 1.0 },
@@ -132,6 +144,7 @@ export const products = [
         baseCost: 80,
         unit: 'sqft',
         image: '/assets/products/05_oneway_vision.jpg',
+        priceRange: "Rs. 80 - Rs. 120 / sqft",
         options: {
             material: [
                 { name: 'Standard (No Lamination)', multiplier: 1.0 },
@@ -148,6 +161,7 @@ export const products = [
         baseCost: 57, // 37 print + 20 labor
         unit: 'sqft',
         image: '/assets/products/06_custom_wallpaper.jpg',
+        priceRange: "From Rs. 57 / sqft",
         options: {
             material: [
                 { name: 'UV Flex Texture (Smell-free)', multiplier: 1.0 },
@@ -161,11 +175,13 @@ export const products = [
     {
         id: 'bottle-labels',
         categoryId: 'packaging',
+        status: 'new',
         title: 'Bottle Labels',
         description: 'Waterproof stickers for Juice, Water, or Oil bottles.',
         price: 499, // Base selling price for min order
         unit: 'fixed',
         image: '/assets/products/11_bottle_labels.jpg',
+        priceRange: "Rs. 499 - Rs. 5,000+",
         options: {
             material: [
                 { name: 'Paper Sticker + Lamination', multiplier: 1.0 },
@@ -187,6 +203,7 @@ export const products = [
         price: 799,
         unit: 'fixed',
         image: '/assets/products/12_diecut_stickers.jpg',
+        priceRange: "Rs. 799 - Rs. 8,000+",
         options: {
             material: [
                 { name: 'Glossy Vinyl', multiplier: 1.0 },
@@ -207,6 +224,7 @@ export const products = [
         price: 2500,
         unit: 'fixed',
         image: '/assets/products/13_shopping_bags.jpg',
+        priceRange: "Rs. 2,500 - Rs. 15,000+",
         options: {
             material: [
                 { name: 'Kraft Paper', multiplier: 1.0 },
@@ -228,6 +246,7 @@ export const products = [
         price: 2000,
         unit: 'fixed',
         image: '/assets/products/14_visiting_cards.jpg',
+        priceRange: "Rs. 2,000 - Rs. 10,000",
         options: {
             material: [
                 { name: 'Matte/Gloss Single Side', multiplier: 1.0 },
@@ -249,6 +268,7 @@ export const products = [
         price: 2499, // 50rs * 50 cards min -> 2500 -> 2499
         unit: 'fixed',
         image: '/assets/products/14_visiting_cards.jpg',
+        priceRange: "Rs. 2,500 - Rs. 12,500",
         options: {
             material: [
                 { name: 'PVC Plastic Card', multiplier: 1.0 },
@@ -268,6 +288,7 @@ export const products = [
         price: 2000,
         unit: 'fixed',
         image: '/assets/products/15_brochure_flyer.jpg',
+        priceRange: "Rs. 2,000 - Rs. 20,000",
         options: {
             material: [
                 { name: '130gsm Paper', multiplier: 1.0 },
@@ -288,6 +309,7 @@ export const products = [
         price: 450,
         unit: 'fixed',
         image: '/assets/products/16_bill_receipt_book.jpg',
+        priceRange: "Rs. 450 - Rs. 4,500",
         options: {
             material: [
                 { name: 'Standard NCR', multiplier: 1.0 },
@@ -309,7 +331,9 @@ export const products = [
         price: 0,
         unit: 'fixed',
         isCustom: true,
-        image: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=1470&auto=format&fit=crop',
+        status: 'popular',
+        image: 'https://images.unsplash.com/photo-1549462980-6a9cfc2445c9?auto=format&fit=crop&q=100&w=1200',
+        priceRange: "Custom Quote",
         options: {
             material: [
                 { name: 'Custom Request', multiplier: 1.0 },
@@ -319,7 +343,7 @@ export const products = [
             ]
         }
     },
-    ...weddingGroups,
+    ...weddingGroups.map(g => ({ ...g, priceRange: g.priceRange || "See Details" })),
 
     // --- Gifts & Others ---
     {
@@ -330,6 +354,7 @@ export const products = [
         price: 849,
         unit: 'fixed',
         image: '/assets/products/08_tshirt_printing.jpg',
+        priceRange: "Rs. 849 - Rs. 1,200",
         options: {
             material: [
                 { name: 'Cotton Round Neck', multiplier: 1.0 },
@@ -350,6 +375,7 @@ export const products = [
         price: 450,
         unit: 'fixed',
         image: '/assets/products/07_mug_printing.jpg',
+        priceRange: "Rs. 450 - Rs. 700",
         options: {
             material: [
                 { name: 'Standard White', multiplier: 1.0 },
@@ -370,6 +396,7 @@ export const products = [
         price: 2500,
         unit: 'fixed',
         image: '/assets/products/09_corporate_gifts.jpg',
+        priceRange: "Rs. 2,500 - Rs. 5,000",
         options: {
             material: [
                 { name: 'Plastic Pen + Keychain', multiplier: 1.0 },
@@ -380,24 +407,103 @@ export const products = [
                 { label: '50 Sets', value: 5 },
             ]
         }
-    },
+    }
+];
+
+export const packages = [
     {
-        id: 'roll-up-standee',
-        categoryId: 'indoor',
-        title: 'Roll-up Standee',
-        description: 'Portable advertising stand banners (2x5 ft standard).',
-        price: 1499,
+        id: 'core-identity-plan',
+        categoryId: 'design',
+        status: 'popular',
+        title: 'Core Identity Plan',
+        description: 'Essential branding for new professionals and micro-startups.',
+        price: 5000,
         unit: 'fixed',
-        image: '/assets/products/10_rollup_standee.jpg',
+        image: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1470&auto=format&fit=crop',
+        priceRange: "Rs. 5,000 - 7,000",
+        isPackage: true,
+        packages: [
+            {
+                name: 'Core Identity',
+                price: 6000,
+                features: [
+                    'Logo Design: 2 Professional concepts + High-resolution source files',
+                    'Business Cards: 1,000 Units (350gsm Matte Finish, Bulk Offset)',
+                    'Letterhead: 50 Units (100gsm Premium Offset) + Digital Template',
+                    'Brand Stickers: 50 Custom Die-cut stickers for basic packaging'
+                ]
+            }
+        ],
         options: {
             material: [
-                { name: 'X-Standee (Economy)', multiplier: 1.0 },     // 1500
-                { name: 'Roll-up Standee (Aluminum)', multiplier: 2.66 }, // 4000
+                { name: 'Standard Delivery (3-4 Days)', multiplier: 1.0 }
             ],
             quantity: [
-                { label: '1 Standee', value: 1 },
-                { label: '2 Standees', value: 2 },
-                { label: '4 Standees', value: 4 },
+                { label: 'One Business', value: 1 }
+            ]
+        }
+    },
+    {
+        id: 'professional-growth-plan',
+        categoryId: 'design',
+        status: 'hot',
+        title: 'Professional Growth Plan',
+        description: 'Comprehensive kit for businesses ready to compete in the local market.',
+        price: 10000,
+        unit: 'fixed',
+        image: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1470&auto=format&fit=crop',
+        priceRange: "Rs. 10,000 - 12,000",
+        isPackage: true,
+        packages: [
+            {
+                name: 'Professional Growth',
+                price: 11000,
+                features: [
+                    'Visual Identity: Logo, Primary Color Palette, and Typography guidelines',
+                    'Corporate Stationery: 1,000 Business Cards (Premium Matte/Gloss) + 100 Corporate Envelopes',
+                    'Marketing Collateral: 500 Flyers (A5, 128gsm Art Paper) OR 1 High-quality Roll-up Standee',
+                    'Digital Assets: 5 Social Media templates + Professional HTML Email Signature'
+                ]
+            }
+        ],
+        options: {
+            material: [
+                { name: 'Standard Delivery (5-7 Days)', multiplier: 1.0 }
+            ],
+            quantity: [
+                { label: 'One Business', value: 1 }
+            ]
+        }
+    },
+    {
+        id: 'enterprise-branding-suite',
+        categoryId: 'design',
+        status: 'new',
+        title: 'Enterprise Branding Suite',
+        description: 'Premium finishes and high-volume requirements for established brands.',
+        price: 25000,
+        unit: 'fixed',
+        image: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1470&auto=format&fit=crop',
+        priceRange: "Rs. 25,000 - 35,000",
+        isPackage: true,
+        packages: [
+            {
+                name: 'Enterprise Suite',
+                price: 30000,
+                features: [
+                    'Executive Stationery: 1,000 Business Cards (Specialty finishes: Spot UV, Embossing, or Gold Foil)',
+                    'Operational Prints: 5 Receipt Books (NCR Carbonless) + 500 Premium 100gsm Letterheads',
+                    'Packaging/Promotional: 200 Customized Paper Bags OR 100 Product Packaging Boxes',
+                    'Large Format Branding: 2 Roll-up Standees + 1 Vinyl Shop Signage OR Window Graphics'
+                ]
+            }
+        ],
+        options: {
+            material: [
+                { name: 'Standard Delivery (10-12 Days)', multiplier: 1.0 }
+            ],
+            quantity: [
+                { label: 'One Business', value: 1 }
             ]
         }
     }

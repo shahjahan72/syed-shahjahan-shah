@@ -1,5 +1,7 @@
 export const siteConfig = {
     name: "Printify Studio PK",
+    currency: "PKR",
+    currencySymbol: "Rs.",
     whatsapp: {
         number: "923481342505", // International format without +
         display: "0348-1342505"
@@ -22,8 +24,8 @@ export const siteConfig = {
         delivery: 299
     },
     social: {
-        instagram: "https://instagram.com/syedshahjahan",
-        linkedin: "https://linkedin.com/in/syedshahjahan"
+        instagram: "https://instagram.com/prnt.pk",
+        linkedin: "https://linkedin.com/company/prnt-pk"
     },
     contact: {
         email: "contact@printifystudio.pk",

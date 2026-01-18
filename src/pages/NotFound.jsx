@@ -18,13 +18,13 @@ const NotFound = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
             >
-                <h2 className="text-3xl font-bold mb-4">Page Not Found</h2>
-                <p className="text-white/50 mb-8 max-w-md mx-auto">
-                    The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.
+                <h2 className="text-3xl font-serif mb-6">Page Not Found</h2>
+                <p className="text-brand-black/40 mb-12 max-w-sm mx-auto text-sm leading-relaxed">
+                    The collection piece you are looking for has been moved or is currently unavailable in our archives.
                 </p>
                 <Link to="/">
-                    <button className="px-8 py-3 bg-white text-black rounded-full font-bold hover:bg-white/90 transition-all flex items-center gap-2 mx-auto">
-                        <ArrowLeft size={18} /> Back to Home
+                    <button className="px-10 py-5 bg-brand-black text-white text-[10px] font-bold tracking-[0.3em] uppercase hover:bg-brand-accent transition-all mx-auto">
+                        Return to Collection
                     </button>
                 </Link>
             </motion.div>

@@ -1,21 +1,32 @@
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
-import Navigation from './components/Navigation';
-import CustomCursor from './components/CustomCursor';
 import PageLoader from './components/PageLoader';
 import ErrorBoundary from './components/ErrorBoundary';
 import SkipNav from './components/SkipNav';
 import StructuredData from './components/StructuredData';
 import AnalyticsWrapper from './components/AnalyticsWrapper';
 
+// Components
+import NavbarPro from './components/NavbarPro';
+import FooterPro from './components/FooterPro';
+import FloatingWhatsApp from './components/FloatingWhatsApp';
+
 // Lazy Loaded Pages
-const Portfolio = lazy(() => import('./pages/Portfolio'));
+const HomePage = lazy(() => import('./pages/HomePage'));
 const ShopLanding = lazy(() => import('./pages/shop/ShopLanding'));
 const ProductDetail = lazy(() => import('./pages/shop/ProductDetail'));
 const Checkout = lazy(() => import('./pages/shop/Checkout'));
 const OrderStatus = lazy(() => import('./pages/OrderStatus'));
+const ContactPage = lazy(() => import('./pages/ContactPage'));
+const AuthPage = lazy(() => import('./pages/AuthPage'));
+const AboutPage = lazy(() => import('./pages/AboutPage'));
 const NotFound = lazy(() => import('./pages/NotFound'));
+const TermsPage = lazy(() => import('./pages/TermsPage'));
+const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
+const RefundPage = lazy(() => import('./pages/RefundPage'));
+const PackagesPage = lazy(() => import('./pages/PackagesPage'));
+const FaqPage = lazy(() => import('./pages/FaqPage'));
 
 const App = () => {
   return (
@@ -25,27 +36,34 @@ const App = () => {
           <StructuredData />
           <SkipNav />
           <AnalyticsWrapper>
-            <main id="main-content" className="relative min-h-screen w-full bg-deep-black text-white selection:bg-neon-purple/30" tabIndex="-1">
-            <CustomCursor />
+            <div className="min-h-screen bg-white text-gray-900">
+              <NavbarPro />
+              <FloatingWhatsApp />
 
-            {/* Noise Overlay Global */}
-            <div className="noise-bg" />
+              <main id="main-content" className="pt-20" tabIndex="-1">
+                <Suspense fallback={<PageLoader />}>
+                  <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/shop" element={<ShopLanding />} />
+                    <Route path="/product/:id" element={<ProductDetail />} />
+                    <Route path="/checkout" element={<Checkout />} />
+                    <Route path="/order-status" element={<OrderStatus />} />
+                    <Route path="/contact" element={<ContactPage />} />
+                    <Route path="/account" element={<AuthPage />} />
+                    <Route path="/about" element={<AboutPage />} />
+                    <Route path="/packages" element={<PackagesPage />} />
+                    <Route path="/faq" element={<FaqPage />} />
+                    <Route path="/terms" element={<TermsPage />} />
+                    <Route path="/privacy" element={<PrivacyPage />} />
+                    <Route path="/refund" element={<RefundPage />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </Suspense>
+              </main>
 
-            <Navigation />
-
-            <Suspense fallback={<PageLoader />}>
-              <Routes>
-                <Route path="/" element={<Portfolio />} />
-                <Route path="/shop" element={<ShopLanding />} />
-                <Route path="/shop/product/:id" element={<ProductDetail />} />
-                <Route path="/shop/checkout" element={<Checkout />} />
-                <Route path="/order-status" element={<OrderStatus />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Suspense>
-
-          </main>
-        </AnalyticsWrapper>
+              <FooterPro />
+            </div>
+          </AnalyticsWrapper>
         </CartProvider>
       </ErrorBoundary>
     </Router>

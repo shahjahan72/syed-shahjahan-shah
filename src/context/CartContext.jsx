@@ -6,9 +6,11 @@ export const useCart = () => useContext(CartContext);
 
 export const CartProvider = ({ children }) => {
     const [cart, setCart] = useState([]);
+    const [isCartOpen, setIsCartOpen] = useState(false);
 
     const addToCart = (product) => {
         setCart((prev) => [...prev, product]);
+        setIsCartOpen(true); // Automatically open cart when item added
     };
 
     const removeFromCart = (index) => {
@@ -19,10 +21,18 @@ export const CartProvider = ({ children }) => {
         setCart([]);
     };
 
-    const cartTotal = cart.reduce((total, item) => total + item.totalPrice, 0);
+    const cartTotal = cart.reduce((total, item) => total + (item.totalPrice || 0), 0);
 
     return (
-        <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, cartTotal }}>
+        <CartContext.Provider value={{
+            cart,
+            addToCart,
+            removeFromCart,
+            clearCart,
+            cartTotal,
+            isCartOpen,
+            setIsCartOpen
+        }}>
             {children}
         </CartContext.Provider>
     );

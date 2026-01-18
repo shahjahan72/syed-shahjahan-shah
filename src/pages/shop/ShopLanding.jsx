@@ -1,136 +1,329 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Link, useSearchParams } from 'react-router-dom';
 import { products, categories } from '../../data/products';
-import { ArrowRight, Filter } from 'lucide-react';
+import { Plus, Eye, ShoppingBag, Search } from 'lucide-react';
+import { useCart } from '../../context/CartContext';
+import TrustBadges from '../../components/features/TrustBadges';
+import Testimonials from '../../components/features/Testimonials';
+import ServiceTrustGrid from '../../components/features/ServiceTrustGrid';
+import FaqEngine from '../../components/features/FaqEngine';
 
 const ShopLanding = () => {
-    const [activeCategory, setActiveCategory] = useState('all');
+    const [searchParams, setSearchParams] = useSearchParams();
+    const activeCategory = searchParams.get('category') || 'all'; // activeCategory is now derived from URL
+    const [searchQuery, setSearchQuery] = useState('');
+    const [priceRange, setPriceRange] = useState('all');
+    const [quickViewProduct, setQuickViewProduct] = useState(null);
+    const { cart, addToCart } = useCart();
+    const [isLoading, setIsLoading] = useState(false);
 
-    const filteredProducts = activeCategory === 'all'
-        ? products
-        : products.filter(p => p.categoryId === activeCategory);
+    const priceRanges = [
+        { id: 'all', label: 'All Prices', min: 0, max: Infinity },
+        { id: 'under1k', label: 'Under Rs. 1,000', min: 0, max: 1000 },
+        { id: '1k-5k', label: 'Rs. 1,000 - 5,000', min: 1000, max: 5000 },
+        { id: '5k-10k', label: 'Rs. 5,000 - 10,000', min: 5000, max: 10000 },
+        { id: 'over10k', label: 'Over Rs. 10,000', min: 10000, max: Infinity },
+    ];
+
+    // Sync URL param with internal state (for initial scroll)
+    useEffect(() => {
+        if (activeCategory !== 'all') {
+            // Scroll to collection if param exists
+            const collectionSection = document.getElementById('collection');
+            if (collectionSection) {
+                collectionSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    }, [activeCategory]);
+
+    // Handle loading state
+    const [isFiltering, setIsFiltering] = useState(false);
+    
+    useEffect(() => {
+        // Set loading state when filters are actively being changed
+        if ((searchQuery || priceRange !== 'all' || activeCategory !== 'all')) {
+            setIsFiltering(true);
+            const timer = setTimeout(() => {
+                setIsFiltering(false);
+            }, 300);
+            return () => clearTimeout(timer);
+        }
+        setIsFiltering(false);
+    }, [searchQuery, priceRange, activeCategory]);
+
+    const handleCategoryChange = (catId) => {
+        setSearchParams(catId === 'all' ? {} : { category: catId });
+    };
+
+    const filteredProducts = useMemo(() => {
+        let result = activeCategory === 'all'
+            ? products
+            : products.filter(p => p.categoryId === activeCategory);
+
+        // Exclude package items from main product listing
+        result = result.filter(p => !p.isPackage);
+
+        if (searchQuery) {
+            const query = searchQuery.toLowerCase();
+            result = result.filter(p =>
+                p.title.toLowerCase().includes(query) ||
+                p.description.toLowerCase().includes(query)
+            );
+        }
+
+        // Price range filtering
+        if (priceRange !== 'all') {
+            const range = priceRanges.find(r => r.id === priceRange);
+            if (range) {
+                result = result.filter(p => {
+                    const basePrice = p.price || p.baseCost || 0;
+                    return basePrice >= range.min && basePrice < range.max;
+                });
+            }
+        }
+
+        return result;
+    }, [activeCategory, searchQuery, priceRange]);
 
     return (
-        <div className="min-h-screen pt-32 pb-20 px-6 max-w-7xl mx-auto">
-            {/* Header */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-center mb-16"
-            >
-                <span className="text-neon-purple font-mono uppercase tracking-widest text-sm mb-2 block">
-                    Printify Studio PK
-                </span>
-                <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
-                    Print <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-purple to-electric-blue">Anything.</span><br />
-                    Anywhere.
-                </h1>
-                <p className="text-white/60 text-lg max-w-2xl mx-auto">
-                    From large-scale billboards to custom stickers. <br />
-                    Premium quality. Fast delivery. Best rates in Pakistan.
-                </p>
-            </motion.div>
+        <div className="min-h-screen bg-brand-white selection:bg-brand-black selection:text-white">
+            {/* Collection Section */}
+            <main id="collection" className="max-w-[1800px] mx-auto px-6 md:px-12 py-12">
+                <header className="mb-12 flex flex-col md:flex-row md:items-center justify-between gap-8">
+                    <div>
+                        <h1 className="text-4xl md:text-5xl font-serif text-brand-black mb-2">Print Shop</h1>
+                        <p className="text-brand-black/60 text-sm">Premium printing services for business & events</p>
+                    </div>
 
-            {/* Categories Filter */}
-            <div className="mb-12 flex flex-wrap justify-center gap-4">
-                <button
-                    onClick={() => setActiveCategory('all')}
-                    className={`px-6 py-2 rounded-full border transition-all ${activeCategory === 'all' ? 'bg-white text-black border-white' : 'bg-transparent text-white/60 border-white/20 hover:border-white'}`}
-                >
-                    All Products
-                </button>
-                {categories.map(cat => (
+                    <div className="flex flex-col sm:flex-row gap-4 items-end">
+                        {/* Price Filter */}
+                        <div className="relative w-full sm:w-40">
+                            <label className="text-[9px] font-bold text-brand-black/40 uppercase tracking-wider mb-1 block">Price Range</label>
+                            <select
+                                value={priceRange}
+                                onChange={(e) => setPriceRange(e.target.value)}
+                                className="w-full bg-transparent border-b border-black/10 py-2 text-[10px] font-bold tracking-[0.1em] outline-none focus:border-brand-black transition-colors cursor-pointer appearance-none"
+                            >
+                                {priceRanges.map(range => (
+                                    <option key={range.id} value={range.id}>{range.label}</option>
+                                ))}
+                            </select>
+                        </div>
+                        
+                        <div className="relative w-full sm:w-64">
+                            <input
+                                type="text"
+                                placeholder="Search products..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="w-full bg-transparent border-b border-black/10 py-2 text-[10px] font-bold tracking-[0.15em] outline-none focus:border-brand-black transition-colors"
+                            />
+                            <Search className="absolute right-0 top-1/2 -translate-y-1/2 text-black/30" size={12} />
+                        </div>
+                        <div className="flex gap-3">
+                            <div className="flex flex-col items-end">
+                                <span className="text-[9px] font-bold text-brand-black/30 uppercase tracking-wider mb-1">Items</span>
+                                <span className="text-lg font-serif">{filteredProducts.length}</span>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                {/* Category Filter */}
+                <div className="mb-12 flex flex-wrap gap-x-6 gap-y-3 border-b border-brand-black/10 pb-4">
                     <button
-                        key={cat.id}
-                        onClick={() => setActiveCategory(cat.id)}
-                        className={`px-6 py-2 rounded-full border transition-all ${activeCategory === cat.id ? 'bg-white text-black border-white' : 'bg-transparent text-white/60 border-white/20 hover:border-white'}`}
+                        onClick={() => handleCategoryChange('all')}
+                        className={`text-[10px] font-bold tracking-[0.2em] uppercase pb-2 transition-all relative ${activeCategory === 'all' ? 'text-brand-black' : 'text-brand-black/40 hover:text-brand-black'
+                            }`}
                     >
-                        {cat.name}
+                        All Products
+                        {activeCategory === 'all' && (
+                            <motion.div layoutId="cat-underline" className="absolute bottom-[-1px] left-0 w-full h-px bg-brand-black" />
+                        )}
                     </button>
-                ))}
+                    {categories.map(cat => (
+                        <button
+                            key={cat.id}
+                            onClick={() => handleCategoryChange(cat.id)}
+                            className={`text-[10px] font-bold tracking-[0.2em] uppercase pb-2 transition-all relative ${activeCategory === cat.id ? 'text-brand-black' : 'text-brand-black/40 hover:text-brand-black'
+                                }`}
+                        >
+                            {cat.name}
+                            {activeCategory === cat.id && (
+                                <motion.div layoutId="cat-underline" className="absolute bottom-[-1px] left-0 w-full h-px bg-brand-black" />
+                            )}
+                        </button>
+                    ))}
+                </div>
+
+                {/* Products Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-12 relative">
+                    {isFiltering && (
+                        <div className="col-span-full flex justify-center py-20">
+                            <div className="w-8 h-8 border-4 border-brand-black/20 border-t-brand-black rounded-full animate-spin"></div>
+                        </div>
+                    )}
+                    {filteredProducts.map((product, index) => (
+                        <motion.div
+                            key={product.id}
+                            initial={{ opacity: 0, y: 40 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: index * 0.05, duration: 0.8 }}
+                            className="group"
+                        >
+                            <div className="relative aspect-[4/5] overflow-hidden bg-white soft-shadow">
+                                <img
+                                    src={product.image}
+                                    alt={product.title}
+                                    className="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-110"
+                                />
+                                <div className="absolute inset-0 bg-brand-black/0 group-hover:bg-brand-black/5 transition-colors duration-700" />
+
+                                {/* Hover Actions */}
+                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                                    <div className="flex gap-4 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                                        <button
+                                            onClick={() => setQuickViewProduct(product)}
+                                            className="w-12 h-12 bg-white text-brand-black rounded-full flex items-center justify-center hover:bg-brand-black hover:text-white transition-colors soft-shadow"
+                                            title="Quick View"
+                                        >
+                                            <Eye size={20} strokeWidth={1.5} />
+                                        </button>
+                                        <Link
+                                            to={`/product/${product.id}`}
+                                            className="w-12 h-12 bg-white text-brand-black rounded-full flex items-center justify-center hover:bg-brand-black hover:text-white transition-colors soft-shadow"
+                                            title="Configure & Buy"
+                                        >
+                                            <Plus size={20} strokeWidth={1.5} />
+                                        </Link>
+                                    </div>
+                                </div>
+
+                                {product.status && (
+                                    <div className="absolute top-4 right-4 z-10">
+                                        <div className={`px-2 py-1 text-[7px] font-bold uppercase tracking-widest text-white backdrop-blur-md shadow-lg ${product.status === 'popular' ? 'bg-blue-500/80' :
+                                            product.status === 'hot' ? 'bg-orange-500/80' :
+                                                'bg-brand-accent/80'
+                                            }`}>
+                                            {product.status === 'popular' ? 'Popular' :
+                                                product.status === 'hot' ? 'Hot' :
+                                                    'New'}
+                                        </div>
+                                    </div>
+                                )}
+                                {product.id && (
+                                    <div className="absolute top-4 left-4 text-[9px] uppercase tracking-widest text-white opacity-40 font-mono">
+                                        {product.id}
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="space-y-1 pt-3">
+                                <Link to={`/product/${product.id}`} className="block">
+                                    <h3 className="text-lg font-serif tracking-tight leading-tight group-hover:text-brand-accent transition-colors duration-300">
+                                        {product.title}
+                                    </h3>
+                                </Link>
+                                <div className="flex items-center justify-between">
+                                    <p className="text-[8px] tracking-[0.15em] uppercase text-brand-black/40 font-bold">
+                                        {categories.find(c => c.id === product.categoryId)?.name}
+                                    </p>
+                                    <span className="text-sm font-medium tracking-tight">
+                                        {product.priceRange || 'Details'}
+                                    </span>
+                                </div>
+                            </div>
+                        </motion.div>
+                    ))}
+                    {!isLoading && filteredProducts.length === 0 && (
+                        <div className="col-span-full text-center py-20">
+                            <p className="text-brand-black/50 text-lg">No products found matching your criteria.</p>
+                        </div>
+                    )}
+                </div>
+            </main>
+
+            {/* Trust & Services Section */}
+            <div className="max-w-[1400px] mx-auto px-6 space-y-40 mt-40">
+                <ServiceTrustGrid />
+                <Testimonials />
+                <TrustBadges />
+                <FaqEngine />
             </div>
 
-            {/* Products Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {/* Special Custom Design Card for Wedding */}
-                {activeCategory === 'wedding' && (
+            {/* Quick View Modal */}
+            <AnimatePresence>
+                {quickViewProduct && (
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="group relative bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] border border-dashed border-neon-purple/50 rounded-2xl overflow-hidden hover:border-neon-purple transition-all duration-300 flex flex-col items-center justify-center p-8 text-center"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-brand-black/60 backdrop-blur-sm"
+                        onClick={() => setQuickViewProduct(null)}
                     >
-                        <div className="w-20 h-20 rounded-full bg-neon-purple/10 flex items-center justify-center mb-6 text-neon-purple group-hover:scale-110 transition-transform">
-                            <Filter size={40} />
-                        </div>
-                        <h3 className="text-2xl font-bold mb-3">Custom / Instagram Design</h3>
-                        <p className="text-white/60 text-sm mb-8">
-                            Have a specific design from Instagram or a video? <br />
-                            Upload your reference and get a custom quote.
-                        </p>
-                        <Link to="/shop/product/WC-CUSTOM" className="w-full">
-                            <button className="w-full py-3 bg-neon-purple text-white rounded-full font-bold hover:bg-white hover:text-black transition-all">
-                                Upload Reference
-                            </button>
-                        </Link>
+                        <motion.div
+                            initial={{ scale: 0.9, y: 20 }}
+                            animate={{ scale: 1, y: 0 }}
+                            exit={{ scale: 0.9, y: 20 }}
+                            className="bg-white max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 overflow-hidden soft-shadow"
+                            onClick={e => e.stopPropagation()}
+                        >
+                            <div className="aspect-[4/5] md:aspect-auto">
+                                <img
+                                    src={quickViewProduct.image}
+                                    alt={quickViewProduct.title}
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
+                            <div className="p-12 flex flex-col justify-center">
+                                <button
+                                    onClick={() => setQuickViewProduct(null)}
+                                    className="absolute top-6 right-6 text-brand-black/40 hover:text-brand-black transition-colors"
+                                >
+                                    Close
+                                </button>
+                                <span className="text-[10px] tracking-[0.3em] uppercase text-brand-black/40 font-bold mb-4 block">
+                                    {categories.find(c => c.id === quickViewProduct.categoryId)?.name}
+                                </span>
+                                <h2 className="text-4xl font-serif mb-6">{quickViewProduct.title}</h2>
+                                <p className="text-brand-black/60 mb-8 leading-relaxed">
+                                    {quickViewProduct.description}
+                                </p>
+                                <div className="text-3xl font-medium mb-10">
+                                    {quickViewProduct.priceRange || 'See Details'}
+                                </div>
+                                <div className="flex gap-4">
+                                    <Link
+                                        to={`/product/${quickViewProduct.id}`}
+                                        className="flex-1 bg-brand-black text-white py-5 text-[10px] font-bold tracking-[0.3em] uppercase text-center hover:bg-brand-accent transition-colors"
+                                    >
+                                        Configure Now
+                                    </Link>
+                                    <Link
+                                        to={`/product/${quickViewProduct.id}`}
+                                        className="flex-1 border border-brand-black/10 py-5 text-[10px] font-bold tracking-[0.3em] uppercase text-center hover:bg-brand-black hover:text-white transition-all"
+                                    >
+                                        Full Details
+                                    </Link>
+                                </div>
+                            </div>
+                        </motion.div>
                     </motion.div>
                 )}
+            </AnimatePresence>
 
-                {filteredProducts.filter(p => !p.isCustom).map((product, index) => (
-                    <motion.div
-                        key={product.id}
-                        layout
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.3 }}
-                        className="group relative bg-[#111] border border-white/10 rounded-2xl overflow-hidden hover:border-electric-blue/50 transition-all duration-300"
-                    >
-                        <div className="aspect-[4/3] overflow-hidden relative">
-                            <img
-                                src={product.image}
-                                alt={product.title}
-                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                            />
-                            <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors" />
-
-                            {/* ID Tag for Wedding Cards */}
-                            {product.categoryId === 'wedding' && (
-                                <div className="absolute top-4 left-4 bg-neon-purple px-3 py-1 rounded-md text-[10px] font-black tracking-tighter shadow-lg z-10 uppercase">
-                                    ID: {product.id}
-                                </div>
-                            )}
-
-                            {/* Badge */}
-                            <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold border border-white/10">
-                                {product.unit === 'sqft' ? 'Per Sq.Ft' : 'Fixed Price'}
-                            </div>
-                        </div>
-
-                        <div className="p-6">
-                            <div className="text-xs text-electric-blue mb-2 font-mono uppercase">
-                                {categories.find(c => c.id === product.categoryId)?.name}
-                            </div>
-                            <h3 className="text-2xl font-bold mb-2 text-white group-hover:text-electric-blue transition-colors">
-                                {product.title}
-                            </h3>
-                            <p className="text-white/60 text-sm mb-6 line-clamp-2">
-                                {product.description}
-                            </p>
-
-                            <div className="flex items-center justify-between border-t border-white/10 pt-4">
-                                <span className="text-xl font-bold text-white">
-                                    Rs. {product.price} <span className="text-sm font-normal text-white/40">/{product.unit === 'sqft' ? 'sqft' : 'unit'}</span>
-                                </span>
-                                <Link to={`/shop/product/${product.id}`}>
-                                    <button className="flex items-center gap-2 px-4 py-2 bg-white text-black rounded-full font-bold text-sm hover:bg-neon-purple hover:text-white transition-all">
-                                        Select Design <ArrowRight size={16} />
-                                    </button>
-                                </Link>
-                            </div>
-                        </div>
-                    </motion.div>
-                ))}
-            </div>
+            {/* Floating Cart Button */}
+            <Link
+                to="/checkout"
+                className="fixed bottom-10 right-10 z-[80] w-16 h-16 bg-brand-black text-white rounded-full flex items-center justify-center soft-shadow hover:scale-110 transition-transform group"
+            >
+                <ShoppingBag size={24} strokeWidth={1.5} />
+                <span className="absolute -top-1 -right-1 bg-brand-accent text-white text-[10px] font-bold w-6 h-6 rounded-full flex items-center justify-center border-2 border-brand-white">
+                    {cart.length}
+                </span>
+            </Link>
         </div>
     );
 };
