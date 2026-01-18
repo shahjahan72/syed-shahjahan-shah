@@ -1,13 +1,27 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-black: var(--text-primary, #1A1A1A);
-  --color-brand-white: var(--bg-primary, #F5F5F5);
-  --color-brand-accent: #00A19D;
-  --color-brand-teal: #00A19D;
-  --color-brand-teal-dark: #008B87;
-  --color-brand-teal-light: #00C4BF;
-  /* Professional Teal Theme */
+  --color-brand-black: var(--text-primary);
+  --color-brand-white: var(--bg-primary);
+  --color-brand-accent: var(--brand-teal);
+  --color-brand-teal: var(--brand-teal);
+  --color-brand-teal-dark: var(--brand-teal-dark);
+  --color-brand-teal-light: var(--brand-teal-light);
+
+  --color-bg-secondary: var(--bg-secondary);
+  --color-text-secondary: var(--text-secondary);
+  --color-border-primary: var(--border-primary);
+
+  /* Mapping standard Tailwind colors to be dynamic */
+  --color-gray-900: var(--text-primary);
+  --color-gray-800: var(--text-primary);
+  --color-gray-700: var(--text-secondary);
+  --color-gray-600: var(--text-secondary);
+  --color-gray-500: var(--text-muted);
+  --color-gray-100: var(--border-primary);
+  --color-gray-50: var(--bg-secondary);
+  --color-gray-200: var(--border-secondary);
+
   --font-sans: "Montserrat", sans-serif;
   --font-serif: "Playfair Display", serif;
 }
@@ -68,12 +82,25 @@
   @apply bg-brand-black/10 rounded-full hover:bg-brand-black/20;
 }
 
-/* Hide scrollbar for mobile categories */
+/* Hide scrollbar for mobile categories and horizontal scroll areas */
 .scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-  display: none;
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.scrollbar-hide::-webkit-scrollbar-track,
+.scrollbar-hide::-webkit-scrollbar-thumb {
+  background: transparent !important;
+  display: none !important;
+}
+
+/* Ensure fixed bars don't have visual scrollbars */
+.overflow-x-auto {
+  -webkit-overflow-scrolling: touch;
 }

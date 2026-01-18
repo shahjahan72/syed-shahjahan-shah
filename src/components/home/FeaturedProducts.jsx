@@ -64,7 +64,7 @@ const FeaturedProducts = () => {
                         >
                             <Link
                                 to={`/product/${product.id}`}
-                                className="group block bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-xl hover:border-[#00A19D]/30 transition-all duration-300"
+                                className="group block bg-bg-secondary border border-gray-200 rounded-xl overflow-hidden hover:shadow-xl hover:border-brand-accent/30 transition-all duration-300"
                             >
                                 <div className="aspect-square overflow-hidden bg-gray-100 relative">
                                     <StatusBadge status={product.status} />

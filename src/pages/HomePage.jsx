@@ -8,7 +8,7 @@ import TrustBadges from '../components/home/TrustBadges';
 
 const HomePage = () => {
     return (
-        <div className="bg-white">
+        <div className="bg-brand-white">
             <HeroSection />
             <TrustBadges />
             <CategoriesGrid />

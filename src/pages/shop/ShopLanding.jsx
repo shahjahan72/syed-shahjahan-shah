@@ -39,7 +39,7 @@ const ShopLanding = () => {
 
     // Handle loading state
     const [isFiltering, setIsFiltering] = useState(false);
-    
+
     useEffect(() => {
         // Set loading state when filters are actively being changed
         if ((searchQuery || priceRange !== 'all' || activeCategory !== 'all')) {
@@ -103,23 +103,23 @@ const ShopLanding = () => {
                             <select
                                 value={priceRange}
                                 onChange={(e) => setPriceRange(e.target.value)}
-                                className="w-full bg-transparent border-b border-black/10 py-2 text-[10px] font-bold tracking-[0.1em] outline-none focus:border-brand-black transition-colors cursor-pointer appearance-none"
+                                className="w-full bg-transparent border-b border-border-primary py-2 text-[10px] font-bold tracking-[0.1em] outline-none focus:border-brand-accent transition-colors cursor-pointer appearance-none"
                             >
                                 {priceRanges.map(range => (
                                     <option key={range.id} value={range.id}>{range.label}</option>
                                 ))}
                             </select>
                         </div>
-                        
+
                         <div className="relative w-full sm:w-64">
                             <input
                                 type="text"
                                 placeholder="Search products..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full bg-transparent border-b border-black/10 py-2 text-[10px] font-bold tracking-[0.15em] outline-none focus:border-brand-black transition-colors"
+                                className="w-full bg-transparent border-b border-border-primary py-2 text-[10px] font-bold tracking-[0.15em] outline-none focus:border-brand-accent transition-colors text-brand-black"
                             />
-                            <Search className="absolute right-0 top-1/2 -translate-y-1/2 text-black/30" size={12} />
+                            <Search className="absolute right-0 top-1/2 -translate-y-1/2 text-text-muted" size={12} />
                         </div>
                         <div className="flex gap-3">
                             <div className="flex flex-col items-end">
@@ -131,30 +131,33 @@ const ShopLanding = () => {
                 </header>
 
                 {/* Category Filter */}
-                <div className="mb-12 flex flex-wrap gap-x-6 gap-y-3 border-b border-brand-black/10 pb-4">
-                    <button
-                        onClick={() => handleCategoryChange('all')}
-                        className={`text-[10px] font-bold tracking-[0.2em] uppercase pb-2 transition-all relative ${activeCategory === 'all' ? 'text-brand-black' : 'text-brand-black/40 hover:text-brand-black'
-                            }`}
-                    >
-                        All Products
-                        {activeCategory === 'all' && (
-                            <motion.div layoutId="cat-underline" className="absolute bottom-[-1px] left-0 w-full h-px bg-brand-black" />
-                        )}
-                    </button>
-                    {categories.map(cat => (
+                {/* Category Filter */}
+                <div className="mb-12 border-b border-border-primary pb-4">
+                    <div className="flex items-center gap-8 overflow-x-auto scrollbar-hide whitespace-nowrap px-1">
                         <button
-                            key={cat.id}
-                            onClick={() => handleCategoryChange(cat.id)}
-                            className={`text-[10px] font-bold tracking-[0.2em] uppercase pb-2 transition-all relative ${activeCategory === cat.id ? 'text-brand-black' : 'text-brand-black/40 hover:text-brand-black'
+                            onClick={() => handleCategoryChange('all')}
+                            className={`text-[11px] font-bold tracking-[0.2em] uppercase transition-all relative py-2 ${activeCategory === 'all' ? 'text-brand-accent' : 'text-text-muted hover:text-brand-black'
                                 }`}
                         >
-                            {cat.name}
-                            {activeCategory === cat.id && (
-                                <motion.div layoutId="cat-underline" className="absolute bottom-[-1px] left-0 w-full h-px bg-brand-black" />
+                            All Products
+                            {activeCategory === 'all' && (
+                                <motion.div layoutId="cat-underline" className="absolute bottom-0 left-0 w-full h-[2px] bg-brand-accent" />
                             )}
                         </button>
-                    ))}
+                        {categories.map(cat => (
+                            <button
+                                key={cat.id}
+                                onClick={() => handleCategoryChange(cat.id)}
+                                className={`text-[11px] font-bold tracking-[0.2em] uppercase transition-all relative py-2 ${activeCategory === cat.id ? 'text-brand-accent' : 'text-text-muted hover:text-brand-black'
+                                    }`}
+                            >
+                                {cat.name}
+                                {activeCategory === cat.id && (
+                                    <motion.div layoutId="cat-underline" className="absolute bottom-0 left-0 w-full h-[2px] bg-brand-accent" />
+                                )}
+                            </button>
+                        ))}
+                    </div>
                 </div>
 
                 {/* Products Grid */}
@@ -173,7 +176,7 @@ const ShopLanding = () => {
                             transition={{ delay: index * 0.05, duration: 0.8 }}
                             className="group"
                         >
-                            <div className="relative aspect-[4/5] overflow-hidden bg-white soft-shadow">
+                            <div className="relative aspect-[4/5] overflow-hidden bg-bg-secondary soft-shadow">
                                 <img
                                     src={product.image}
                                     alt={product.title}
@@ -186,14 +189,14 @@ const ShopLanding = () => {
                                     <div className="flex gap-4 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                                         <button
                                             onClick={() => setQuickViewProduct(product)}
-                                            className="w-12 h-12 bg-white text-brand-black rounded-full flex items-center justify-center hover:bg-brand-black hover:text-white transition-colors soft-shadow"
+                                            className="w-12 h-12 bg-bg-primary text-brand-black rounded-full flex items-center justify-center hover:bg-brand-black hover:text-white transition-colors soft-shadow"
                                             title="Quick View"
                                         >
                                             <Eye size={20} strokeWidth={1.5} />
                                         </button>
                                         <Link
                                             to={`/product/${product.id}`}
-                                            className="w-12 h-12 bg-white text-brand-black rounded-full flex items-center justify-center hover:bg-brand-black hover:text-white transition-colors soft-shadow"
+                                            className="w-12 h-12 bg-bg-primary text-brand-black rounded-full flex items-center justify-center hover:bg-brand-black hover:text-white transition-colors soft-shadow"
                                             title="Configure & Buy"
                                         >
                                             <Plus size={20} strokeWidth={1.5} />
@@ -227,7 +230,7 @@ const ShopLanding = () => {
                                     </h3>
                                 </Link>
                                 <div className="flex items-center justify-between">
-                                    <p className="text-[8px] tracking-[0.15em] uppercase text-brand-black/40 font-bold">
+                                    <p className="text-[8px] tracking-[0.15em] uppercase text-text-muted font-bold">
                                         {categories.find(c => c.id === product.categoryId)?.name}
                                     </p>
                                     <span className="text-sm font-medium tracking-tight">
@@ -267,7 +270,7 @@ const ShopLanding = () => {
                             initial={{ scale: 0.9, y: 20 }}
                             animate={{ scale: 1, y: 0 }}
                             exit={{ scale: 0.9, y: 20 }}
-                            className="bg-white max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 overflow-hidden soft-shadow"
+                            className="bg-brand-white max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 overflow-hidden soft-shadow relative"
                             onClick={e => e.stopPropagation()}
                         >
                             <div className="aspect-[4/5] md:aspect-auto">
@@ -284,7 +287,7 @@ const ShopLanding = () => {
                                 >
                                     Close
                                 </button>
-                                <span className="text-[10px] tracking-[0.3em] uppercase text-brand-black/40 font-bold mb-4 block">
+                                <span className="text-[10px] tracking-[0.3em] uppercase text-text-muted font-bold mb-4 block">
                                     {categories.find(c => c.id === quickViewProduct.categoryId)?.name}
                                 </span>
                                 <h2 className="text-4xl font-serif mb-6">{quickViewProduct.title}</h2>

@@ -26,7 +26,7 @@ const TrustBadges = () => {
     ];
 
     return (
-        <section className="py-24 bg-[#F5F5F5] border-t border-brand-black/5">
+        <section className="py-24 bg-bg-secondary border-t border-border-primary">
             <div className="max-w-[1400px] mx-auto px-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
                     {features.map((feature, idx) => (

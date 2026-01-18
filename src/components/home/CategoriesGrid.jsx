@@ -6,7 +6,7 @@ import { categories } from '../../data/products';
 
 const CategoriesGrid = () => {
     return (
-        <section className="bg-white py-16">
+        <section className="bg-brand-white py-16">
             <div className="max-w-7xl mx-auto px-4 sm:px-6">
                 {/* Header */}
                 <div className="text-center mb-12">
@@ -35,7 +35,7 @@ const CategoriesGrid = () => {
                         >
                             <Link
                                 to={`/shop?category=${category.id}`}
-                                className="group block bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-xl hover:border-[#00A19D]/30 transition-all duration-300"
+                                className="group block bg-bg-secondary border border-gray-200 rounded-xl overflow-hidden hover:shadow-xl hover:border-[#00A19D]/30 transition-all duration-300"
                             >
                                 <div className="aspect-square overflow-hidden bg-gray-100">
                                     <img

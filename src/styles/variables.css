@@ -1,59 +1,48 @@
 :root {
-    /* Colors */
-    --bg-primary: #F5F5F5;
-    --bg-secondary: #FFFFFF;
-    --bg-tertiary: #E8E8E8;
+    /* Brand Colors - Standard */
+    --brand-teal: #00A19D;
+    --brand-teal-dark: #008B87;
+    --brand-teal-light: #00C4BF;
 
-    --text-primary: #1A1A1A;
-    --text-secondary: #4A4A4A;
-    --text-muted: #8E8E8E;
+    /* Light Theme (Default) */
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #F9FAFB;
+    --bg-tertiary: #F3F4F6;
 
-    --accent-primary: #D4AF37;
-    /* Metallic Gold */
-    --accent-secondary: #000000;
-    --accent-glow: rgba(212, 175, 55, 0.2);
+    --text-primary: #111827;
+    --text-secondary: #4B5563;
+    --text-muted: #9CA3AF;
 
-    --border-light: rgba(0, 0, 0, 0.05);
-    --glass-bg: rgba(255, 255, 255, 0.7);
-    --glass-border: rgba(0, 0, 0, 0.05);
+    --border-primary: #E5E7EB;
+    --border-secondary: #F3F4F6;
 
-    /* Spacing */
-    --container-width: 1400px;
-    --header-height: 100px;
+    --card-bg: #FFFFFF;
+    --card-shadow: 0 10px 40px -15px rgba(0, 0, 0, 0.05);
 
-    /* Animation */
+    /* Animation & Spacing */
     --transition-fast: 0.2s ease;
-    --transition-medium: 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    --transition-medium: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-html.light {
-    --bg-primary: #ffffff;
-    --bg-secondary: #f4f4f5;
-    --bg-tertiary: #e4e4e7;
+/* Dark Mode Overrides */
+.dark-mode {
+    --bg-primary: #0F172A;
+    /* Slate 900 */
+    --bg-secondary: #1E293B;
+    /* Slate 800 */
+    --bg-tertiary: #334155;
+    /* Slate 700 */
 
-    --text-primary: #18181b;
-    --text-secondary: #52525b;
-    --text-muted: #a1a1aa;
+    --text-primary: #F9FAFB;
+    /* Gray 50 */
+    --text-secondary: #9CA3AF;
+    /* Gray 400 */
+    --text-muted: #6B7280;
+    /* Gray 500 */
 
-    --border-light: rgba(0, 0, 0, 0.1);
-    --glass-bg: rgba(0, 0, 0, 0.03);
-    --glass-border: rgba(0, 0, 0, 0.05);
-}
+    --border-primary: #1E293B;
+    --border-secondary: #334155;
 
-html.dark {
-    --bg-primary: #1a1a1a;
-    --bg-secondary: #2d2d2d;
-    --bg-tertiary: #3d3d3d;
-
-    --text-primary: #f4f4f5;
-    --text-secondary: #d4d4d8;
-    --text-muted: #a1a1aa;
-
-    --accent-primary: #D4AF37;
-    --accent-secondary: #000000;
-    --accent-glow: rgba(212, 175, 55, 0.3);
-
-    --border-light: rgba(255, 255, 255, 0.1);
-    --glass-bg: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 255, 255, 0.1);
+    --card-bg: #1E293B;
+    --card-shadow: 0 10px 40px -15px rgba(0, 0, 0, 0.3);
 }

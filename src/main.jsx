@@ -2,6 +2,11 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './styles/global.css'
+import './styles/variables.css'
+import { initTheme } from './utils/theme'
+
+// Initialize theme immediately
+initTheme();
 
 // Register service worker
 /*

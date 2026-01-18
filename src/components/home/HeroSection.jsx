@@ -5,7 +5,7 @@ import { ArrowRight, Printer } from 'lucide-react';
 
 const HeroSection = () => {
     return (
-        <section className="bg-white py-16 lg:py-24">
+        <section className="bg-brand-white py-16 lg:py-24 transition-colors duration-300">
             <div className="max-w-7xl mx-auto px-4 sm:px-6">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                     {/* Image */}
@@ -40,23 +40,23 @@ const HeroSection = () => {
                             <Printer className="text-[#00A19D]" size={32} />
                         </div>
 
-                        <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-4">
+                        <h1 className="text-4xl lg:text-5xl font-black text-brand-black mb-4">
                             Printing <span className="text-[#00A19D]">Service</span>
                         </h1>
 
-                        <p className="text-gray-600 leading-relaxed mb-8">
+                        <p className="text-text-secondary leading-relaxed mb-8">
                             At Printify Studio, we offer a full range of printing services to meet the needs of businesses and individuals alike. Whether you need a simple brochure or a large-scale trade show display, our team of experts will work with you to create a final product that meets your specific requirements.
                         </p>
 
-                        <p className="text-gray-600 leading-relaxed mb-8">
+                        <p className="text-text-secondary leading-relaxed mb-8">
                             Some of our most popular printing services include: <strong>Business Cards</strong> - High-quality, full-color business cards printed on premium paper stock. <strong>Brochures</strong> - Eye-catching brochures that showcase your products or services. <strong>Posters</strong> - Large-scale posters for indoor or outdoor use, perfect for trade shows or events. <strong>Banners</strong> - Durable, full-color banners that are perfect for promoting your brand.
                         </p>
 
                         <Link
                             to="/shop"
-                            className="inline-flex items-center gap-2 text-gray-900 font-semibold uppercase tracking-wide hover:text-[#00A19D] transition-colors group"
+                            className="inline-flex items-center gap-2 text-brand-black font-semibold uppercase tracking-wide hover:text-brand-accent transition-colors group"
                         >
-                            <span className="w-8 h-[2px] bg-gray-900 group-hover:bg-[#00A19D] transition-colors"></span>
+                            <span className="w-8 h-[2px] bg-brand-black group-hover:bg-brand-accent transition-colors"></span>
                             Get Instant Quote
                             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                         </Link>

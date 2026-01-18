@@ -10,16 +10,16 @@ const PackagesPage = () => {
     return (
         <div className="min-h-screen bg-brand-white selection:bg-brand-black selection:text-white">
             {/* Header */}
-            <header className="border-b border-brand-black/10">
+            <header className="border-b border-border-primary">
                 <div className="max-w-7xl mx-auto px-6 py-8">
-                    <Link 
-                        to="/shop" 
+                    <Link
+                        to="/shop"
                         className="flex items-center gap-2 text-brand-black/60 hover:text-brand-black transition-colors mb-6"
                     >
                         <ArrowLeft size={16} />
                         <span className="text-sm">Back to Shop</span>
                     </Link>
-                    
+
                     <h1 className="text-4xl md:text-5xl font-serif text-brand-black mb-4">Branding Packages</h1>
                     <p className="text-brand-black/60 max-w-2xl">
                         Complete visual identity solutions designed specifically for startups and growing businesses.
@@ -31,29 +31,28 @@ const PackagesPage = () => {
             <main className="max-w-7xl mx-auto px-6 py-16">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
                     {packages.map((pkg) => (
-                        <div 
+                        <div
                             key={pkg.id}
-                            className="border border-brand-black/10 rounded-lg p-8 hover:shadow-lg transition-shadow bg-white"
+                            className="border border-border-primary rounded-lg p-8 hover:shadow-lg transition-shadow bg-bg-secondary"
                         >
                             {pkg.status && (
                                 <div className="mb-4">
-                                    <span className={`px-3 py-1 text-xs font-bold uppercase tracking-widest text-white ${
-                                        pkg.status === 'hot' ? 'bg-orange-500' : 
-                                        pkg.status === 'popular' ? 'bg-blue-500' : 
-                                        'bg-brand-accent'
-                                    }`}>
-                                        {pkg.status === 'hot' ? 'Best Value' : 
-                                         pkg.status === 'popular' ? 'Most Popular' : 
-                                         'New'}
+                                    <span className={`px-3 py-1 text-xs font-bold uppercase tracking-widest text-white ${pkg.status === 'hot' ? 'bg-orange-500' :
+                                            pkg.status === 'popular' ? 'bg-blue-500' :
+                                                'bg-brand-accent'
+                                        }`}>
+                                        {pkg.status === 'hot' ? 'Best Value' :
+                                            pkg.status === 'popular' ? 'Most Popular' :
+                                                'New'}
                                     </span>
                                 </div>
                             )}
-                            
+
                             <h2 className="text-2xl font-serif text-brand-black mb-2">{pkg.title}</h2>
                             <p className="text-brand-black/60 mb-6 text-sm leading-relaxed">
                                 {pkg.description}
                             </p>
-                            
+
                             <div className="mb-6">
                                 <span className="text-2xl font-bold text-brand-black">
                                     {pkg.priceRange}
@@ -63,13 +62,12 @@ const PackagesPage = () => {
                             {/* Package Plans */}
                             <div className="space-y-4 mb-8">
                                 {pkg.packages.map((plan) => (
-                                    <div 
+                                    <div
                                         key={plan.name}
-                                        className={`border rounded-lg p-4 transition-all ${
-                                            selectedPlan?.name === plan.name 
-                                                ? 'border-brand-accent bg-brand-accent/5' 
+                                        className={`border rounded-lg p-4 transition-all ${selectedPlan?.name === plan.name
+                                                ? 'border-brand-accent bg-brand-accent/5'
                                                 : 'border-brand-black/10'
-                                        }`}
+                                            }`}
                                     >
                                         <div className="flex justify-between items-start mb-3">
                                             <h3 className="font-bold text-brand-black">{plan.name}</h3>
@@ -94,7 +92,7 @@ const PackagesPage = () => {
                             >
                                 Get a Quote
                             </Link>
-                            
+
                             {/* Delivery Info */}
                             <div className="mt-4 text-center">
                                 <p className="text-xs text-brand-black/50">
@@ -106,7 +104,7 @@ const PackagesPage = () => {
                 </div>
 
                 {/* Important Notes */}
-                <div className="bg-gray-50 rounded-lg p-6 mb-16">
+                <div className="bg-bg-secondary rounded-lg p-6 mb-16 border border-border-primary">
                     <h3 className="font-bold text-brand-black mb-4">Important Information</h3>
                     <ul className="text-sm text-brand-black/70 space-y-2">
                         <li className="flex items-start gap-2">
@@ -125,7 +123,7 @@ const PackagesPage = () => {
                 </div>
 
                 {/* Comparison Table */}
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto scrollbar-hide">
                     <table className="w-full border-collapse">
                         <thead>
                             <tr className="bg-brand-black text-white">
@@ -173,7 +171,7 @@ const PackagesPage = () => {
                 {/* Features Section */}
                 <div className="mt-24">
                     <h2 className="text-3xl font-serif text-brand-black mb-12 text-center">Why Choose Our Branding Packages?</h2>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         <div className="text-center">
                             <div className="w-16 h-16 bg-brand-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -184,7 +182,7 @@ const PackagesPage = () => {
                                 All branding assets created by professional designers using industry-standard software.
                             </p>
                         </div>
-                        
+
                         <div className="text-center">
                             <div className="w-16 h-16 bg-brand-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <Clock className="text-brand-accent" size={24} />
@@ -194,7 +192,7 @@ const PackagesPage = () => {
                                 Receive your complete brand kit within 3-5 business days with express options available.
                             </p>
                         </div>
-                        
+
                         <div className="text-center">
                             <div className="w-16 h-16 bg-brand-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <CheckCircle className="text-brand-accent" size={24} />

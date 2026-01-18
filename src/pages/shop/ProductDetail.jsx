@@ -77,7 +77,7 @@ const ProductDetail = () => {
             quantity: quantityOption || { value: customQty },
             dimensions
         });
-        
+
         setValidationErrors(validation.errors);
 
         // Validation: If strict requirements aren't met, price is 0 (Show Range)
@@ -215,20 +215,20 @@ const ProductDetail = () => {
     // --- Specialized Template Selection View ---
     if (product.isTemplateGroup && !selectedTemplate) {
         return (
-            <div className="min-h-screen bg-[#F5F5F5] pt-32 pb-20 px-8">
+            <div className="min-h-screen bg-brand-white pt-32 pb-20 px-8">
                 <header className="mb-20 max-w-[1400px] mx-auto">
-                    <button onClick={() => navigate('/')} className="flex items-center gap-2 text-black/30 hover:text-black mb-12 uppercase text-[10px] font-bold tracking-[0.3em] transition-all">
+                    <button onClick={() => navigate('/')} className="flex items-center gap-2 text-brand-black/30 hover:text-brand-black mb-12 uppercase text-[10px] font-bold tracking-[0.3em] transition-all">
                         <ArrowLeft size={14} /> Back to Collection
                     </button>
                     <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-10">
                         <div>
                             <span className="text-brand-accent text-[10px] font-bold tracking-[0.4em] uppercase mb-4 block">Archive Series</span>
                             <h1 className="text-6xl font-serif text-brand-black mb-4">{product.title}</h1>
-                            <p className="max-w-xl text-black/50 text-sm leading-relaxed">{product.description}</p>
+                            <p className="max-w-xl text-brand-black/50 text-sm leading-relaxed">{product.description}</p>
                         </div>
-                        <div className="flex gap-12 text-[10px] font-bold tracking-[0.2em] uppercase border-l border-black/5 pl-12">
-                            <div><span className="opacity-30 block mb-2">Base Cost</span><span className="text-lg">Rs. {product.price}</span></div>
-                            <div><span className="opacity-30 block mb-2">Minimum</span><span className="text-lg">{product.moq} Units</span></div>
+                        <div className="flex gap-12 text-[10px] font-bold tracking-[0.2em] uppercase border-l border-border-primary pl-12">
+                            <div><span className="opacity-30 block mb-2">Base Cost</span><span className="text-lg text-brand-black">Rs. {product.price}</span></div>
+                            <div><span className="opacity-30 block mb-2">Minimum</span><span className="text-lg text-brand-black">{product.moq} Units</span></div>
                         </div>
                     </div>
                 </header>
@@ -246,7 +246,7 @@ const ProductDetail = () => {
                                 className="group cursor-pointer"
                                 onClick={() => setSelectedTemplate({ id: templateId, image: imgSrc })}
                             >
-                                <div className="aspect-[3/4] overflow-hidden bg-white soft-shadow mb-6 relative">
+                                <div className="aspect-[3/4] overflow-hidden bg-bg-secondary soft-shadow mb-6 relative">
                                     <img src={imgSrc} alt={templateId} className="w-full h-full object-cover grayscale-[0.5] group-hover:grayscale-0 transition-all duration-1000 scale-100 group-hover:scale-105" />
                                     <div className="absolute inset-0 bg-brand-black/0 group-hover:bg-brand-black/5 transition-colors" />
                                     <div className="absolute bottom-6 left-6 right-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
@@ -282,16 +282,16 @@ const ProductDetail = () => {
 
     // --- Ultra-Professional Configuration View ---
     return (
-        <div className="min-h-screen bg-[#F5F5F5] pt-32 pb-40 px-8">
+        <div className="min-h-screen bg-brand-white pt-32 pb-40 px-8">
             <div className="max-w-[1400px] mx-auto">
-                <button onClick={() => selectedTemplate ? setSelectedTemplate(null) : navigate('/')} className="flex items-center gap-2 text-black/20 hover:text-black mb-16 uppercase text-[10px] font-bold tracking-[0.3em] transition-all">
+                <button onClick={() => selectedTemplate ? setSelectedTemplate(null) : navigate('/')} className="flex items-center gap-2 text-brand-black/20 hover:text-brand-black mb-16 uppercase text-[10px] font-bold tracking-[0.3em] transition-all">
                     <ArrowLeft size={14} /> {selectedTemplate ? 'Return to Gallery' : 'Return to Collections'}
                 </button>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 items-start">
                     {/* Media Column (Sticky) */}
                     <div className="lg:col-span-7 lg:sticky lg:top-36">
-                        <div className="bg-white soft-shadow overflow-hidden group">
+                        <div className="bg-bg-secondary soft-shadow overflow-hidden group">
                             {product.isCustom ? (
                                 <div className="aspect-square bg-brand-black flex flex-col items-center justify-center p-20 text-center text-white">
                                     <span className="text-[10px] tracking-[0.5em] uppercase text-brand-accent mb-8 font-bold">Commission Service</span>
@@ -320,25 +320,25 @@ const ProductDetail = () => {
                     <div className="lg:col-span-5 space-y-20">
                         <header>
                             <div className="flex items-center gap-4 mb-6">
-                                <span className="text-[10px] tracking-[0.4em] uppercase text-black/30 font-bold">{product.categoryId}</span>
-                                <div className="h-px w-8 bg-black/10" />
-                                <span className="text-[10px] tracking-[0.4em] uppercase text-black/30 font-bold">Ref. {product.id}</span>
+                                <span className="text-[10px] tracking-[0.4em] uppercase text-brand-black/30 font-bold">{product.categoryId}</span>
+                                <div className="h-px w-8 bg-border-primary" />
+                                <span className="text-[10px] tracking-[0.4em] uppercase text-brand-black/30 font-bold">Ref. {product.id}</span>
                             </div>
                             <h1 className="text-6xl font-serif text-brand-black mb-8 leading-[1.1]">{product.title}</h1>
-                            <p className="text-black/50 text-sm leading-relaxed max-w-md">{product.description}</p>
+                            <p className="text-brand-black/50 text-sm leading-relaxed max-w-md">{product.description}</p>
                         </header>
 
                         <div className="space-y-16">
                             {/* Package Selection */}
                             {product.isPackage && (
                                 <section>
-                                    <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-black/40 mb-8">01. Service Tier</h3>
+                                    <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-brand-black/40 mb-8">01. Service Tier</h3>
                                     <div className="grid grid-cols-1 gap-6">
                                         {product.packages.map((pkg) => (
                                             <button
                                                 key={pkg.name}
                                                 onClick={() => setSelectedPackage(pkg)}
-                                                className={`group relative p-8 text-left transition-all border ${selectedPackage?.name === pkg.name ? 'border-brand-black bg-brand-black text-white' : 'border-black/5 bg-white hover:border-black/20'}`}
+                                                className={`group relative p-8 text-left transition-all border ${selectedPackage?.name === pkg.name ? 'border-brand-accent bg-brand-black text-white' : 'border-border-primary bg-bg-secondary hover:border-brand-black/20'}`}
                                             >
                                                 <div className="flex justify-between items-start mb-6">
                                                     <div>
@@ -366,7 +366,7 @@ const ProductDetail = () => {
                             {!product.isCustom && (
                                 <section>
                                     <div className="flex justify-between items-end mb-8">
-                                        <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-black/40">01. Material Quality</h3>
+                                        <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-brand-black/40">01. Material Quality</h3>
                                         <span className="text-[9px] font-bold text-brand-accent uppercase tracking-wider">{material?.name} Selection applied</span>
                                     </div>
                                     <div className="grid grid-cols-1 gap-3">
@@ -374,7 +374,7 @@ const ProductDetail = () => {
                                             <button
                                                 key={m.name}
                                                 onClick={() => setMaterial(m)}
-                                                className={`group flex items-center justify-between p-6 transition-all border ${material?.name === m.name ? 'border-brand-black bg-brand-black text-white' : 'border-black/5 bg-white hover:border-black/20 text-black/40'}`}
+                                                className={`group flex items-center justify-between p-6 transition-all border ${material?.name === m.name ? 'border-brand-black bg-brand-black text-white' : 'border-border-primary bg-bg-secondary hover:border-brand-black/20 text-brand-black/40'}`}
                                             >
                                                 <div className="flex flex-col items-start gap-1">
                                                     <span className="text-[10px] font-bold tracking-widest uppercase">{m.name}</span>
@@ -425,7 +425,7 @@ const ProductDetail = () => {
                             {/* Quantity Selection */}
                             {!product.isCustom && (
                                 <section>
-                                    <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-black/40 mb-8">
+                                    <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-brand-black/40 mb-8">
                                         03. Bespoke Quantity {product.moq ? `(Min. ${product.moq})` : ''}
                                     </h3>
                                     {product.options?.quantity ? (
@@ -434,7 +434,7 @@ const ProductDetail = () => {
                                                 <button
                                                     key={q.value}
                                                     onClick={() => setQuantityOption(q)}
-                                                    className={`py-6 flex flex-col items-center justify-center transition-all border ${quantityOption?.value === q.value ? 'border-brand-black bg-brand-black text-white' : 'border-black/5 bg-white hover:border-black/20 text-black/20'}`}
+                                                    className={`py-6 flex flex-col items-center justify-center transition-all border ${quantityOption?.value === q.value ? 'border-brand-black bg-brand-black text-white' : 'border-border-primary bg-bg-secondary hover:border-brand-black/20 text-brand-black/20'}`}
                                                 >
                                                     <span className="text-[10px] font-bold tracking-widest uppercase">{q.label.split(' ')[0]}</span>
                                                     <span className="text-[8px] opacity-50 uppercase mt-1">Units</span>
@@ -646,7 +646,7 @@ const ProductDetail = () => {
                                         </>
                                     )}
                                 </div>
-                                
+
                                 {/* Validation Errors */}
                                 {validationErrors.length > 0 && (
                                     <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">

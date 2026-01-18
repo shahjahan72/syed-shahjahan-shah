@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
+import { Mail, Phone, MapPin, Facebook, Instagram, Linkedin, Twitter, CreditCard, Shield } from 'lucide-react';
 import { siteConfig } from '../config/siteConfig';
 import { categories } from '../data/products';
 
@@ -25,7 +25,7 @@ const FooterPro = () => {
                             </span>
                         </Link>
                         <p className="text-gray-400 text-sm leading-relaxed mb-6">
-                            Your trusted partner for all printing needs. We deliver high-quality printing services with fast turnaround and competitive prices across Pakistan.
+                            Your trusted partner for all printing needs. We deliver high-quality printing services with fast turnaround and competitive prices. Delivery Across Pakistan.
                         </p>
                         <div className="flex gap-4">
                             <a href="#" className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-[#00A19D] transition-colors">
@@ -40,6 +40,25 @@ const FooterPro = () => {
                             <a href="#" className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-[#00A19D] transition-colors">
                                 <Twitter size={18} />
                             </a>
+                        </div>
+
+                        {/* Payment Methods */}
+                        <div className="mt-8">
+                            <h4 className="text-lg font-bold mb-4">Secure Payment Methods</h4>
+                            <div className="flex flex-wrap gap-3">
+                                <div className="flex items-center gap-2 px-3 py-2 bg-white/10 rounded-lg">
+                                    <CreditCard className="text-white" size={20} />
+                                    <span className="text-sm font-medium">Visa</span>
+                                </div>
+                                <div className="flex items-center gap-2 px-3 py-2 bg-white/10 rounded-lg">
+                                    <CreditCard className="text-white" size={20} />
+                                    <span className="text-sm font-medium">Master Card</span>
+                                </div>
+                                <div className="flex items-center gap-2 px-3 py-2 bg-white/10 rounded-lg">
+                                    <Shield className="text-white" size={20} />
+                                    <span className="text-sm font-medium">EasyPaisa</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 

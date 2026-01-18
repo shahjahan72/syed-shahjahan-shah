@@ -1,6 +1,6 @@
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { CartProvider } from './context/CartContext';
+import { CartProvider, useCart } from './context/CartContext';
 import PageLoader from './components/PageLoader';
 import ErrorBoundary from './components/ErrorBoundary';
 import SkipNav from './components/SkipNav';
@@ -11,6 +11,7 @@ import AnalyticsWrapper from './components/AnalyticsWrapper';
 import NavbarPro from './components/NavbarPro';
 import FooterPro from './components/FooterPro';
 import FloatingWhatsApp from './components/FloatingWhatsApp';
+import CartModalHandler from './components/CartModalHandler';
 
 // Lazy Loaded Pages
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -36,9 +37,10 @@ const App = () => {
           <StructuredData />
           <SkipNav />
           <AnalyticsWrapper>
-            <div className="min-h-screen bg-white text-gray-900">
+            <div className="min-h-screen bg-brand-white text-brand-black transition-colors duration-300">
               <NavbarPro />
               <FloatingWhatsApp />
+              <CartModalHandler />
 
               <main id="main-content" className="pt-20" tabIndex="-1">
                 <Suspense fallback={<PageLoader />}>

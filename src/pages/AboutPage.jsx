@@ -1,14 +1,14 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { 
-    Target, 
-    Eye, 
-    Award, 
-    Users, 
-    Clock, 
-    Shield, 
-    Printer, 
+import {
+    Target,
+    Eye,
+    Award,
+    Users,
+    Clock,
+    Shield,
+    Printer,
     Palette,
     CheckCircle,
     ArrowRight,
@@ -85,15 +85,15 @@ const AboutPage = () => {
     ];
 
     return (
-        <div className="bg-white">
+        <div className="bg-brand-white">
             {/* Hero Section */}
-            <section className="relative min-h-[60vh] flex items-center bg-gradient-to-br from-[#00A19D] to-[#008B87] text-white overflow-hidden">
+            <section className="relative min-h-[60vh] flex items-center bg-gradient-to-br from-brand-accent to-brand-teal-dark text-white overflow-hidden">
                 <div className="absolute inset-0 opacity-10">
                     <div className="absolute inset-0" style={{
                         backgroundImage: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
                     }} />
                 </div>
-                
+
                 <div className="max-w-7xl mx-auto px-6 py-20 relative z-10">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
@@ -110,15 +110,15 @@ const AboutPage = () => {
                             At {siteConfig.name}, we bring your ideas to life with precision printing and exceptional quality. From business cards to billboards, we deliver excellence in every print.
                         </p>
                         <div className="flex flex-wrap gap-4">
-                            <Link 
-                                to="/shop" 
-                                className="bg-white text-[#00A19D] px-8 py-4 font-bold uppercase tracking-wide hover:bg-gray-100 transition-colors"
+                            <Link
+                                to="/shop"
+                                className="bg-brand-white text-brand-accent px-8 py-4 font-bold uppercase tracking-wide hover:bg-bg-secondary transition-colors"
                             >
                                 Explore Products
                             </Link>
-                            <Link 
-                                to="/contact" 
-                                className="border-2 border-white text-white px-8 py-4 font-bold uppercase tracking-wide hover:bg-white hover:text-[#00A19D] transition-colors"
+                            <Link
+                                to="/contact"
+                                className="border-2 border-white text-white px-8 py-4 font-bold uppercase tracking-wide hover:bg-white hover:text-brand-accent transition-colors"
                             >
                                 Get Quote
                             </Link>
@@ -128,7 +128,7 @@ const AboutPage = () => {
             </section>
 
             {/* Stats Section */}
-            <section className="py-16 bg-gray-50">
+            <section className="py-16 bg-bg-secondary">
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                         {stats.map((stat, idx) => (
@@ -140,8 +140,8 @@ const AboutPage = () => {
                                 transition={{ delay: idx * 0.1 }}
                                 className="text-center"
                             >
-                                <div className="text-4xl md:text-5xl font-bold text-[#00A19D] mb-2">{stat.number}</div>
-                                <div className="text-gray-600 font-medium">{stat.label}</div>
+                                <div className="text-4xl md:text-5xl font-bold text-brand-accent mb-2">{stat.number}</div>
+                                <div className="text-text-secondary font-medium">{stat.label}</div>
                             </motion.div>
                         ))}
                     </div>
@@ -152,8 +152,8 @@ const AboutPage = () => {
             <section id="why-us" className="py-20">
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="text-center mb-16">
-                        <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">What Drives Us</h2>
-                        <p className="text-gray-600 max-w-2xl mx-auto">Our commitment to excellence is reflected in everything we do</p>
+                        <h2 className="text-4xl md:text-5xl font-bold text-brand-black mb-4">What Drives Us</h2>
+                        <p className="text-text-secondary max-w-2xl mx-auto">Our commitment to excellence is reflected in everything we do</p>
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-8">
@@ -164,13 +164,13 @@ const AboutPage = () => {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: idx * 0.15 }}
-                                className="bg-white border border-gray-100 p-8 rounded-xl hover:shadow-xl transition-shadow"
+                                className="bg-bg-secondary border border-border-primary p-8 rounded-xl hover:shadow-xl transition-shadow"
                             >
                                 <div className="w-14 h-14 bg-[#00A19D]/10 rounded-xl flex items-center justify-center mb-6">
                                     <value.icon className="w-7 h-7 text-[#00A19D]" />
                                 </div>
-                                <h3 className="text-2xl font-bold text-gray-900 mb-4">{value.title}</h3>
-                                <p className="text-gray-600 leading-relaxed">{value.description}</p>
+                                <h3 className="text-2xl font-bold text-brand-black mb-4">{value.title}</h3>
+                                <p className="text-text-secondary leading-relaxed">{value.description}</p>
                             </motion.div>
                         ))}
                     </div>
@@ -178,7 +178,7 @@ const AboutPage = () => {
             </section>
 
             {/* Our Process */}
-            <section id="process" className="py-20 bg-gray-900 text-white">
+            <section id="process" className="py-20 bg-brand-black text-brand-white">
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="text-center mb-16">
                         <span className="text-[#00A19D] text-sm font-bold uppercase tracking-widest mb-4 block">How It Works</span>
@@ -213,11 +213,11 @@ const AboutPage = () => {
                     <div className="grid lg:grid-cols-2 gap-16 items-center">
                         <div>
                             <span className="text-[#00A19D] text-sm font-bold uppercase tracking-widest mb-4 block">Why Choose Us</span>
-                            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Excellence in Every Print</h2>
-                            <p className="text-gray-600 text-lg leading-relaxed mb-8">
+                            <h2 className="text-4xl md:text-5xl font-bold text-brand-black mb-6">Excellence in Every Print</h2>
+                            <p className="text-text-secondary text-lg leading-relaxed mb-8">
                                 We combine cutting-edge technology with skilled craftsmanship to deliver printing solutions that exceed expectations. Our commitment to quality and customer satisfaction sets us apart.
                             </p>
-                            
+
                             <div className="grid grid-cols-2 gap-6">
                                 {whyChooseUs.map((item, idx) => (
                                     <motion.div
@@ -246,7 +246,7 @@ const AboutPage = () => {
                             viewport={{ once: true }}
                             className="relative"
                         >
-                            <img 
+                            <img
                                 src="https://images.unsplash.com/photo-1586075010633-2445c9ff0330?q=80&w=800&auto=format&fit=crop"
                                 alt="Printing Process"
                                 className="rounded-2xl shadow-2xl"
@@ -261,20 +261,20 @@ const AboutPage = () => {
             </section>
 
             {/* CTA Section */}
-            <section className="py-20 bg-[#00A19D]">
+            <section className="py-20 bg-brand-accent">
                 <div className="max-w-4xl mx-auto px-6 text-center">
                     <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Ready to Start Your Project?</h2>
                     <p className="text-xl text-white/90 mb-8">
                         Get in touch with our team for a free consultation and quote
                     </p>
                     <div className="flex flex-wrap justify-center gap-4">
-                        <Link 
-                            to="/shop" 
+                        <Link
+                            to="/shop"
                             className="bg-white text-[#00A19D] px-8 py-4 font-bold uppercase tracking-wide hover:bg-gray-100 transition-colors inline-flex items-center gap-2"
                         >
                             Browse Products <ArrowRight size={18} />
                         </Link>
-                        <a 
+                        <a
                             href={`https://wa.me/${siteConfig.whatsapp.number}`}
                             target="_blank"
                             rel="noopener noreferrer"

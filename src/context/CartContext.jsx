@@ -7,10 +7,11 @@ export const useCart = () => useContext(CartContext);
 export const CartProvider = ({ children }) => {
     const [cart, setCart] = useState([]);
     const [isCartOpen, setIsCartOpen] = useState(false);
+    const [showCartModal, setShowCartModal] = useState(false);
 
     const addToCart = (product) => {
         setCart((prev) => [...prev, product]);
-        setIsCartOpen(true); // Automatically open cart when item added
+        setShowCartModal(true); // Show cart confirmation modal
     };
 
     const removeFromCart = (index) => {
@@ -31,7 +32,9 @@ export const CartProvider = ({ children }) => {
             clearCart,
             cartTotal,
             isCartOpen,
-            setIsCartOpen
+            setIsCartOpen,
+            showCartModal,
+            setShowCartModal
         }}>
             {children}
         </CartContext.Provider>
