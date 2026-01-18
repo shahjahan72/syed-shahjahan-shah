@@ -1,7 +1,7 @@
 // Analytics utility for tracking user interactions
 class Analytics {
     constructor() {
-        this.isEnabled = process.env.NODE_ENV === 'production';
+        this.isEnabled = import.meta.env.PROD;
         this.init();
     }
 
