@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-black: #1A1A1A;
-  --color-brand-white: #F5F5F5;
+  --color-brand-black: var(--text-primary, #1A1A1A);
+  --color-brand-white: var(--bg-primary, #F5F5F5);
   --color-brand-accent: #00A19D;
   --color-brand-teal: #00A19D;
   --color-brand-teal-dark: #008B87;
@@ -66,4 +66,14 @@
 
 ::-webkit-scrollbar-thumb {
   @apply bg-brand-black/10 rounded-full hover:bg-brand-black/20;
+}
+
+/* Hide scrollbar for mobile categories */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, Heart, ShoppingCart, User, Menu, X, Search } from 'lucide-react';
+import { ChevronDown, Heart, ShoppingCart, User, Menu, X, Search, Sun, Moon } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { categories } from '../data/products';
 import { siteConfig } from '../config/siteConfig';
@@ -33,6 +33,23 @@ const NavbarPro = () => {
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
+
+    const [theme, setTheme] = useState('light');
+
+    // Initialize theme from localStorage or system preference
+    useEffect(() => {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        setTheme(savedTheme);
+        document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+    }, []);
+
+    // Toggle theme function
+    const toggleTheme = () => {
+        const newTheme = theme === 'light' ? 'dark' : 'light';
+        setTheme(newTheme);
+        localStorage.setItem('theme', newTheme);
+        document.documentElement.classList.toggle('dark', newTheme === 'dark');
+    };
 
     const navLinks = [
         { name: 'Home', path: '/' },
@@ -134,6 +151,15 @@ const NavbarPro = () => {
 
                     {/* Right Icons */}
                     <div className="flex items-center gap-4">
+                        {/* Theme Toggle */}
+                        <button
+                            onClick={toggleTheme}
+                            className="p-2 text-gray-700 hover:text-[#00A19D] transition-colors"
+                            aria-label="Toggle theme"
+                        >
+                            {theme === 'light' ? <Moon size={22} /> : <Sun size={22} />}
+                        </button>
+
                         {/* Wishlist */}
                         <button className="relative p-2 text-gray-700 hover:text-[#00A19D] transition-colors">
                             <Heart size={22} />
@@ -168,6 +194,22 @@ const NavbarPro = () => {
                                 key={cat.id}
                                 to={`/shop?category=${cat.id}`}
                                 className="text-sm text-gray-600 hover:text-[#00A19D] whitespace-nowrap transition-colors"
+                            >
+                                {cat.name}
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Mobile Categories - Horizontal Scroll */}
+                <div className="lg:hidden border-t border-gray-100">
+                    <div className="flex items-center gap-4 py-3 overflow-x-auto scrollbar-hide">
+                        {categories.map((cat) => (
+                            <Link
+                                key={cat.id}
+                                to={`/shop?category=${cat.id}`}
+                                className="text-xs text-gray-600 hover:text-[#00A19D] whitespace-nowrap transition-colors px-3 py-1 rounded-md hover:bg-gray-100"
+                                onClick={() => setMobileOpen(false)}
                             >
                                 {cat.name}
                             </Link>
