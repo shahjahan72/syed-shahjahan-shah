@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { products, pricingConfig } from '../../data/products';
 import { productValidationSchema, printingRules } from '../../data/printingRules';
 import { useCart } from '../../context/CartContext';
+import ProductReviews from '../../components/features/ProductReviews';
 import {
     Upload,
     ShoppingCart,
@@ -317,39 +318,39 @@ const ProductDetail = () => {
                     </div>
 
                     {/* Configuration Column */}
-                    <div className="lg:col-span-5 space-y-20">
+                    <div className="lg:col-span-5 space-y-8">
                         <header>
-                            <div className="flex items-center gap-4 mb-6">
+                            <div className="flex items-center gap-4 mb-4">
                                 <span className="text-[10px] tracking-[0.4em] uppercase text-brand-black/30 font-bold">{product.categoryId}</span>
                                 <div className="h-px w-8 bg-border-primary" />
                                 <span className="text-[10px] tracking-[0.4em] uppercase text-brand-black/30 font-bold">Ref. {product.id}</span>
                             </div>
-                            <h1 className="text-6xl font-serif text-brand-black mb-8 leading-[1.1]">{product.title}</h1>
+                            <h1 className="text-4xl md:text-5xl font-serif text-brand-black mb-4 leading-tight">{product.title}</h1>
                             <p className="text-brand-black/50 text-sm leading-relaxed max-w-md">{product.description}</p>
                         </header>
 
-                        <div className="space-y-16">
+                        <div className="space-y-8">
                             {/* Package Selection */}
                             {product.isPackage && (
                                 <section>
-                                    <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-brand-black/40 mb-8">01. Service Tier</h3>
-                                    <div className="grid grid-cols-1 gap-6">
+                                    <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-brand-black/40 mb-4">01. Service Tier</h3>
+                                    <div className="grid grid-cols-1 gap-4">
                                         {product.packages.map((pkg) => (
                                             <button
                                                 key={pkg.name}
                                                 onClick={() => setSelectedPackage(pkg)}
-                                                className={`group relative p-8 text-left transition-all border ${selectedPackage?.name === pkg.name ? 'border-brand-accent bg-brand-black text-white' : 'border-border-primary bg-bg-secondary hover:border-brand-black/20'}`}
+                                                className={`group relative p-6 text-left transition-all border ${selectedPackage?.name === pkg.name ? 'border-brand-accent bg-brand-black text-white' : 'border-border-primary bg-bg-secondary hover:border-brand-black/20'}`}
                                             >
-                                                <div className="flex justify-between items-start mb-6">
+                                                <div className="flex justify-between items-start mb-4">
                                                     <div>
-                                                        <h4 className="text-xl font-serif mb-1">{pkg.name}</h4>
+                                                        <h4 className="text-lg font-serif mb-1">{pkg.name}</h4>
                                                         <p className={`text-[10px] font-bold tracking-widest uppercase ${selectedPackage?.name === pkg.name ? 'text-brand-accent' : 'text-black/30'}`}>
                                                             Design Tier
                                                         </p>
                                                     </div>
-                                                    <span className="text-2xl font-serif">Rs. {pkg.price.toLocaleString()}</span>
+                                                    <span className="text-xl font-serif">Rs. {pkg.price.toLocaleString()}</span>
                                                 </div>
-                                                <ul className="space-y-3">
+                                                <ul className="space-y-2">
                                                     {pkg.features.map((feat, i) => (
                                                         <li key={i} className={`flex items-center gap-3 text-[10px] font-bold uppercase tracking-wider ${selectedPackage?.name === pkg.name ? 'text-white/60' : 'text-black/40'}`}>
                                                             <Check size={12} className={selectedPackage?.name === pkg.name ? 'text-brand-accent' : 'text-brand-black'} /> {feat}
@@ -362,108 +363,106 @@ const ProductDetail = () => {
                                 </section>
                             )}
 
-                            {/* Materials Selection */}
+                            {/* Materials & Quantity Combined Section */}
                             {!product.isCustom && (
-                                <section>
-                                    <div className="flex justify-between items-end mb-8">
-                                        <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-brand-black/40">01. Material Quality</h3>
-                                        <span className="text-[9px] font-bold text-brand-accent uppercase tracking-wider">{material?.name} Selection applied</span>
-                                    </div>
-                                    <div className="grid grid-cols-1 gap-3">
-                                        {product.options?.material.map((m) => (
-                                            <button
-                                                key={m.name}
-                                                onClick={() => setMaterial(m)}
-                                                className={`group flex items-center justify-between p-6 transition-all border ${material?.name === m.name ? 'border-brand-black bg-brand-black text-white' : 'border-border-primary bg-bg-secondary hover:border-brand-black/20 text-brand-black/40'}`}
-                                            >
-                                                <div className="flex flex-col items-start gap-1">
-                                                    <span className="text-[10px] font-bold tracking-widest uppercase">{m.name}</span>
-                                                    {m.multiplier > 1 && <span className={`text-[8px] uppercase tracking-wider font-bold ${material?.name === m.name ? 'text-brand-accent' : 'text-black/20'}`}>Premium Upgrade</span>}
-                                                </div>
-                                                <div className={`w-2 h-2 rounded-full transition-all ${material?.name === m.name ? 'bg-brand-accent scale-150' : 'bg-black/5'}`} />
-                                            </button>
-                                        ))}
-                                    </div>
-                                </section>
-                            )}
-
-                            {/* Dimensions Selection (sqft) */}
-                            {product.unit === 'sqft' && (
-                                <section>
-                                    <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-black/40 mb-8">02. Measurement Details (ft)</h3>
-                                    <div className="grid grid-cols-2 gap-8 p-10 bg-white soft-shadow">
-                                        <div className="space-y-4">
-                                            <label className="text-[9px] font-bold uppercase tracking-widest text-black/20">Width</label>
-                                            <div className="flex items-center gap-4 border-b border-black/10 focus-within:border-brand-black transition-colors">
-                                                <input
-                                                    type="number"
-                                                    placeholder="00"
-                                                    value={dimensions.width || ''}
-                                                    onChange={e => setDimensions({ ...dimensions, width: parseFloat(e.target.value) || 0 })}
-                                                    className="w-full bg-transparent py-4 outline-none text-lg font-serif"
-                                                />
-                                                <span className="text-[10px] opacity-20 font-bold uppercase">ft</span>
-                                            </div>
+                                <section className="space-y-6">
+                                    {/* Materials Selection */}
+                                    <div>
+                                        <div className="flex justify-between items-end mb-4">
+                                            <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-brand-black/40">01. Material Quality</h3>
+                                            {material && <span className="text-[9px] font-bold text-brand-accent uppercase tracking-wider">{material.name} Selected</span>}
                                         </div>
-                                        <div className="space-y-4">
-                                            <label className="text-[9px] font-bold uppercase tracking-widest text-black/20">Height</label>
-                                            <div className="flex items-center gap-4 border-b border-black/10 focus-within:border-brand-black transition-colors">
-                                                <input
-                                                    type="number"
-                                                    placeholder="00"
-                                                    value={dimensions.height || ''}
-                                                    onChange={e => setDimensions({ ...dimensions, height: parseFloat(e.target.value) || 0 })}
-                                                    className="w-full bg-transparent py-4 outline-none text-lg font-serif"
-                                                />
-                                                <span className="text-[10px] opacity-20 font-bold uppercase">ft</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </section>
-                            )}
-
-                            {/* Quantity Selection */}
-                            {!product.isCustom && (
-                                <section>
-                                    <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-brand-black/40 mb-8">
-                                        03. Bespoke Quantity {product.moq ? `(Min. ${product.moq})` : ''}
-                                    </h3>
-                                    {product.options?.quantity ? (
-                                        <div className="grid grid-cols-3 gap-3">
-                                            {product.options.quantity.map((q) => (
+                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                            {product.options?.material.map((m) => (
                                                 <button
-                                                    key={q.value}
-                                                    onClick={() => setQuantityOption(q)}
-                                                    className={`py-6 flex flex-col items-center justify-center transition-all border ${quantityOption?.value === q.value ? 'border-brand-black bg-brand-black text-white' : 'border-border-primary bg-bg-secondary hover:border-brand-black/20 text-brand-black/20'}`}
+                                                    key={m.name}
+                                                    onClick={() => setMaterial(m)}
+                                                    className={`group flex flex-col items-center justify-center p-4 transition-all border ${material?.name === m.name ? 'border-brand-black bg-brand-black text-white' : 'border-border-primary bg-bg-secondary hover:border-brand-black/20 text-brand-black/40'}`}
                                                 >
-                                                    <span className="text-[10px] font-bold tracking-widest uppercase">{q.label.split(' ')[0]}</span>
-                                                    <span className="text-[8px] opacity-50 uppercase mt-1">Units</span>
+                                                    <span className="text-[10px] font-bold tracking-widest uppercase text-center">{m.name}</span>
+                                                    {m.multiplier > 1 && <span className={`text-[8px] uppercase tracking-wider font-bold mt-1 ${material?.name === m.name ? 'text-brand-accent' : 'text-black/20'}`}>Premium</span>}
                                                 </button>
                                             ))}
                                         </div>
-                                    ) : (
-                                        <div className="flex items-center gap-8 p-10 bg-white soft-shadow">
-                                            <div className="flex-1 space-y-4">
-                                                <label className="text-[9px] font-bold uppercase tracking-widest text-black/20">Units Required</label>
-                                                <input
-                                                    type="number"
-                                                    min={product.moq || 1}
-                                                    value={customQty}
-                                                    onChange={e => setCustomQty(parseInt(e.target.value) || 1)}
-                                                    className="w-full bg-transparent border-b border-black/10 focus:border-brand-black py-4 outline-none text-lg font-serif transition-colors"
-                                                />
-                                            </div>
-                                            <div className="flex flex-col gap-2 items-center opacity-20">
-                                                <Lock size={12} />
-                                                <span className="text-[8px] font-bold uppercase tracking-[0.2em]">Verified</span>
+                                    </div>
+
+                                    {/* Dimensions Selection (sqft) - Inline with Material */}
+                                    {product.unit === 'sqft' && (
+                                        <div>
+                                            <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-black/40 mb-4">02. Dimensions (ft)</h3>
+                                            <div className="grid grid-cols-2 gap-4 p-6 bg-white border border-border-primary">
+                                                <div className="space-y-2">
+                                                    <label className="text-[9px] font-bold uppercase tracking-widest text-black/40">Width</label>
+                                                    <div className="flex items-center gap-2 border-b border-black/10 focus-within:border-brand-black transition-colors">
+                                                        <input
+                                                            type="number"
+                                                            placeholder="0"
+                                                            value={dimensions.width || ''}
+                                                            onChange={e => setDimensions({ ...dimensions, width: parseFloat(e.target.value) || 0 })}
+                                                            className="w-full bg-transparent py-2 outline-none text-base font-serif"
+                                                        />
+                                                        <span className="text-[10px] opacity-30 font-bold uppercase">ft</span>
+                                                    </div>
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <label className="text-[9px] font-bold uppercase tracking-widest text-black/40">Height</label>
+                                                    <div className="flex items-center gap-2 border-b border-black/10 focus-within:border-brand-black transition-colors">
+                                                        <input
+                                                            type="number"
+                                                            placeholder="0"
+                                                            value={dimensions.height || ''}
+                                                            onChange={e => setDimensions({ ...dimensions, height: parseFloat(e.target.value) || 0 })}
+                                                            className="w-full bg-transparent py-2 outline-none text-base font-serif"
+                                                        />
+                                                        <span className="text-[10px] opacity-30 font-bold uppercase">ft</span>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     )}
+
+                                    {/* Quantity Selection */}
+                                    <div>
+                                        <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-brand-black/40 mb-4">
+                                            {product.unit === 'sqft' ? '03' : '02'}. Quantity {product.moq ? `(Min. ${product.moq})` : ''}
+                                        </h3>
+                                        {product.options?.quantity ? (
+                                            <div className="grid grid-cols-3 gap-3">
+                                                {product.options.quantity.map((q) => (
+                                                    <button
+                                                        key={q.value}
+                                                        onClick={() => setQuantityOption(q)}
+                                                        className={`py-4 flex flex-col items-center justify-center transition-all border ${quantityOption?.value === q.value ? 'border-brand-black bg-brand-black text-white' : 'border-border-primary bg-bg-secondary hover:border-brand-black/20 text-brand-black/20'}`}
+                                                    >
+                                                        <span className="text-[10px] font-bold tracking-widest uppercase">{q.label.split(' ')[0]}</span>
+                                                        <span className="text-[8px] opacity-50 uppercase mt-1">Units</span>
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <div className="flex items-center gap-6 p-6 bg-white border border-border-primary">
+                                                <div className="flex-1 space-y-2">
+                                                    <label className="text-[9px] font-bold uppercase tracking-widest text-black/40">Units Required</label>
+                                                    <input
+                                                        type="number"
+                                                        min={product.moq || 1}
+                                                        value={customQty}
+                                                        onChange={e => setCustomQty(parseInt(e.target.value) || 1)}
+                                                        className="w-full bg-transparent border-b border-black/10 focus:border-brand-black py-2 outline-none text-base font-serif transition-colors"
+                                                    />
+                                                </div>
+                                                <div className="flex flex-col gap-1 items-center opacity-20">
+                                                    <Lock size={12} />
+                                                    <span className="text-[8px] font-bold uppercase tracking-[0.2em]">Verified</span>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
                                 </section>
                             )}
 
                             {/* Personalization Section for Wedding & Generic */}
-                            <section className="space-y-12">
+                            <section className="space-y-6">
                                 <div className="flex justify-between items-end border-b border-black/5 pb-6">
                                     <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-black/40">04. Design & Personalization</h3>
                                     <div className="flex gap-4">
@@ -597,7 +596,7 @@ const ProductDetail = () => {
                             </section>
 
                             {/* Summary & Intent */}
-                            <div className="pt-20 border-t border-black/5 space-y-12">
+                            <div className="pt-12 border-t border-black/5 space-y-6">
                                 <div className="flex justify-between items-end">
                                     <div>
                                         <span className="text-[10px] font-bold tracking-[0.3em] uppercase text-black/30 mb-4 block">Estimate Value</span>
@@ -668,6 +667,13 @@ const ProductDetail = () => {
                         </div>
                     </div>
                 </div>
+
+                {/* Product Reviews Section */}
+                {!product.isCustom && !product.isTemplateGroup && (
+                    <div className="mt-32">
+                        <ProductReviews productId={product.id} productName={product.title} />
+                    </div>
+                )}
             </div>
         </div>
     );

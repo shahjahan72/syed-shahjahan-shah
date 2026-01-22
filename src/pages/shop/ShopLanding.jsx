@@ -161,7 +161,7 @@ const ShopLanding = () => {
                 </div>
 
                 {/* Products Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-12 relative">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 relative">
                     {isFiltering && (
                         <div className="col-span-full flex justify-center py-20">
                             <div className="w-8 h-8 border-4 border-brand-black/20 border-t-brand-black rounded-full animate-spin"></div>
@@ -170,74 +170,51 @@ const ShopLanding = () => {
                     {filteredProducts.map((product, index) => (
                         <motion.div
                             key={product.id}
-                            initial={{ opacity: 0, y: 40 }}
+                            initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
-                            transition={{ delay: index * 0.05, duration: 0.8 }}
-                            className="group"
+                            transition={{ delay: index * 0.05 }}
                         >
-                            <div className="relative aspect-[4/5] overflow-hidden bg-bg-secondary soft-shadow">
-                                <img
-                                    src={product.image}
-                                    alt={product.title}
-                                    className="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-110"
-                                />
-                                <div className="absolute inset-0 bg-brand-black/0 group-hover:bg-brand-black/5 transition-colors duration-700" />
-
-                                {/* Hover Actions */}
-                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                                    <div className="flex gap-4 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                                        <button
-                                            onClick={() => setQuickViewProduct(product)}
-                                            className="w-12 h-12 bg-bg-primary text-brand-black rounded-full flex items-center justify-center hover:bg-brand-black hover:text-white transition-colors soft-shadow"
-                                            title="Quick View"
-                                        >
-                                            <Eye size={20} strokeWidth={1.5} />
-                                        </button>
-                                        <Link
-                                            to={`/product/${product.id}`}
-                                            className="w-12 h-12 bg-bg-primary text-brand-black rounded-full flex items-center justify-center hover:bg-brand-black hover:text-white transition-colors soft-shadow"
-                                            title="Configure & Buy"
-                                        >
-                                            <Plus size={20} strokeWidth={1.5} />
-                                        </Link>
-                                    </div>
-                                </div>
-
-                                {product.status && (
-                                    <div className="absolute top-4 right-4 z-10">
-                                        <div className={`px-2 py-1 text-[7px] font-bold uppercase tracking-widest text-white backdrop-blur-md shadow-lg ${product.status === 'popular' ? 'bg-blue-500/80' :
-                                            product.status === 'hot' ? 'bg-orange-500/80' :
-                                                'bg-brand-accent/80'
-                                            }`}>
-                                            {product.status === 'popular' ? 'Popular' :
-                                                product.status === 'hot' ? 'Hot' :
-                                                    'New'}
+                            <Link
+                                to={`/product/${product.id}`}
+                                className="group block bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-xl hover:border-brand-accent/30 transition-all duration-300"
+                            >
+                                <div className="aspect-square overflow-hidden bg-gray-100 relative">
+                                    {product.status && (
+                                        <div className="absolute top-3 left-3 z-10">
+                                            <div className={`px-2 py-1 text-[10px] font-bold uppercase text-white rounded ${product.status === 'popular' ? 'bg-orange-500' :
+                                                    product.status === 'hot' ? 'bg-red-500' :
+                                                        'bg-green-500'
+                                                }`}>
+                                                {product.status === 'popular' ? 'POPULAR' :
+                                                    product.status === 'hot' ? 'HOT' :
+                                                        'NEW'}
+                                            </div>
                                         </div>
-                                    </div>
-                                )}
-                                {product.id && (
-                                    <div className="absolute top-4 left-4 text-[9px] uppercase tracking-widest text-white opacity-40 font-mono">
-                                        {product.id}
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className="space-y-1 pt-3">
-                                <Link to={`/product/${product.id}`} className="block">
-                                    <h3 className="text-lg font-serif tracking-tight leading-tight group-hover:text-brand-accent transition-colors duration-300">
+                                    )}
+                                    <img
+                                        src={product.image}
+                                        alt={product.title}
+                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                    />
+                                </div>
+                                <div className="p-4">
+                                    <h3 className="font-bold text-gray-900 group-hover:text-[#00A19D] transition-colors line-clamp-1">
                                         {product.title}
                                     </h3>
-                                </Link>
-                                <div className="flex items-center justify-between">
-                                    <p className="text-[8px] tracking-[0.15em] uppercase text-text-muted font-bold">
-                                        {categories.find(c => c.id === product.categoryId)?.name}
+                                    <p className="text-sm text-gray-500 mt-1 line-clamp-2 min-h-[40px]">
+                                        {product.description}
                                     </p>
-                                    <span className="text-sm font-medium tracking-tight">
-                                        {product.priceRange || 'Details'}
-                                    </span>
+                                    <div className="mt-3 flex items-center justify-between">
+                                        <span className="text-[#00A19D] font-bold">
+                                            {product.priceRange || 'Details'}
+                                        </span>
+                                        <span className="text-xs text-gray-400">
+                                            {product.unit === 'sqft' ? '/sqft' : ''}
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
+                            </Link>
                         </motion.div>
                     ))}
                     {!isLoading && filteredProducts.length === 0 && (

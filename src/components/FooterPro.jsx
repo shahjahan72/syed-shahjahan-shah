@@ -14,9 +14,9 @@ const FooterPro = () => {
                     <div>
                         <Link to="/" className="flex items-center gap-2 mb-6">
                             <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-[#00A19D]">
-                                <img 
-                                    src="/assets/images/printify logo.jpg" 
-                                    alt="Printify Studio Logo" 
+                                <img
+                                    src="/assets/images/printify logo.jpg"
+                                    alt="Printify Studio Logo"
                                     className="w-full h-full object-cover"
                                 />
                             </div>
@@ -99,9 +99,14 @@ const FooterPro = () => {
                             </li>
                             <li className="flex items-center gap-3">
                                 <Phone size={20} className="text-[#00A19D] flex-shrink-0" />
-                                <a href={`tel:${siteConfig.whatsapp.display}`} className="text-gray-400 hover:text-[#00A19D] transition-colors">
-                                    {siteConfig.whatsapp.display}
-                                </a>
+                                <div className="flex flex-col gap-1">
+                                    <a href={`tel:${siteConfig.phone.primary}`} className="text-gray-400 hover:text-[#00A19D] transition-colors">
+                                        {siteConfig.phone.primary}
+                                    </a>
+                                    <a href={`tel:${siteConfig.whatsapp.display}`} className="text-gray-400 hover:text-[#00A19D] transition-colors text-sm">
+                                        {siteConfig.whatsapp.display} (WhatsApp)
+                                    </a>
+                                </div>
                             </li>
                             <li className="flex items-center gap-3">
                                 <Mail size={20} className="text-[#00A19D] flex-shrink-0" />

@@ -8,7 +8,7 @@ import { siteConfig } from '../../config/siteConfig';
 const Checkout = () => {
     const { cart, cartTotal, clearCart } = useCart();
     const navigate = useNavigate();
-    const [formData, setFormData] = useState({ name: '', phone: '', address: '', city: '', transactionId: '' });
+    const [formData, setFormData] = useState({ name: '', phone: '', address: '', province: '', transactionId: '' });
     const [isSuccess, setIsSuccess] = useState(false);
 
     const handleSubmit = (e) => {
@@ -41,7 +41,7 @@ const Checkout = () => {
             return details;
         }).join('%0A-----------------------------%0A');
 
-        const message = `🔔 *New Order: ${siteConfig.name}* %0A%0A👤 *Customer:* ${formData.name}%0A📍 *Address:* ${formData.address}, ${formData.city}%0A📱 *Contact:* ${formData.phone}%0A%0A${orderItems}%0A%0A🚚 *Delivery Fee:* Rs. ${siteConfig.fees.delivery}%0A💰 *Grand Total: Rs. ${(cartTotal + siteConfig.fees.delivery).toLocaleString()}*%0A%0A💳 *Transaction ID:* ${formData.transactionId || 'Not provided'}%0A%0A_Please confirm this order._`;
+        const message = `🔔 *New Order: ${siteConfig.name}* %0A%0A👤 *Customer:* ${formData.name}%0A📍 *Address:* ${formData.address}, ${formData.province}%0A📱 *Contact:* ${formData.phone}%0A%0A${orderItems}%0A%0A🚚 *Delivery Fee:* Rs. ${siteConfig.fees.delivery}%0A💰 *Grand Total: Rs. ${(cartTotal + siteConfig.fees.delivery).toLocaleString()}*%0A%0A💳 *Transaction ID:* ${formData.transactionId || 'Not provided'}%0A%0A_Please confirm this order._`;
 
         window.open(`https://wa.me/${siteConfig.whatsapp.number}?text=${message}`, '_blank');
 
@@ -189,7 +189,21 @@ const Checkout = () => {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                                 <div className="space-y-4">
                                     <label className="text-[10px] font-bold tracking-[0.2em] uppercase text-brand-black/40">Province/State</label>
-                                    <input required type="text" value={formData.city} onChange={e => setFormData({ ...formData, city: e.target.value })} className="w-full bg-transparent border-b border-brand-black/10 py-4 focus:border-brand-black outline-none transition-colors text-sm font-medium text-brand-black placeholder:text-brand-black/20" />
+                                    <select
+                                        required
+                                        value={formData.province}
+                                        onChange={e => setFormData({ ...formData, province: e.target.value })}
+                                        className="w-full bg-transparent border-b border-brand-black/10 py-4 focus:border-brand-black outline-none transition-colors text-sm font-medium text-brand-black cursor-pointer"
+                                    >
+                                        <option value="">Select Province</option>
+                                        <option value="Punjab">Punjab</option>
+                                        <option value="Sindh">Sindh</option>
+                                        <option value="Khyber Pakhtunkhwa">Khyber Pakhtunkhwa</option>
+                                        <option value="Balochistan">Balochistan</option>
+                                        <option value="Gilgit-Baltistan">Gilgit-Baltistan</option>
+                                        <option value="Azad Kashmir">Azad Kashmir</option>
+                                        <option value="Islamabad Capital Territory">Islamabad Capital Territory</option>
+                                    </select>
                                 </div>
                                 <div className="space-y-4">
                                     <label className="text-[10px] font-bold tracking-[0.2em] uppercase text-brand-black/40">Full Address</label>
@@ -201,8 +215,8 @@ const Checkout = () => {
                         <section className="space-y-10">
                             <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-brand-black/40 mb-10 border-b border-brand-black/5 pb-4">04. Payment Verification</h3>
                             <div className="space-y-4">
-                                <label className="text-[10px] font-bold tracking-[0.2em] uppercase text-brand-black/30">Transaction ID</label>
-                                <input required type="text" placeholder="REF-XXXXXX" value={formData.transactionId} onChange={e => setFormData({ ...formData, transactionId: e.target.value })} className="w-full bg-transparent border-b border-brand-black/10 py-4 focus:border-brand-black outline-none transition-colors text-sm font-medium placeholder:opacity-20" />
+                                <label className="text-[10px] font-bold tracking-[0.2em] uppercase text-brand-black/30">Transaction ID (Optional)</label>
+                                <input type="text" placeholder="REF-XXXXXX" value={formData.transactionId} onChange={e => setFormData({ ...formData, transactionId: e.target.value })} className="w-full bg-transparent border-b border-brand-black/10 py-4 focus:border-brand-black outline-none transition-colors text-sm font-medium placeholder:opacity-20" />
                             </div>
                             <div className="group relative border border-brand-black/5 p-16 text-center hover:border-brand-black transition-colors cursor-pointer bg-white">
                                 <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" />

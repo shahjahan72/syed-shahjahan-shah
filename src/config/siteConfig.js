@@ -6,6 +6,9 @@ export const siteConfig = {
         number: "923481342505", // International format without +
         display: "0348-1342505"
     },
+    phone: {
+        primary: "03253368345"
+    },
     banking: {
         meezan: {
             bankName: "Meezan Bank",
@@ -28,7 +31,10 @@ export const siteConfig = {
         linkedin: "https://linkedin.com/company/prnt-pk"
     },
     contact: {
-        email: "contact@printifystudio.pk",
+        email: "syedshahjahanshah@gmail.com",
         address: "Karachi, Pakistan"
+    },
+    portfolio: {
+        url: "https://shahjahan-shah.vercel.app/"
     }
 };

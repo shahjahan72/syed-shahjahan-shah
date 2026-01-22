@@ -77,6 +77,7 @@ const NavbarPro = () => {
                 { name: 'Branding Packages', path: '/packages' },
             ]
         },
+        { name: 'Portfolio', path: siteConfig.portfolio.url, external: true },
         { name: 'My Account', path: '/account' },
     ];
 
@@ -112,6 +113,15 @@ const NavbarPro = () => {
                                         {link.name}
                                         <ChevronDown size={14} className={`transition-transform ${activeDropdown === idx ? 'rotate-180' : ''}`} />
                                     </button>
+                                ) : link.external ? (
+                                    <a
+                                        href={link.path}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className={`px-4 py-2 text-sm font-semibold uppercase tracking-wide transition-colors ${isActive(link.path) ? 'text-[#00A19D]' : 'text-gray-700 hover:text-[#00A19D]'}`}
+                                    >
+                                        {link.name}
+                                    </a>
                                 ) : (
                                     <Link
                                         to={link.path}
@@ -183,37 +193,6 @@ const NavbarPro = () => {
                         </button>
                     </div>
                 </div>
-
-                {/* Categories Bar */}
-                <div className="hidden lg:block border-t border-border-primary">
-                    <div className="flex items-center gap-6 py-3 overflow-x-auto">
-                        {categories.map((cat) => (
-                            <Link
-                                key={cat.id}
-                                to={`/shop?category=${cat.id}`}
-                                className="text-sm text-text-secondary hover:text-brand-accent whitespace-nowrap transition-colors"
-                            >
-                                {cat.name}
-                            </Link>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Mobile Categories - Horizontal Scroll */}
-                <div className="lg:hidden border-t border-border-primary">
-                    <div className="flex items-center gap-4 py-3 overflow-x-auto scrollbar-hide px-6">
-                        {categories.map((cat) => (
-                            <Link
-                                key={cat.id}
-                                to={`/shop?category=${cat.id}`}
-                                className="text-xs text-text-secondary hover:text-brand-accent whitespace-nowrap transition-colors px-4 py-2 rounded-full bg-bg-secondary border border-border-primary"
-                                onClick={() => setMobileOpen(false)}
-                            >
-                                {cat.name}
-                            </Link>
-                        ))}
-                    </div>
-                </div>
             </div>
 
             <AnimatePresence>
@@ -234,13 +213,25 @@ const NavbarPro = () => {
                             <div className="flex-1 overflow-y-auto px-6 py-8 space-y-6">
                                 {navLinks.map((link, idx) => (
                                     <div key={idx} className="space-y-4">
-                                        <Link
-                                            to={link.path}
-                                            onClick={() => setMobileOpen(false)}
-                                            className={`block text-2xl font-bold ${isActive(link.path) ? 'text-brand-accent' : 'text-brand-black'}`}
-                                        >
-                                            {link.name}
-                                        </Link>
+                                        {link.external ? (
+                                            <a
+                                                href={link.path}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                onClick={() => setMobileOpen(false)}
+                                                className="block text-2xl font-bold text-brand-black"
+                                            >
+                                                {link.name}
+                                            </a>
+                                        ) : (
+                                            <Link
+                                                to={link.path}
+                                                onClick={() => setMobileOpen(false)}
+                                                className={`block text-2xl font-bold ${isActive(link.path) ? 'text-brand-accent' : 'text-brand-black'}`}
+                                            >
+                                                {link.name}
+                                            </Link>
+                                        )}
                                         {link.dropdown && (
                                             <div className="pl-4 space-y-3 border-l-2 border-border-primary">
                                                 {link.dropdown.map((item, i) => (
@@ -257,22 +248,6 @@ const NavbarPro = () => {
                                         )}
                                     </div>
                                 ))}
-
-                                <div className="pt-8 border-t border-border-primary">
-                                    <p className="text-sm font-bold text-text-muted uppercase tracking-widest mb-4">Categories</p>
-                                    <div className="grid grid-cols-2 gap-3">
-                                        {categories.map((cat) => (
-                                            <Link
-                                                key={cat.id}
-                                                to={`/shop?category=${cat.id}`}
-                                                onClick={() => setMobileOpen(false)}
-                                                className="px-4 py-3 bg-bg-secondary rounded-xl text-sm font-semibold text-text-secondary hover:bg-brand-accent hover:text-white transition-all text-center"
-                                            >
-                                                {cat.name}
-                                            </Link>
-                                        ))}
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </motion.div>

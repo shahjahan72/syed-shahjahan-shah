@@ -70,13 +70,12 @@ const ContactPage = () => {
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
-                                className={`flex items-center gap-2 px-8 py-4 font-semibold transition-all ${
-                                    activeTab === tab.id
+                                className={`flex items-center gap-2 px-8 py-4 font-semibold transition-all ${activeTab === tab.id
                                         ? tab.id === 'email' ? 'bg-white text-gray-900 border-b-2 border-gray-900'
-                                        : tab.id === 'address' ? 'bg-gradient-to-r from-[#00A19D] to-[#00C9A7] text-white'
-                                        : 'bg-gradient-to-r from-[#00C9A7] to-[#00E5CC] text-white'
+                                            : tab.id === 'address' ? 'bg-gradient-to-r from-[#00A19D] to-[#00C9A7] text-white'
+                                                : 'bg-gradient-to-r from-[#00C9A7] to-[#00E5CC] text-white'
                                         : 'bg-white text-gray-600 hover:bg-gray-50'
-                                }`}
+                                    }`}
                             >
                                 <tab.icon size={18} />
                                 {tab.label}
@@ -139,7 +138,7 @@ const ContactPage = () => {
                         className="space-y-6"
                     >
                         <h3 className="text-2xl font-bold text-gray-900 mb-6">Send us a Message</h3>
-                        
+
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">Your Name *</label>
                             <input
