@@ -5,7 +5,7 @@ const TrustBadges = () => {
     const features = [
         {
             icon: Truck,
-            title: "Nationwide Delivery",
+            title: "Home delivery",
             desc: "Fast & secure shipping across all major cities in Pakistan."
         },
         {

@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useSearchParams } from 'react-router-dom';
-import { products, categories } from '../../data/products';
+import { products, packages, categories } from '../../data/products';
 import { Plus, Eye, ShoppingBag, Search } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import TrustBadges from '../../components/features/TrustBadges';
 import Testimonials from '../../components/features/Testimonials';
 import ServiceTrustGrid from '../../components/features/ServiceTrustGrid';
 import FaqEngine from '../../components/features/FaqEngine';
+import SEO from '../../components/SEO';
 
 const ShopLanding = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -57,12 +58,10 @@ const ShopLanding = () => {
     };
 
     const filteredProducts = useMemo(() => {
+        const allItems = [...products, ...packages];
         let result = activeCategory === 'all'
-            ? products
-            : products.filter(p => p.categoryId === activeCategory);
-
-        // Exclude package items from main product listing
-        result = result.filter(p => !p.isPackage);
+            ? allItems
+            : allItems.filter(p => p.categoryId === activeCategory);
 
         if (searchQuery) {
             const query = searchQuery.toLowerCase();
@@ -88,6 +87,11 @@ const ShopLanding = () => {
 
     return (
         <div className="min-h-screen bg-brand-white selection:bg-brand-black selection:text-white">
+            <SEO
+                title="Print Shop | Custom Printing & Merchandise - Printify Studio PK"
+                description="Browse our complete range of custom printing services. From business cards and flyers to t-shirts, mugs, and large format banners."
+                url="/shop"
+            />
             {/* Collection Section */}
             <main id="collection" className="max-w-[1800px] mx-auto px-6 md:px-12 py-12">
                 <header className="mb-12 flex flex-col md:flex-row md:items-center justify-between gap-8">
@@ -183,8 +187,8 @@ const ShopLanding = () => {
                                     {product.status && (
                                         <div className="absolute top-3 left-3 z-10">
                                             <div className={`px-2 py-1 text-[10px] font-bold uppercase text-white rounded ${product.status === 'popular' ? 'bg-orange-500' :
-                                                    product.status === 'hot' ? 'bg-red-500' :
-                                                        'bg-green-500'
+                                                product.status === 'hot' ? 'bg-red-500' :
+                                                    'bg-green-500'
                                                 }`}>
                                                 {product.status === 'popular' ? 'POPULAR' :
                                                     product.status === 'hot' ? 'HOT' :

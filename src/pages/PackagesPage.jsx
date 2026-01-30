@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, CheckCircle, Clock, Star } from 'lucide-react';
 import { packages } from '../data/products';
+import SEO from '../components/SEO';
 
 const PackagesPage = () => {
     const [selectedPackage, setSelectedPackage] = useState(null);
@@ -9,6 +10,11 @@ const PackagesPage = () => {
 
     return (
         <div className="min-h-screen bg-brand-white selection:bg-brand-black selection:text-white">
+            <SEO
+                title="Branding Packages | Logo Design & Identity - Printify Studio PK"
+                description="Launch your business with professional branding packages. Logo design, stationery, social media kits, and complete visual identity solutions."
+                url="/packages"
+            />
             {/* Header */}
             <header className="border-b border-border-primary">
                 <div className="max-w-7xl mx-auto px-6 py-8">
@@ -38,8 +44,8 @@ const PackagesPage = () => {
                             {pkg.status && (
                                 <div className="mb-4">
                                     <span className={`px-3 py-1 text-xs font-bold uppercase tracking-widest text-white ${pkg.status === 'hot' ? 'bg-orange-500' :
-                                            pkg.status === 'popular' ? 'bg-blue-500' :
-                                                'bg-brand-accent'
+                                        pkg.status === 'popular' ? 'bg-blue-500' :
+                                            'bg-brand-accent'
                                         }`}>
                                         {pkg.status === 'hot' ? 'Best Value' :
                                             pkg.status === 'popular' ? 'Most Popular' :
@@ -65,8 +71,8 @@ const PackagesPage = () => {
                                     <div
                                         key={plan.name}
                                         className={`border rounded-lg p-4 transition-all ${selectedPlan?.name === plan.name
-                                                ? 'border-brand-accent bg-brand-accent/5'
-                                                : 'border-brand-black/10'
+                                            ? 'border-brand-accent bg-brand-accent/5'
+                                            : 'border-brand-black/10'
                                             }`}
                                     >
                                         <div className="flex justify-between items-start mb-3">

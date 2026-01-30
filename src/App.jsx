@@ -7,6 +7,8 @@ import SkipNav from './components/SkipNav';
 import StructuredData from './components/StructuredData';
 import AnalyticsWrapper from './components/AnalyticsWrapper';
 
+import SEO from './components/SEO';
+
 // Components
 import NavbarPro from './components/NavbarPro';
 import FooterPro from './components/FooterPro';
@@ -34,6 +36,7 @@ const App = () => {
     <Router>
       <ErrorBoundary>
         <CartProvider>
+          <SEO />
           <StructuredData />
           <SkipNav />
           <AnalyticsWrapper>

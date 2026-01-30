@@ -5,6 +5,8 @@ import './styles/global.css'
 import './styles/variables.css'
 import { initTheme } from './utils/theme'
 
+import { HelmetProvider } from 'react-helmet-async';
+
 // Initialize theme immediately
 initTheme();
 
@@ -25,6 +27,8 @@ if ('serviceWorker' in navigator) {
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <App />
+    <HelmetProvider>
+      <App />
+    </HelmetProvider>
   </React.StrictMode>,
 )

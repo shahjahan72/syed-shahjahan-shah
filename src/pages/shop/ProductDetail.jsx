@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { products, pricingConfig } from '../../data/products';
+import { products, packages, pricingConfig } from '../../data/products';
+import { calculatePrice } from '../../utils/pricingCalculator';
 import { productValidationSchema, printingRules } from '../../data/printingRules';
 import { useCart } from '../../context/CartContext';
 import ProductReviews from '../../components/features/ProductReviews';
+import SEO from '../../components/SEO';
 import {
     Upload,
     ShoppingCart,
@@ -25,12 +27,14 @@ const ProductDetail = () => {
     const navigate = useNavigate();
     const { addToCart } = useCart();
 
-    const product = products.find(p => p.id === id);
+    const product = products.find(p => p.id === id) || packages.find(p => p.id === id);
 
     // --- State Management ---
     const [selectedTemplate, setSelectedTemplate] = useState(null);
     const [lightboxImage, setLightboxImage] = useState(null);
     const [material, setMaterial] = useState(null);
+    const [printType, setPrintType] = useState(null); // New State
+    const [finishes, setFinishes] = useState([]); // New State
     const [quantityOption, setQuantityOption] = useState(null);
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
     const [customQty, setCustomQty] = useState(1);
@@ -40,6 +44,41 @@ const ProductDetail = () => {
     const [personalization, setPersonalization] = useState({ text: '', logoPosition: 'center' });
     const [weddingDetails, setWeddingDetails] = useState({ bride: '', groom: '', date: '', venue: '', family: '' });
     const [validationErrors, setValidationErrors] = useState([]);
+
+    // --- Custom Branding Package State ---
+    const [customBuilderState, setCustomBuilderState] = useState({});
+
+    const CUSTOM_BRANDING_SECTIONS = [
+        {
+            title: "Logo & Identity",
+            items: [
+                { id: 'logo_concepts', label: 'Logo Design Concepts', type: 'select', options: ['None', '1 Concept', '2 Concepts', '4 Concepts', 'Unlimited'] },
+                { id: 'brand_guidelines', label: 'Brand Guidelines', type: 'select', options: ['None', 'Basic', 'Advanced'] }
+            ]
+        },
+        {
+            title: "Stationery",
+            items: [
+                { id: 'business_card', label: 'Business Card Design', type: 'checkbox' },
+                { id: 'letterhead', label: 'Letterhead Design', type: 'checkbox' },
+                { id: 'envelope', label: 'Envelope Design', type: 'checkbox' },
+            ]
+        },
+        {
+            title: "Digital Branding",
+            items: [
+                { id: 'social_media', label: 'Social Media Kit', type: 'checkbox' },
+                { id: 'email_signature', label: 'Email Signature', type: 'checkbox' },
+            ]
+        },
+        {
+            title: "Packaging & Extras",
+            items: [
+                { id: 'packaging_design', label: 'Packaging Design', type: 'checkbox' },
+                { id: 'other', label: 'Other / Custom Request', type: 'checkbox' }
+            ]
+        }
+    ];
 
     // --- Pricing & Calculation Stats ---
     const [price, setPrice] = useState(0);
@@ -56,9 +95,11 @@ const ProductDetail = () => {
 
     // --- Initialize Controls ---
     // REMOVED DEFAULTS: User must select options manually per strict business logic
+    // --- Initialize Controls ---
     useEffect(() => {
-        // Reset state on ID change
         setMaterial(null);
+        setPrintType(null);
+        setFinishes([]);
         setQuantityOption(null);
         setDimensions({ width: 0, height: 0 });
         setCustomQty(products.find(p => p.id === id)?.moq || 1);
@@ -71,116 +112,93 @@ const ProductDetail = () => {
     // --- Dynamic Pricing Engine ---
     useEffect(() => {
         if (!product) return;
-
-        // Validate product configuration
-        const validation = productValidationSchema.validateProductConfiguration(product, {
-            material,
-            quantity: quantityOption || { value: customQty },
-            dimensions
-        });
-
-        setValidationErrors(validation.errors);
-
-        // Validation: If strict requirements aren't met, price is 0 (Show Range)
-        if (!validation.valid && !product.isCustom && !product.isPackage) {
-            setPrice(0);
-            return;
-        }
-
-        if (product.isPackage) {
-            if (!selectedPackage) {
-                setPrice(0);
-                return;
-            }
-            const basePrice = selectedPackage.price;
-            const multiplier = material?.multiplier || 1.0;
-            setPrice(Math.round(basePrice * multiplier));
-            return;
-        }
-
-        let total = 0;
-        let setupFee = 0;
-        let marginTier = pricingConfig.margins.small;
-
+        if (product.isCustomPackageBuilder) return;
         if (product.isCustom) {
             setPrice(0);
             return;
         }
 
-        if (product.unit === 'sqft') {
-            const areaPerItem = (dimensions.width || 0) * (dimensions.height || 0);
-            const totalArea = areaPerItem * customQty;
-
-            // Strict Validation for Sqft
-            if (totalArea <= 0) {
+        // Package Logic (Bundle)
+        if (product.isPackage) {
+            if (!selectedPackage) {
                 setPrice(0);
+                setValidationErrors(["Select a Package Tier"]);
                 return;
             }
+            // Packages are fixed price bundles
+            setPrice(selectedPackage.price);
+            setValidationErrors([]);
+            return;
+        }
 
-            // Determine Margin Tier based on total square footage
-            if (totalArea >= pricingConfig.thresholds.bulk) {
-                marginTier = pricingConfig.margins.bulk;
-                setIsBulk(true);
-            } else if (totalArea >= pricingConfig.thresholds.medium) {
-                marginTier = pricingConfig.margins.large;
-                setIsBulk(false);
-            } else if (totalArea >= pricingConfig.thresholds.small) {
-                marginTier = pricingConfig.margins.medium;
-                setIsBulk(false);
-            } else {
-                marginTier = pricingConfig.margins.small;
-                setIsBulk(false);
-            }
+        // Standard Product Logic via Calculator
+        const config = {
+            quantity: quantityOption ? quantityOption.value : customQty,
+            dimensions,
+            material,
+            printType,
+            finishes
+        };
 
-            const baseCost = product.baseCost * totalArea;
-            total = baseCost * material.multiplier * marginTier;
+        const { total, breakdown, valid } = calculatePrice(product, config);
 
-            // Enforce Setup Fee if area is too small
-            if (totalArea < pricingConfig.setupFeeThreshold) {
-                setupFee = pricingConfig.setupFee;
-                total += setupFee;
-                setSetupFeeApplied(true);
-            } else {
-                setSetupFeeApplied(false);
-            }
+        // UI Validation
+        const errors = [];
+        if (product.options?.material && !material) errors.push("Select Material/Paper");
+        if (product.options?.printType && !printType) errors.push("Select Print Type");
+        if (product.unit === 'sqft' && (dimensions.width <= 0 || dimensions.height <= 0)) errors.push("Enter Dimensions (Width & Height)");
+        // If product has fixed quantity options, ensure one is selected. If sqft, qty is usually manual (customQty)
+        if (product.options?.quantity && !quantityOption && product.unit !== 'sqft') errors.push("Select Quantity");
+
+        setValidationErrors(errors);
+
+        if (valid && errors.length === 0) {
+            setPrice(total);
+            setSetupFeeApplied(breakdown?.setupFee > 0);
+            setIsBulk(breakdown?.marginMultiplier <= 1.4);
         } else {
-            // Processing for 'fixed' unit products (Cards, Stationery, Packaging)
-            const qtyValue = quantityOption ? quantityOption.value : customQty;
-
-            // Strict Validation for Fixed
-            if (product.options?.quantity && !quantityOption) {
-                setPrice(0);
-                return;
-            }
-
-            if (product.categoryId === 'wedding') {
-                const cardPrice = (product.price || 0) * material.multiplier;
-                const printingCharge = product.printingCharge || 0;
-                total = (cardPrice * qtyValue) + printingCharge;
-            } else if (product.options?.quantity && quantityOption) {
-                // Ratio-based pricing for quantity packs
-                const baseQty = product.options.quantity[0].value;
-                const ratio = qtyValue / baseQty;
-                total = (product.price || 0) * ratio * material.multiplier;
-            } else {
-                total = (product.price || 0) * qtyValue * material.multiplier;
-            }
-            setIsBulk(false);
+            setPrice(0);
             setSetupFeeApplied(false);
         }
 
-        // Clean price rounding
-        let finalPrice = Math.round(total);
-        if (finalPrice > 100) {
-            finalPrice = Math.ceil(finalPrice / 10) * 10;
-        }
-        setPrice(finalPrice);
-
-    }, [product, material, dimensions, customQty, quantityOption, weddingDetails, selectedPackage]);
+    }, [product, material, printType, finishes, dimensions, customQty, quantityOption, selectedPackage]);
 
     if (!product) return null;
 
     const handleAction = () => {
+        if (product.isCustomPackageBuilder) {
+            let summary = `*Custom Branding Inquiry:*%0A%0A`;
+            let hasSelection = false;
+
+            CUSTOM_BRANDING_SECTIONS.forEach(section => {
+                let sectionAdded = false;
+                section.items.forEach(item => {
+                    const val = customBuilderState[item.id];
+                    if (val) {
+                        if (item.type === 'select' && val !== 'None') {
+                            if (!sectionAdded) { summary += `*${section.title}:*%0A`; sectionAdded = true; }
+                            summary += `- ${item.label}: ${val}%0A`;
+                            hasSelection = true;
+                        } else if (item.type === 'checkbox' && val === true) {
+                            if (!sectionAdded) { summary += `*${section.title}:*%0A`; sectionAdded = true; }
+                            summary += `- ${item.label}%0A`;
+                            hasSelection = true;
+                        }
+                    }
+                });
+                if (sectionAdded) summary += `%0A`;
+            });
+
+            if (!hasSelection) {
+                alert("Please select at least one branding service.");
+                return;
+            }
+
+            summary += `_Please provide a custom quote based on these requirements._`;
+            window.open(`https://wa.me/923481342505?text=${summary}`, '_blank');
+            return;
+        }
+
         if (product.isCustom) {
             const message = `Bespoke Selection Enquiry:%0A Product: ${product.title}%0A Please assist me with a custom quote.`;
             window.open(`https://wa.me/923481342505?text=${message}`, '_blank');
@@ -217,6 +235,13 @@ const ProductDetail = () => {
     if (product.isTemplateGroup && !selectedTemplate) {
         return (
             <div className="min-h-screen bg-brand-white pt-32 pb-20 px-8">
+                <SEO
+                    title={`${product.title} | Portfolio - Printify Studio PK`}
+                    description={product.description}
+                    image={product.image}
+                    url={`/product/${product.id}`}
+                    type="article"
+                />
                 <header className="mb-20 max-w-[1400px] mx-auto">
                     <button onClick={() => navigate('/')} className="flex items-center gap-2 text-brand-black/30 hover:text-brand-black mb-12 uppercase text-[10px] font-bold tracking-[0.3em] transition-all">
                         <ArrowLeft size={14} /> Back to Collection
@@ -284,6 +309,13 @@ const ProductDetail = () => {
     // --- Ultra-Professional Configuration View ---
     return (
         <div className="min-h-screen bg-brand-white pt-32 pb-40 px-8">
+            <SEO
+                title={`${product.title} | Printify Studio PK`}
+                description={product.description}
+                image={product.image}
+                url={`/product/${product.id}`}
+                type="product"
+            />
             <div className="max-w-[1400px] mx-auto">
                 <button onClick={() => selectedTemplate ? setSelectedTemplate(null) : navigate('/')} className="flex items-center gap-2 text-brand-black/20 hover:text-brand-black mb-16 uppercase text-[10px] font-bold tracking-[0.3em] transition-all">
                     <ArrowLeft size={14} /> {selectedTemplate ? 'Return to Gallery' : 'Return to Collections'}
@@ -363,9 +395,52 @@ const ProductDetail = () => {
                                 </section>
                             )}
 
+                            {/* Custom Branding Builder UI */}
+                            {product.isCustomPackageBuilder && (
+                                <section className="space-y-8">
+                                    {CUSTOM_BRANDING_SECTIONS.map((section, idx) => (
+                                        <div key={idx}>
+                                            <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-brand-black/40 mb-4">{`0${idx + 1}. ${section.title}`}</h3>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                                {section.items.map(item => (
+                                                    <div key={item.id} className={`p-4 border transition-all ${customBuilderState[item.id] && customBuilderState[item.id] !== 'None' ? 'border-brand-black bg-brand-black/5' : 'border-border-primary bg-bg-secondary hover:border-brand-black/20'}`}>
+                                                        {item.type === 'select' ? (
+                                                            <div className="flex flex-col gap-2">
+                                                                <label className="text-[10px] font-bold uppercase tracking-widest text-brand-black">{item.label}</label>
+                                                                <select
+                                                                    className="bg-transparent outline-none text-sm font-serif border-b border-brand-black/10 py-2 focus:border-brand-black transition-colors w-full cursor-pointer"
+                                                                    value={customBuilderState[item.id] || 'None'}
+                                                                    onChange={(e) => setCustomBuilderState({ ...customBuilderState, [item.id]: e.target.value })}
+                                                                >
+                                                                    {item.options.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                                                                </select>
+                                                            </div>
+                                                        ) : (
+                                                            <label className="flex items-center gap-4 cursor-pointer select-none">
+                                                                <div className={`w-5 h-5 border flex items-center justify-center transition-colors ${customBuilderState[item.id] ? 'bg-brand-black border-brand-black' : 'border-brand-black/20 bg-white'}`}>
+                                                                    {customBuilderState[item.id] && <Check size={12} className="text-white" />}
+                                                                </div>
+                                                                <input
+                                                                    type="checkbox"
+                                                                    className="hidden"
+                                                                    checked={customBuilderState[item.id] || false}
+                                                                    onChange={(e) => setCustomBuilderState({ ...customBuilderState, [item.id]: e.target.checked })}
+                                                                />
+                                                                <span className="text-sm font-serif text-brand-black">{item.label}</span>
+                                                            </label>
+                                                        )}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </section>
+                            )}
+
                             {/* Materials & Quantity Combined Section */}
-                            {!product.isCustom && (
+                            {!product.isCustom && !product.isCustomPackageBuilder && (
                                 <section className="space-y-6">
+                                    {/* Materials Selection */}
                                     {/* Materials Selection */}
                                     <div>
                                         <div className="flex justify-between items-end mb-4">
@@ -380,11 +455,64 @@ const ProductDetail = () => {
                                                     className={`group flex flex-col items-center justify-center p-4 transition-all border ${material?.name === m.name ? 'border-brand-black bg-brand-black text-white' : 'border-border-primary bg-bg-secondary hover:border-brand-black/20 text-brand-black/40'}`}
                                                 >
                                                     <span className="text-[10px] font-bold tracking-widest uppercase text-center">{m.name}</span>
-                                                    {m.multiplier > 1 && <span className={`text-[8px] uppercase tracking-wider font-bold mt-1 ${material?.name === m.name ? 'text-brand-accent' : 'text-black/20'}`}>Premium</span>}
+                                                    {(m.multiplier > 1 || m.cost > 30) && <span className={`text-[8px] uppercase tracking-wider font-bold mt-1 ${material?.name === m.name ? 'text-brand-accent' : 'text-black/20'}`}>Premium</span>}
                                                 </button>
                                             ))}
                                         </div>
                                     </div>
+
+                                    {/* Print Type Selection (If Applicable) */}
+                                    {product.options?.printType && (
+                                        <div>
+                                            <div className="flex justify-between items-end mb-4">
+                                                <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-brand-black/40">02. Print Type</h3>
+                                                {printType && <span className="text-[9px] font-bold text-brand-accent uppercase tracking-wider">{printType.name} Selected</span>}
+                                            </div>
+                                            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                                {product.options.printType.map((pt) => (
+                                                    <button
+                                                        key={pt.name}
+                                                        onClick={() => setPrintType(pt)}
+                                                        className={`group flex flex-col items-center justify-center p-4 transition-all border ${printType?.name === pt.name ? 'border-brand-black bg-brand-black text-white' : 'border-border-primary bg-bg-secondary hover:border-brand-black/20 text-brand-black/40'}`}
+                                                    >
+                                                        <span className="text-[10px] font-bold tracking-widest uppercase text-center">{pt.name}</span>
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Finishes Selection (If Applicable) */}
+                                    {product.options?.finishes && (
+                                        <div>
+                                            <div className="flex justify-between items-end mb-4">
+                                                <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-brand-black/40">Add-ons & Finishes</h3>
+                                            </div>
+                                            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                                {product.options.finishes.map((finish) => {
+                                                    const isSelected = finishes.some(f => f.name === finish.name);
+                                                    return (
+                                                        <button
+                                                            key={finish.name}
+                                                            onClick={() => {
+                                                                if (isSelected) {
+                                                                    setFinishes(finishes.filter(f => f.name !== finish.name));
+                                                                } else {
+                                                                    setFinishes([...finishes, finish]);
+                                                                }
+                                                            }}
+                                                            className={`group flex flex-col items-center justify-center p-4 transition-all border ${isSelected ? 'border-brand-black bg-brand-black text-white' : 'border-border-primary bg-bg-secondary hover:border-brand-black/20 text-brand-black/40'}`}
+                                                        >
+                                                            <div className="flex items-center gap-2">
+                                                                {isSelected && <Check size={12} />}
+                                                                <span className="text-[10px] font-bold tracking-widest uppercase text-center">{finish.name}</span>
+                                                            </div>
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                    )}
 
                                     {/* Dimensions Selection (sqft) - Inline with Material */}
                                     {product.unit === 'sqft' && (
@@ -616,12 +744,12 @@ const ProductDetail = () => {
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {product.isCustom ? (
+                                    {product.isCustom || product.isCustomPackageBuilder ? (
                                         <button
                                             onClick={handleAction}
                                             className="col-span-2 bg-[#25D366] text-white py-8 text-[11px] font-bold uppercase tracking-[0.4em] hover:bg-[#128C7E] transition-all flex items-center justify-center gap-4"
                                         >
-                                            <MessageCircle size={20} /> Chat on WhatsApp
+                                            <MessageCircle size={20} /> {product.isCustomPackageBuilder ? 'Get Custom Quote' : 'Chat on WhatsApp'}
                                         </button>
                                     ) : (
                                         <>
