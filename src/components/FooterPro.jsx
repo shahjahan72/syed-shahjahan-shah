@@ -18,6 +18,7 @@ const FooterPro = () => {
                                     src="/assets/images/printify logo.jpg"
                                     alt="Printify Studio Logo"
                                     className="w-full h-full object-cover"
+                                    onError={(e) => { e.currentTarget.style.filter = 'grayscale(100%)'; }}
                                 />
                             </div>
                             <span className="text-xl font-black">
@@ -72,6 +73,7 @@ const FooterPro = () => {
                             <li><Link to="/faq" className="text-gray-400 hover:text-[#00A19D] transition-colors">FAQ</Link></li>
                             <li><Link to="/about" className="text-gray-400 hover:text-[#00A19D] transition-colors">About Us</Link></li>
                             <li><Link to="/contact" className="text-gray-400 hover:text-[#00A19D] transition-colors">Contact Us</Link></li>
+                            <li><a href={siteConfig.portfolio.url} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#00A19D] transition-colors">Portfolio</a></li>
                         </ul>
                     </div>
 

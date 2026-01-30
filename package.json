@@ -7,9 +7,15 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prisma:generate": "prisma generate",
+    "prisma:studio": "prisma studio",
+    "prisma:dbpush": "prisma db push",
+    "prisma:init": "npm run prisma:generate && npm run prisma:dbpush"
   },
   "dependencies": {
+    "@prisma/client": "^5.8.0",
+    "@supabase/supabase-js": "^2.34.0",
     "@react-three/drei": "^9.108.0",
     "@react-three/fiber": "^8.16.8",
     "framer-motion": "^11.12.0",
@@ -21,9 +27,10 @@
     "three": "^0.182.0"
   },
   "devDependencies": {
+    "prisma": "^5.8.0",
     "@tailwindcss/postcss": "^4.1.18",
-    "@types/react": "^18.3.1",
-    "@types/react-dom": "^18.3.0",
+    "@types-react": "^18.3.1",
+    "@types-react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.23",
     "eslint": "^8.57.0",

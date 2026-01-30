@@ -31,6 +31,10 @@ const RefundPage = lazy(() => import('./pages/RefundPage'));
 const PackagesPage = lazy(() => import('./pages/PackagesPage'));
 const FaqPage = lazy(() => import('./pages/FaqPage'));
 
+// Admin
+const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'));
+const AdminOrders = lazy(() => import('./pages/admin/AdminOrders'));
+
 const App = () => {
   return (
     <Router>
@@ -61,6 +65,11 @@ const App = () => {
                     <Route path="/terms" element={<TermsPage />} />
                     <Route path="/privacy" element={<PrivacyPage />} />
                     <Route path="/refund" element={<RefundPage />} />
+
+                    {/* Admin (protected via token) - no public link */}
+                    <Route path="/admin" element={<AdminLogin />} />
+                    <Route path="/admin/orders" element={<AdminOrders />} />
+
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </Suspense>

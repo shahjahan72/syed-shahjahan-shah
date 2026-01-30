@@ -20,7 +20,7 @@ export const siteConfig = {
         jazzcash: {
             name: "JazzCash",
             number: "03253368345",
-            title: "Syed Shahjahan Shah"
+            title: "Shahjahan Shah"
         }
     },
     fees: {

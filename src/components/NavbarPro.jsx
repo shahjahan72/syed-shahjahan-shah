@@ -77,7 +77,7 @@ const NavbarPro = () => {
                 { name: 'Branding Packages', path: '/packages' },
             ]
         },
-        { name: 'Portfolio', path: siteConfig.portfolio.url, external: true },
+
         { name: 'My Account', path: '/account' },
     ];
 
@@ -94,6 +94,7 @@ const NavbarPro = () => {
                                 src="/assets/images/printify logo.jpg"
                                 alt="Printify Studio Logo"
                                 className="w-full h-full object-cover"
+                                onError={(e) => { e.currentTarget.style.filter = 'grayscale(100%)'; }}
                             />
                         </div>
                         <span className="text-2xl font-black text-brand-black tracking-tight">

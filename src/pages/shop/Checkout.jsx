@@ -8,12 +8,60 @@ import { siteConfig } from '../../config/siteConfig';
 const Checkout = () => {
     const { cart, cartTotal, clearCart } = useCart();
     const navigate = useNavigate();
-    const [formData, setFormData] = useState({ name: '', phone: '', address: '', province: '', transactionId: '' });
+    const [formData, setFormData] = useState({ name: '', phone: '', address: '', province: '', transactionId: '', paymentMethod: 'bank' });
     const [isSuccess, setIsSuccess] = useState(false);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const [submitting, setSubmitting] = useState(false);
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (submitting) return;
+        setSubmitting(true);
+
+        // Build a lightweight payload for server-side validation & storage
+        const itemsPayload = cart.map(item => {
+            const quantity = item.selectedQuantity?.value || item.quantity || 1;
+            const product = {
+                id: item.id || item.productID,
+                unit: item.unit,
+                options: item.options,
+                // Pricing calculator expects material.cost, printType.cost, finishes[].cost
+                material: item.selectedMaterial,
+                printType: item.selectedPrintType || item.printType || item.selectedPrintType,
+                finishes: item.finishes || item.selectedFinishes || [],
+                dimensions: item.dimensions || null
+            };
+            const config = {
+                quantity,
+                dimensions: item.dimensions || null,
+                material: product.material,
+                printType: product.printType,
+                finishes: product.finishes
+            };
+            return { product, config, quantity };
+        });
+
+        const payload = {
+            items: itemsPayload,
+            customer: { name: formData.name, phone: formData.phone, address: formData.address, province: formData.province, email: siteConfig.contact.email },
+            payment: { method: formData.paymentMethod || 'manual', transactionId: formData.transactionId, amount: cartTotal + siteConfig.fees.delivery },
+            total: cartTotal + siteConfig.fees.delivery
+        };
+
+        try {
+            const resp = await fetch('/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+            const body = await resp.json();
+            if (!resp.ok) {
+                console.error('Order API error', body);
+                // Fallback: proceed to WhatsApp so user can still place the order
+                alert('Could not record order server-side. The order will still be sent via WhatsApp, but please notify us if this persists.');
+            }
+        } catch (err) {
+            console.error('Order API network error', err);
+            alert('Network error when contacting order API. The order will still be sent via WhatsApp.');
+        }
+
+        // Existing WhatsApp message flow (unchanged text)
         const orderItems = cart.map((item, i) => {
             const designId = item.designMetadata ? item.designMetadata.id : item.productID;
             let details = `📦 *${item.title}*`;
@@ -48,6 +96,7 @@ const Checkout = () => {
         setTimeout(() => {
             setIsSuccess(true);
             clearCart();
+            setSubmitting(false);
         }, 1500);
     };
 
@@ -166,6 +215,7 @@ const Checkout = () => {
                             <div className="space-y-4 pt-10 border-t border-brand-black/5">
                                 <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-brand-black/40 block">{siteConfig.banking.jazzcash.name}</span>
                                 <p className="text-sm font-medium select-all text-brand-black">{siteConfig.banking.jazzcash.number}</p>
+                                <p className="text-xs text-brand-black/60 select-all">Account Title: {siteConfig.banking.jazzcash.title}</p>
                             </div>
                         </div>
                     </section>
@@ -174,6 +224,19 @@ const Checkout = () => {
                 {/* Form */}
                 <div className="lg:col-span-7">
                     <form onSubmit={handleSubmit} className="space-y-16">
+                        <div className="space-y-6">
+                            <label className="text-[10px] font-bold tracking-[0.2em] uppercase text-brand-black/40">Payment Method</label>
+                            <div className="flex gap-6 items-center">
+                                <label className="flex items-center gap-3 cursor-pointer">
+                                    <input type="radio" name="paymentMethod" value="bank" checked={submitting ? false : !(formData.paymentMethod && formData.paymentMethod === 'jazzcash')} onChange={() => setFormData({ ...formData, paymentMethod: 'bank' })} className="cursor-pointer" />
+                                    <span className="text-sm">Bank Transfer</span>
+                                </label>
+                                <label className="flex items-center gap-3 cursor-pointer">
+                                    <input type="radio" name="paymentMethod" value="jazzcash" checked={formData.paymentMethod === 'jazzcash'} onChange={() => setFormData({ ...formData, paymentMethod: 'jazzcash' })} className="cursor-pointer" />
+                                    <span className="text-sm">JazzCash</span>
+                                </label>
+                            </div>
+                        </div>
                         <section className="space-y-10">
                             <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-brand-black/40 mb-10 border-b border-brand-black/5 pb-4">03. Recipient Information</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -218,10 +281,8 @@ const Checkout = () => {
                                 <label className="text-[10px] font-bold tracking-[0.2em] uppercase text-brand-black/30">Transaction ID (Optional)</label>
                                 <input type="text" placeholder="REF-XXXXXX" value={formData.transactionId} onChange={e => setFormData({ ...formData, transactionId: e.target.value })} className="w-full bg-transparent border-b border-brand-black/10 py-4 focus:border-brand-black outline-none transition-colors text-sm font-medium placeholder:opacity-20" />
                             </div>
-                            <div className="group relative border border-brand-black/5 p-16 text-center hover:border-brand-black transition-colors cursor-pointer bg-white">
-                                <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" />
-                                <Truck size={24} strokeWidth={1} className="mx-auto mb-4 opacity-20 group-hover:opacity-100 transition-opacity" />
-                                <span className="text-[10px] font-bold tracking-widest uppercase opacity-40 group-hover:opacity-100 transition-opacity">Upload Payment Receipt</span>
+                            <div className="p-6 bg-white border border-brand-black/5">
+                                <p className="text-sm text-brand-black/50">No receipt upload is required. Please share your payment screenshot via WhatsApp after placing the order.</p>
                             </div>
                         </section>
 
@@ -229,7 +290,7 @@ const Checkout = () => {
                             <div className="flex items-center gap-4 text-brand-black/30 uppercase tracking-[0.2em] text-[9px] font-bold">
                                 <ShieldCheck size={14} /> Encrypted Transmission via WhatsApp Secure
                             </div>
-                            <button type="submit" className="w-full bg-brand-black text-white py-8 text-[11px] font-bold tracking-[0.4em] uppercase hover:bg-brand-accent transition-colors">
+                            <button type="submit" disabled={submitting} aria-busy={submitting} className="w-full bg-brand-black text-white py-8 text-[11px] font-bold tracking-[0.4em] uppercase hover:bg-brand-accent transition-colors">
                                 Complete Commission
                             </button>
                         </div>

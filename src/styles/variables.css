@@ -46,3 +46,22 @@
     --card-bg: #1E293B;
     --card-shadow: 0 10px 40px -15px rgba(0, 0, 0, 0.3);
 }
+
+/* Enterprise look (toggleable via .enterprise on body) */
+.enterprise {
+    --brand-teal: #111827; /* darker neutral */
+    --brand-teal-dark: #0b1220;
+    --brand-teal-light: #1f2937;
+
+    --bg-primary: #FAFAFA;
+    --bg-secondary: #F4F4F5;
+
+    --text-primary: #0F172A;
+    --text-secondary: #334155;
+
+    --border-primary: #E6E9EE;
+    --card-bg: #FFFFFF;
+    --card-shadow: 0 6px 30px -12px rgba(0,0,0,0.06);
+
+    --transition-fast: 0.15s ease;
+}

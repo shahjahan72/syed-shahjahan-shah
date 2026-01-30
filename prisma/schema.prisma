@@ -1,0 +1,47 @@
+// Minimal Prisma schema for Printify Studio PK
+// Use `DATABASE_URL` environment variable to connect (set in Vercel/locally)
+
+datasource db {
+  provider = "postgresql"
+  // For Supabase, set both DATABASE_URL and DIRECT_URL in your environment.
+  // Prisma uses DATABASE_URL for runtime connections; use DIRECT_URL for migrations when using connection pooling.
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Basic models to support orders and manual payments
+model Order {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  status      String   @default("PENDING")
+  total       Int
+  currency    String   @default("PKR")
+  customerName String?
+  customerPhone String?
+  customerEmail String?
+  items       Json
+  payments    Payment[]
+}
+
+model Payment {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  orderId       String   @unique
+  order         Order    @relation(fields: [orderId], references: [id])
+  method        String
+  amount        Int
+  transactionId String?
+  status        String   @default("PENDING")
+}
+
+// Example model (commented out) — add product models when you want persistent product storage
+// model Product {
+//   id        String   @id @default(cuid())
+//   title     String
+//   slug      String   @unique
+//   price     Int
+//   createdAt DateTime @default(now())
+// }
