@@ -28,6 +28,10 @@ Admin UI
 
 Notes
 - The Admin UI validates the token by attempting to call the protected API on login. If the token is invalid, login is rejected.
+- If the server-side `ADMIN_TOKEN` variable is not configured, the API will return a 500 server error (`Server misconfiguration: ADMIN_TOKEN is not set`) to make misconfiguration obvious during deploy.
+- A lightweight token check endpoint is available for quick verification: **GET** `/api/admin-token-check`.
+  - 200: `{ ok: true, message: 'ADMIN_TOKEN is set on the server.' }` (safe response — does not leak the token itself)
+  - 500: `{ ok: false, error: 'Server misconfiguration: ADMIN_TOKEN is not set. Please set this environment variable in your hosting environment.' }`
 - The list is paginated and supports server-side filtering to keep response times low.
 
 Notes

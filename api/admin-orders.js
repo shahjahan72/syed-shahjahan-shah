@@ -8,7 +8,15 @@ function unauthorized(res) {
 
 export default async function handler(req, res) {
   const auth = req.headers.authorization || '';
-  if (!ADMIN_TOKEN || auth !== `Bearer ${ADMIN_TOKEN}`) {
+
+  // Fail fast with explicit server error if the admin token is not configured
+  if (!ADMIN_TOKEN) {
+    console.error('ADMIN_TOKEN is not set in the environment. Admin routes unavailable.');
+    return res.status(500).json({ ok: false, error: 'Server misconfiguration: ADMIN_TOKEN is not set' });
+  }
+
+  // Strict comparison: the incoming header must exactly match `Bearer <ADMIN_TOKEN>`
+  if (auth !== `Bearer ${ADMIN_TOKEN}`) {
     return unauthorized(res);
   }
 
