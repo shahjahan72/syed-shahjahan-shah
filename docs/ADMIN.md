@@ -31,7 +31,11 @@ Notes
 - If the server-side `ADMIN_TOKEN` variable is not configured, the API will return a 500 server error (`Server misconfiguration: ADMIN_TOKEN is not set`) to make misconfiguration obvious during deploy.
 - A lightweight token check endpoint is available for quick verification: **GET** `/api/admin-token-check`.
   - 200: `{ ok: true, message: 'ADMIN_TOKEN is set on the server.' }` (safe response — does not leak the token itself)
-  - 500: `{ ok: false, error: 'Server misconfiguration: ADMIN_TOKEN is not set. Please set this environment variable in your hosting environment.' }`
+  - 500: `{ ok: false, error: 'Server misconfiguration: ADMIN_TOKEN is not set. Please set this environment variable in your hosting environment.' }
+
+- Temporary debug token (for quick testing): You can set a `DEBUG_ADMIN_TOKEN` env var (or use the local non-production fallback `shahjahan160104`) to log in quickly during testing. When `DEBUG_ADMIN_TOKEN` is present, the admin API also accepts `Authorization: Bearer <DEBUG_ADMIN_TOKEN>`.
+  - Example: set `DEBUG_ADMIN_TOKEN=shahjahan160104` in Vercel for a short time to test the Admin UI login.
+  - ⚠️ Warning: Remove the debug token and unset `DEBUG_ADMIN_TOKEN` after verification; do NOT leave debug tokens enabled in production.
 - The list is paginated and supports server-side filtering to keep response times low.
 
 Notes

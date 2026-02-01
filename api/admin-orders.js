@@ -1,6 +1,8 @@
 import prisma from '../server/prismaClient.js';
 
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN;
+// DEBUG_TOKEN is for temporary debugging. Set DEBUG_ADMIN_TOKEN in your environment or use the local fallback when not in production.
+const DEBUG_TOKEN = process.env.DEBUG_ADMIN_TOKEN || (process.env.NODE_ENV !== 'production' ? 'shahjahan160104' : null);
 
 function unauthorized(res) {
   res.status(401).json({ ok: false, error: 'Unauthorized' });
@@ -9,14 +11,20 @@ function unauthorized(res) {
 export default async function handler(req, res) {
   const auth = req.headers.authorization || '';
 
-  // Fail fast with explicit server error if the admin token is not configured
-  if (!ADMIN_TOKEN) {
+  // If ADMIN_TOKEN isn't configured, allow DEBUG_TOKEN for quick testing (remove or set DEBUG_ADMIN_TOKEN in production!)
+  if (!ADMIN_TOKEN && !DEBUG_TOKEN) {
     console.error('ADMIN_TOKEN is not set in the environment. Admin routes unavailable.');
     return res.status(500).json({ ok: false, error: 'Server misconfiguration: ADMIN_TOKEN is not set' });
   }
+  if (!ADMIN_TOKEN && DEBUG_TOKEN) {
+    console.warn('ADMIN_TOKEN missing — running with DEBUG_ADMIN_TOKEN fallback. Remove this after testing.');
+  }
 
-  // Strict comparison: the incoming header must exactly match `Bearer <ADMIN_TOKEN>`
-  if (auth !== `Bearer ${ADMIN_TOKEN}`) {
+  // Strict comparison: the incoming header must match `Bearer <ADMIN_TOKEN>` or `Bearer <DEBUG_TOKEN>` when enabled
+  const allowed = [];
+  if (ADMIN_TOKEN) allowed.push(`Bearer ${ADMIN_TOKEN}`);
+  if (DEBUG_TOKEN) allowed.push(`Bearer ${DEBUG_TOKEN}`);
+  if (!allowed.includes(auth)) {
     return unauthorized(res);
   }
 
