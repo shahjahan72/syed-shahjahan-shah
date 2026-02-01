@@ -20,11 +20,18 @@ export default async function handler(req, res) {
     console.warn('ADMIN_TOKEN missing — running with DEBUG_ADMIN_TOKEN fallback. Remove this after testing.');
   }
 
-  // Strict comparison: the incoming header must match `Bearer <ADMIN_TOKEN>` or `Bearer <DEBUG_TOKEN>` when enabled
-  const allowed = [];
-  if (ADMIN_TOKEN) allowed.push(`Bearer ${ADMIN_TOKEN}`);
-  if (DEBUG_TOKEN) allowed.push(`Bearer ${DEBUG_TOKEN}`);
-  if (!allowed.includes(auth)) {
+  // Extract token robustly from header (supports `Bearer <token>` or just `<token>`)
+  const authHeader = req.headers.authorization || req.headers.Authorization || '';
+  const token = (authHeader || '').replace(/^Bearer\s+/i, '').trim();
+
+  if (!token) return unauthorized(res);
+
+  // Compare the raw token value to configured admin/debug tokens
+  const validTokens = new Set();
+  if (ADMIN_TOKEN) validTokens.add(ADMIN_TOKEN);
+  if (DEBUG_TOKEN) validTokens.add(DEBUG_TOKEN);
+
+  if (!validTokens.has(token)) {
     return unauthorized(res);
   }
 
