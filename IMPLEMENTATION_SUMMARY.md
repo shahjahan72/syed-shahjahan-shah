@@ -47,9 +47,9 @@
 
 **New Contact Details:**
 - **Email:** syedshahjahanshah@gmail.com
-- **WhatsApp:** 03481342505 (0348-1342505)
-- **Phone:** 03253368345
-- **JazzCash:** 03253368345
+- **WhatsApp:** REDACTED
+- **Phone:** REDACTED
+- **JazzCash:** REDACTED
 
 **Where Updated:**
 - Footer (all contact methods)
@@ -224,8 +224,8 @@
 |------|-------|
 | Email | syedshahjahanshah@gmail.com |
 | WhatsApp | 03481342505 |
-| Phone | 03253368345 |
-| JazzCash | 03253368345 |
+| Phone | REDACTED |
+| JazzCash | REDACTED |
 | Portfolio | https://shahjahan-shah.vercel.app/ |
 
 ---

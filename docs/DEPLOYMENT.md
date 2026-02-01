@@ -14,9 +14,9 @@ Deployment steps
 3. Confirm deep links work by visiting directly (not via navigation) `https://<your-deployment>/shop` or any product URL.
 
 SEO & Sitemap
-- `public/robots.txt` and `public/sitemap.xml` already exist and reference `https://printifystudio.pk/`.
+- `public/robots.txt` and `public/sitemap.xml` use relative paths by default and can be adjusted during your deployment step.
 - `index.html` now includes basic SEO meta tags and canonical link.
 
 Notes
-- If your production domain differs from `https://printifystudio.pk/`, update the canonical URL and sitemap links accordingly.
+- If your production setup requires absolute URLs, set `APP_URL` to your production origin before generating sitemaps and update canonical tags accordingly.
 - For server-side routes (if you later add backend functions), add explicit rules to `vercel.json` as needed.

@@ -1,10 +1,12 @@
 import { motion } from 'framer-motion';
 import { MessageCircle } from 'lucide-react';
+import { siteConfig } from '../config/siteConfig';
 
 const FloatingWhatsApp = () => {
+    if (!siteConfig.whatsapp.number) return null;
     return (
         <motion.a
-            href="https://wa.me/923481342505"
+            href={`https://wa.me/${siteConfig.whatsapp.number}`}
             target="_blank"
             rel="noopener noreferrer"
             initial={{ scale: 0 }}

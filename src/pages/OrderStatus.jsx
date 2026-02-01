@@ -15,7 +15,7 @@ const OrderStatus = () => {
             total: 'Rs. 1,800',
             estimatedDelivery: '2024-01-18',
             customer: 'John Doe',
-            contact: '+92 348 1342505'
+            contact: ''
         },
         {
             id: 'ORD-002',
@@ -26,7 +26,7 @@ const OrderStatus = () => {
             total: 'Rs. 2,500',
             estimatedDelivery: '2024-01-20',
             customer: 'Jane Smith',
-            contact: '+92 348 1342505'
+            contact: ''
         },
         {
             id: 'ORD-003',
@@ -37,7 +37,7 @@ const OrderStatus = () => {
             total: 'Rs. 4,200',
             estimatedDelivery: '2024-01-17',
             customer: 'Mike Johnson',
-            contact: '+92 348 1342505'
+            contact: ''
         }
     ]);
 

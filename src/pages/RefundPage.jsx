@@ -90,7 +90,7 @@ const RefundPage = () => {
                                     For refund or dispute inquiries, contact us via:
                                 </p>
                                 <ul className="list-disc list-inside text-gray-600 space-y-2">
-                                    <li>Email: <a href="mailto:support@printifystudio.pk" className="text-[#00A19D] hover:underline">support@printifystudio.pk</a></li>
+                                    <li>Email: <a href="mailto:support@yourdomain.com" className="text-[#00A19D] hover:underline">support@yourdomain.com</a></li>
                                     <li>WhatsApp: {siteConfig.whatsapp.display}</li>
                                 </ul>
                             </div>

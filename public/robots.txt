@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://printifystudio.pk/sitemap.xml
+Sitemap: /sitemap.xml
 
 # Prevent crawling of checkout and admin pages
 Disallow: /shop/checkout

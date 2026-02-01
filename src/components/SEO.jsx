@@ -1,12 +1,14 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
+import { siteConfig } from '../config/siteConfig';
+
 const SEO = ({ title, description, image, url, type = 'website' }) => {
     // Default Values
     const siteTitle = "Printify Studio PK | Printing, Packaging & Brand Identity";
     const siteDescription = "Looking for professional printing in Pakistan? Printify Studio PK offers premium business cards, banners, packaging, wedding cards, and branding services.";
-    const siteImage = "https://printifystudio.pk/assets/og-preview.png"; // Placeholder domain for preview
-    const siteUrl = "https://printifystudio.pk";
+    const siteImage = "/assets/og-preview.png"; // Use relative path
+    const siteUrl = "/";
 
     // Merged Values
     // If a title is passed, use it. Otherwise use the default site title.
@@ -39,12 +41,12 @@ const SEO = ({ title, description, image, url, type = 'website' }) => {
             '@type': 'LocalBusiness',
             name: 'Printify Studio PK',
             image: siteImage,
-            telephone: '+92-348-1342505',
+            telephone: siteConfig.phone.primary || '',
             address: {
                 '@type': 'PostalAddress',
-                streetAddress: 'Karachi, Pakistan',
-                addressLocality: 'Karachi',
-                addressCountry: 'PK'
+                streetAddress: siteConfig.contact.address || '',
+                addressLocality: siteConfig.contact.address || '',
+                addressCountry: ''
             },
             url: siteUrl,
             description: siteDescription

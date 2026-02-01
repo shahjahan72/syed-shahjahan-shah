@@ -1,9 +1,10 @@
 import prisma from '../server/prismaClient.js';
 import { calculatePrice } from '../src/utils/pricingCalculator.js';
 
-// CORS helper
-function setCors(res) {
-  const origin = process.env.FRONTEND_ORIGIN || '*';
+// CORS helper: dynamically uses request Origin header first, then FRONTEND_ORIGIN, then '*'
+function setCors(req, res) {
+  const reqOrigin = req && req.headers && (req.headers.origin || req.headers.Origin);
+  const origin = reqOrigin || process.env.FRONTEND_ORIGIN || '*';
   res.setHeader('Access-Control-Allow-Origin', origin);
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -11,7 +12,7 @@ function setCors(res) {
 
 export default async function handler(req, res) {
   // Add CORS headers and handle preflight
-  setCors(res);
+  setCors(req, res);
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   if (req.method === 'POST') {

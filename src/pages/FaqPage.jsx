@@ -112,11 +112,6 @@ const FaqPage = () => {
     );
 };
 
-// Site config (you'll need to import this or define it)
-const siteConfig = {
-    whatsapp: {
-        number: "923481342505"
-    }
-};
+import { siteConfig } from '../config/siteConfig';
 
-export default FaqPage;
+export default FaqPage; 

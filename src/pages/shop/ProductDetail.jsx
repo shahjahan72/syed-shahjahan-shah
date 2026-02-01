@@ -7,6 +7,7 @@ import { productValidationSchema, printingRules } from '../../data/printingRules
 import { useCart } from '../../context/CartContext';
 import ProductReviews from '../../components/features/ProductReviews';
 import SEO from '../../components/SEO';
+import { siteConfig } from '../../config/siteConfig';
 import {
     Upload,
     ShoppingCart,
@@ -195,13 +196,13 @@ const ProductDetail = () => {
             }
 
             summary += `_Please provide a custom quote based on these requirements._`;
-            window.open(`https://wa.me/923481342505?text=${summary}`, '_blank');
+            if (siteConfig.whatsapp.number) window.open(`https://wa.me/${siteConfig.whatsapp.number}?text=${summary}`, '_blank'); else alert('WhatsApp contact not configured');
             return;
         }
 
         if (product.isCustom) {
             const message = `Bespoke Selection Enquiry:%0A Product: ${product.title}%0A Please assist me with a custom quote.`;
-            window.open(`https://wa.me/923481342505?text=${message}`, '_blank');
+            if (siteConfig.whatsapp.number) window.open(`https://wa.me/${siteConfig.whatsapp.number}?text=${message}`, '_blank'); else alert('WhatsApp contact not configured');
             return;
         }
 
@@ -764,7 +765,7 @@ const ProductDetail = () => {
                                             <button
                                                 onClick={() => {
                                                     const message = `Corporate Quote Request:%0A Product: ${product.title}%0A My approximate requirements are ${quantityOption ? quantityOption.label : customQty} units.`;
-                                                    window.open(`https://wa.me/923481342505?text=${message}`, '_blank');
+                                                    if (siteConfig.whatsapp.number) window.open(`https://wa.me/${siteConfig.whatsapp.number}?text=${message}`, '_blank'); else alert('WhatsApp contact not configured');
                                                 }}
                                                 className="py-8 bg-white border border-black/10 text-[11px] font-bold uppercase tracking-[0.4em] hover:bg-brand-black hover:text-white transition-all"
                                             >

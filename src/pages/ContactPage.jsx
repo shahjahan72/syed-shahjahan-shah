@@ -97,7 +97,7 @@ const ContactPage = () => {
                                 <strong>General Inquiries:</strong> {siteConfig.contact.email}
                             </p>
                             <p className="text-gray-700">
-                                <strong>Support:</strong> support@printifystudio.pk
+                                <strong>Support:</strong> support@yourdomain.com
                             </p>
                         </div>
                     )}

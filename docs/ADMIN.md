@@ -31,6 +31,8 @@ Notes
 - If the server-side `ADMIN_TOKEN` variable is not configured, the API will return a 500 server error (`Server misconfiguration: ADMIN_TOKEN is not set`) to make misconfiguration obvious during deploy.
 
 - Debug tokens: If you need a temporary token to test the admin UI, set `DEBUG_ADMIN_TOKEN` explicitly in your environment (do NOT hard-code values in the repository). If `DEBUG_ADMIN_TOKEN` is present it may be accepted in non-production environments only. **Remove** the debug token and unset `DEBUG_ADMIN_TOKEN` before deploying to production.
+
+- CORS: To restrict allowed origins in production, set `FRONTEND_ORIGIN` in your deployment environment to the origin of your frontend (e.g., `https://www.example.com`). When set, API routes will set `Access-Control-Allow-Origin` to that value and allow the `Authorization` header.
 - The list is paginated and supports server-side filtering to keep response times low.
 
 Notes

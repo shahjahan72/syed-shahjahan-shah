@@ -1,9 +1,10 @@
 import prisma from '../server/prismaClient.js';
 import crypto from 'crypto';
 
-// CORS helper: uses a configured frontend origin when provided for production safety.
-function setCors(res) {
-  const origin = process.env.FRONTEND_ORIGIN || '*';
+// CORS helper: dynamically uses request Origin header first, then FRONTEND_ORIGIN, then '*'
+function setCors(req, res) {
+  const reqOrigin = req && req.headers && (req.headers.origin || req.headers.Origin);
+  const origin = reqOrigin || process.env.FRONTEND_ORIGIN || '*';
   res.setHeader('Access-Control-Allow-Origin', origin);
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -14,8 +15,8 @@ const SERVER_ADMIN_TOKEN = process.env.ADMIN_TOKEN && process.env.ADMIN_TOKEN.tr
 // Optional debug token must be explicitly provided (no hard-coded fallback).
 const DEBUG_TOKEN = process.env.DEBUG_ADMIN_TOKEN ? process.env.DEBUG_ADMIN_TOKEN.trim() : null;
 
-function unauthorized(res) {
-  setCors(res);
+function unauthorized(req, res) {
+  setCors(req, res);
   res.status(401).json({ ok: false, error: 'Unauthorized' });
 }
 
@@ -47,7 +48,7 @@ function isValidToken(incoming) {
 
 export default async function handler(req, res) {
   // Add CORS headers for preflight and every response
-  setCors(res);
+  setCors(req, res);
   // Handle OPTIONS preflight requests
   if (req.method === 'OPTIONS') return res.status(200).end();
 
@@ -61,7 +62,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ ok: false, error: 'Server misconfiguration: ADMIN_TOKEN is not set' });
   }
 
-  if (!token || !isValidToken(token)) return unauthorized(res);
+  if (!token || !isValidToken(token)) return unauthorized(req, res);
 
   try {
     if (req.method === 'GET') {
