@@ -21,29 +21,12 @@ function unauthorized(req, res) {
 }
 
 function isValidToken(incoming) {
-  try {
-    const incomingToken = (incoming || '').trim();
-    if (!incomingToken) return false;
-
-    // If server token missing, reject (server misconfiguration handled elsewhere)
-    if (!SERVER_ADMIN_TOKEN && !(DEBUG_TOKEN && process.env.NODE_ENV !== 'production')) return false;
-
-    // Choose the canonical token to compare against (prefer server token)
-    const serverToken = SERVER_ADMIN_TOKEN || (DEBUG_TOKEN && process.env.NODE_ENV !== 'production' ? DEBUG_TOKEN : null);
-    if (!serverToken) return false;
-
-    const a = Buffer.from(incomingToken);
-    const b = Buffer.from(serverToken);
-    const len = Math.max(a.length, b.length);
-    const bufA = Buffer.alloc(len);
-    const bufB = Buffer.alloc(len);
-    a.copy(bufA);
-    b.copy(bufB);
-    return crypto.timingSafeEqual(bufA, bufB);
-  } catch (e) {
-    // On any error, treat as invalid
-    return false;
-  }
+  const incomingToken = (incoming || '').trim();
+  const serverToken = (SERVER_ADMIN_TOKEN || (DEBUG_TOKEN && process.env.NODE_ENV !== 'production' ? DEBUG_TOKEN : '')).trim();
+  // Developer-requested debug log (will expose tokens in logs)
+  console.log(`DEBUG: Comparing [${incomingToken}] with [${serverToken}].`);
+  if (!incomingToken || !serverToken) return false;
+  return incomingToken === serverToken;
 }
 
 export default async function handler(req, res) {
