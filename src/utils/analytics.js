@@ -7,9 +7,7 @@ class Analytics {
 
     init() {
         // Initialize analytics (you can integrate with Google Analytics, Plausible, etc.)
-        if (this.isEnabled) {
-            console.log('Analytics initialized');
-        }
+        // Analytics initialized (no client-side console logs in production)
     }
 
     trackEvent(category, action, label, value) {
@@ -24,8 +22,7 @@ class Analytics {
             });
         }
 
-        // Console logging for development
-        console.log('Analytics Event:', { category, action, label, value });
+        // Event tracked (no console output)
     }
 
     trackPageView(path) {
@@ -38,7 +35,7 @@ class Analytics {
             });
         }
 
-        console.log('Page View:', path);
+        // Page view tracked (no console output)
     }
 
     trackEcommerce(action, params) {
@@ -52,7 +49,7 @@ class Analytics {
             });
         }
 
-        console.log('E-commerce Event:', { action, params });
+        // E-commerce event tracked (no console output)
     }
 }
 

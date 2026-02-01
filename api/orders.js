@@ -1,7 +1,19 @@
 import prisma from '../server/prismaClient.js';
 import { calculatePrice } from '../src/utils/pricingCalculator.js';
 
+// CORS helper
+function setCors(res) {
+  const origin = process.env.FRONTEND_ORIGIN || '*';
+  res.setHeader('Access-Control-Allow-Origin', origin);
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+}
+
 export default async function handler(req, res) {
+  // Add CORS headers and handle preflight
+  setCors(res);
+  if (req.method === 'OPTIONS') return res.status(200).end();
+
   if (req.method === 'POST') {
     try {
       const { items, customer = {}, payment } = req.body || {};
@@ -69,8 +81,8 @@ export default async function handler(req, res) {
 
       return res.status(201).json({ ok: true, orderId: order.id, serverTotal, payment: paymentRecord });
     } catch (err) {
-      console.error('Order creation error:', err.message || err);
-      return res.status(500).json({ error: err.message || 'Server error' });
+      console.error('Order creation error:', err);
+      return res.status(500).json({ error: 'Server error' });
     }
   }
 
@@ -84,8 +96,8 @@ export default async function handler(req, res) {
       if (!order) return res.status(404).json({ error: 'Order not found' });
       return res.status(200).json({ ok: true, order });
     } catch (err) {
-      console.error('Fetch order error:', err.message || err);
-      return res.status(500).json({ error: err.message || 'Server error' });
+      console.error('Fetch order error:', err);
+      return res.status(500).json({ error: 'Server error' });
     }
   }
 

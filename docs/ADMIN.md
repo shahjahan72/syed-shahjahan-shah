@@ -18,7 +18,7 @@ API Examples
 
 Admin UI
 - A lightweight admin interface is available at `/admin` (login) and `/admin/orders` (orders list).
-- Login accepts the same `ADMIN_TOKEN` value (validated by a server check). The UI stores the token in `sessionStorage` for the session.
+- Login accepts the same `ADMIN_TOKEN` value (validated by a server check). The UI stores the token in `localStorage` so the admin remains logged in across refreshes.
 - Admin UI features:
   - **Search & Filters**: Search by Order ID, Phone Number, and filter by date range (From / To).
   - **Pagination**: Server-backed pagination to keep the UI fast as the orders grow (page, perPage supported).
@@ -29,13 +29,8 @@ Admin UI
 Notes
 - The Admin UI validates the token by attempting to call the protected API on login. If the token is invalid, login is rejected.
 - If the server-side `ADMIN_TOKEN` variable is not configured, the API will return a 500 server error (`Server misconfiguration: ADMIN_TOKEN is not set`) to make misconfiguration obvious during deploy.
-- A lightweight token check endpoint is available for quick verification: **GET** `/api/admin-token-check`.
-  - 200: `{ ok: true, message: 'ADMIN_TOKEN is set on the server.' }` (safe response — does not leak the token itself)
-  - 500: `{ ok: false, error: 'Server misconfiguration: ADMIN_TOKEN is not set. Please set this environment variable in your hosting environment.' }
 
-- Temporary debug token (for quick testing): You can set a `DEBUG_ADMIN_TOKEN` env var (or use the local non-production fallback `shahjahan160104`) to log in quickly during testing. When `DEBUG_ADMIN_TOKEN` is present, the admin API also accepts `Authorization: Bearer <DEBUG_ADMIN_TOKEN>`.
-  - Example: set `DEBUG_ADMIN_TOKEN=shahjahan160104` in Vercel for a short time to test the Admin UI login.
-  - ⚠️ Warning: Remove the debug token and unset `DEBUG_ADMIN_TOKEN` after verification; do NOT leave debug tokens enabled in production.
+- Debug tokens: If you need a temporary token to test the admin UI, set `DEBUG_ADMIN_TOKEN` explicitly in your environment (do NOT hard-code values in the repository). If `DEBUG_ADMIN_TOKEN` is present it may be accepted in non-production environments only. **Remove** the debug token and unset `DEBUG_ADMIN_TOKEN` before deploying to production.
 - The list is paginated and supports server-side filtering to keep response times low.
 
 Notes

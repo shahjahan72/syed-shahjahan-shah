@@ -1,6 +1,18 @@
 import prisma from '../server/prismaClient.js';
 
+// CORS helper
+function setCors(res) {
+  const origin = process.env.FRONTEND_ORIGIN || '*';
+  res.setHeader('Access-Control-Allow-Origin', origin);
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+}
+
 export default async function handler(req, res) {
+  // Add CORS headers and handle preflight
+  setCors(res);
+  if (req.method === 'OPTIONS') return res.status(200).end();
+
   if (req.method !== 'GET') {
     res.status(405).json({ error: 'Method not allowed' });
     return;
@@ -14,7 +26,7 @@ export default async function handler(req, res) {
 
     res.status(200).json({ ok: true, now });
   } catch (err) {
-    console.error('DB ping error:', err.message || err);
-    res.status(500).json({ ok: false, error: err.message || 'DB connection error' });
+    console.error('DB ping error:', err);
+    res.status(500).json({ ok: false, error: 'DB connection error' });
   }
 }

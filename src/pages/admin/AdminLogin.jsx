@@ -14,8 +14,8 @@ const AdminLogin = () => {
       const resp = await fetch('/api/admin-orders', { headers: { Authorization: `Bearer ${token}` } });
       const body = await resp.json();
       if (!resp.ok) throw new Error(body.error || 'Unauthorized');
-      // Verified: store token in sessionStorage for the admin UI session
-      sessionStorage.setItem('ADMIN_TOKEN', token);
+    // Verified: store token in localStorage so the admin stays logged in across refreshes
+    localStorage.setItem('ADMIN_TOKEN', token);
       navigate('/admin/orders');
     } catch (err) {
       alert('Invalid admin token. Please check the token and try again.');
@@ -31,7 +31,7 @@ const AdminLogin = () => {
           <input type="password" placeholder="Admin Token" value={token} onChange={e => setToken(e.target.value)} className="w-full border-b py-3 outline-none" />
           <div className="flex gap-3">
             <button type="submit" className="bg-brand-black text-white px-4 py-3 rounded">Enter</button>
-            <button type="button" onClick={() => { setToken(''); sessionStorage.removeItem('ADMIN_TOKEN'); }} className="px-4 py-3 border rounded">Clear</button>
+            <button type="button" onClick={() => { setToken(''); localStorage.removeItem('ADMIN_TOKEN'); }} className="px-4 py-3 border rounded">Clear</button>
           </div>
         </form>
       </div>

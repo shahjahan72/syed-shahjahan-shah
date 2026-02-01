@@ -1,20 +1,48 @@
 import prisma from '../server/prismaClient.js';
+import crypto from 'crypto';
 
-// CORS helper: ensures every response includes necessary CORS headers.
+// CORS helper: uses a configured frontend origin when provided for production safety.
 function setCors(res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  const origin = process.env.FRONTEND_ORIGIN || '*';
+  res.setHeader('Access-Control-Allow-Origin', origin);
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 }
 
-const ADMIN_TOKEN = process.env.ADMIN_TOKEN;
-// DEBUG_TOKEN is for temporary debugging. Set DEBUG_ADMIN_TOKEN in your environment or use the local fallback when not in production.
-const DEBUG_TOKEN = process.env.DEBUG_ADMIN_TOKEN || (process.env.NODE_ENV !== 'production' ? 'shahjahan160104' : null);
+// Server admin token must be set via environment
+const SERVER_ADMIN_TOKEN = process.env.ADMIN_TOKEN && process.env.ADMIN_TOKEN.trim();
+// Optional debug token must be explicitly provided (no hard-coded fallback).
+const DEBUG_TOKEN = process.env.DEBUG_ADMIN_TOKEN ? process.env.DEBUG_ADMIN_TOKEN.trim() : null;
 
 function unauthorized(res) {
-  // Ensure CORS headers on auth failures
   setCors(res);
   res.status(401).json({ ok: false, error: 'Unauthorized' });
+}
+
+function isValidToken(incoming) {
+  try {
+    const incomingToken = (incoming || '').trim();
+    if (!incomingToken) return false;
+
+    // If server token missing, reject (server misconfiguration handled elsewhere)
+    if (!SERVER_ADMIN_TOKEN && !(DEBUG_TOKEN && process.env.NODE_ENV !== 'production')) return false;
+
+    // Choose the canonical token to compare against (prefer server token)
+    const serverToken = SERVER_ADMIN_TOKEN || (DEBUG_TOKEN && process.env.NODE_ENV !== 'production' ? DEBUG_TOKEN : null);
+    if (!serverToken) return false;
+
+    const a = Buffer.from(incomingToken);
+    const b = Buffer.from(serverToken);
+    const len = Math.max(a.length, b.length);
+    const bufA = Buffer.alloc(len);
+    const bufB = Buffer.alloc(len);
+    a.copy(bufA);
+    b.copy(bufB);
+    return crypto.timingSafeEqual(bufA, bufB);
+  } catch (e) {
+    // On any error, treat as invalid
+    return false;
+  }
 }
 
 export default async function handler(req, res) {
@@ -27,25 +55,13 @@ export default async function handler(req, res) {
   const authHeader = req.headers.authorization || req.headers.Authorization || '';
   const token = (authHeader || '').replace(/^Bearer\s+/i, '').trim();
 
-  // If ADMIN_TOKEN isn't configured, allow DEBUG_TOKEN for quick testing (remove or set DEBUG_ADMIN_TOKEN in production!)
-  if (!ADMIN_TOKEN && !DEBUG_TOKEN) {
+  // Validate presence of server token configuration
+  if (!SERVER_ADMIN_TOKEN) {
     console.error('ADMIN_TOKEN is not set in the environment. Admin routes unavailable.');
     return res.status(500).json({ ok: false, error: 'Server misconfiguration: ADMIN_TOKEN is not set' });
   }
-  if (!ADMIN_TOKEN && DEBUG_TOKEN) {
-    console.warn('ADMIN_TOKEN missing — running with DEBUG_ADMIN_TOKEN fallback. Remove this after testing.' );
-  }
 
-  if (!token) return unauthorized(res);
-
-  // Compare the raw token value to configured admin/debug tokens (trim server tokens before comparing)
-  const validTokens = new Set();
-  if (ADMIN_TOKEN) validTokens.add(ADMIN_TOKEN.trim());
-  if (DEBUG_TOKEN) validTokens.add(DEBUG_TOKEN.trim());
-
-  if (!validTokens.has(token.trim())) {
-    return unauthorized(res);
-  }
+  if (!token || !isValidToken(token)) return unauthorized(res);
 
   try {
     if (req.method === 'GET') {
@@ -104,7 +120,7 @@ export default async function handler(req, res) {
     res.setHeader('Allow', ['GET', 'PATCH']);
     res.status(405).end('Method Not Allowed');
   } catch (err) {
-    console.error('Admin route error:', err.message || err);
-    res.status(500).json({ ok: false, error: err.message || 'Server error' });
+    console.error('Admin route error:', err);
+    res.status(500).json({ ok: false, error: 'Server error' });
   }
 }

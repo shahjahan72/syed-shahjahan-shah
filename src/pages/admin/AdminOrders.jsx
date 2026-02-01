@@ -15,7 +15,7 @@ const AdminOrders = () => {
   const [perPage, setPerPage] = useState(20);
   const [meta, setMeta] = useState({ total: 0, page: 1, perPage: 20 });
 
-  const token = typeof window !== 'undefined' ? sessionStorage.getItem('ADMIN_TOKEN') : null;
+  const getToken = () => (typeof window !== 'undefined' ? localStorage.getItem('ADMIN_TOKEN') : null);
 
   const fetchOrders = async (opts = {}) => {
     setLoading(true);
@@ -29,7 +29,7 @@ const AdminOrders = () => {
       params.set('page', opts.page || page);
       params.set('perPage', opts.perPage || perPage);
 
-      const resp = await fetch(`/api/admin-orders?${params.toString()}`, { headers: { Authorization: `Bearer ${token}` } });
+      const resp = await fetch(`/api/admin-orders?${params.toString()}`, { headers: { Authorization: `Bearer ${getToken()}` } });
       const body = await resp.json();
       if (!resp.ok) throw new Error(body.error || 'Failed to fetch');
       setOrders(body.orders || []);
@@ -68,7 +68,7 @@ const AdminOrders = () => {
     if (!confirm) return;
 
     try {
-      const resp = await fetch('/api/admin-orders', { method: 'PATCH', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify({ orderId, action: 'mark-paid', paymentStatus: 'COMPLETED' }) });
+      const resp = await fetch('/api/admin-orders', { method: 'PATCH', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` }, body: JSON.stringify({ orderId, action: 'mark-paid', paymentStatus: 'COMPLETED' }) });
       const body = await resp.json();
       if (!resp.ok) throw new Error(body.error || 'Failed to update');
       // refresh
@@ -88,7 +88,7 @@ const AdminOrders = () => {
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-3xl font-bold">Admin — Orders</h1>
           <div className="flex items-center gap-3">
-            <button onClick={() => { sessionStorage.removeItem('ADMIN_TOKEN'); window.location.href = '/admin'; }} className="px-3 py-2 border rounded">Logout</button>
+            <button onClick={() => { localStorage.removeItem('ADMIN_TOKEN'); window.location.href = '/admin'; }} className="px-3 py-2 border rounded">Logout</button>
             <button onClick={toggleEnterprise} className="px-3 py-2 border rounded">Toggle Enterprise Look</button>
           </div>
         </div>

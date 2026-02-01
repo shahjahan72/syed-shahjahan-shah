@@ -11,7 +11,7 @@ const AuthPage = () => {
     const handleLogin = (e) => {
         e.preventDefault();
         // Handle login logic - integrate with your backend
-        console.log('Login:', loginData);
+        // TODO: Implement backend authentication
         alert('Login functionality would connect to your backend here.');
     };
 

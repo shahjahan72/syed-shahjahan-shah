@@ -1,15 +1,11 @@
 import { PrismaClient } from '@prisma/client';
 
-// Reuse client across hot-reloads in development to prevent exhausting connections
-let prisma;
+// Create a single PrismaClient instance and cache it to avoid exhausting
+// database connections in serverless / hot-reload environments.
+const globalForPrisma = globalThis;
 
-if (process.env.NODE_ENV === 'production') {
-  prisma = new PrismaClient();
-} else {
-  if (!global.__prisma) {
-    global.__prisma = new PrismaClient();
-  }
-  prisma = global.__prisma;
+if (!globalForPrisma.__prisma) {
+  globalForPrisma.__prisma = new PrismaClient();
 }
 
-export default prisma;
+export default globalForPrisma.__prisma;
