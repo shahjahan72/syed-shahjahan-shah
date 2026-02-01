@@ -1,15 +1,31 @@
 import prisma from '../server/prismaClient.js';
 
+// CORS helper: ensures every response includes necessary CORS headers.
+function setCors(res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+}
+
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN;
 // DEBUG_TOKEN is for temporary debugging. Set DEBUG_ADMIN_TOKEN in your environment or use the local fallback when not in production.
 const DEBUG_TOKEN = process.env.DEBUG_ADMIN_TOKEN || (process.env.NODE_ENV !== 'production' ? 'shahjahan160104' : null);
 
 function unauthorized(res) {
+  // Ensure CORS headers on auth failures
+  setCors(res);
   res.status(401).json({ ok: false, error: 'Unauthorized' });
 }
 
 export default async function handler(req, res) {
-  const auth = req.headers.authorization || '';
+  // Add CORS headers for preflight and every response
+  setCors(res);
+  // Handle OPTIONS preflight requests
+  if (req.method === 'OPTIONS') return res.status(200).end();
+
+  // Extract token robustly from header (supports `Bearer <token>` or just `<token>`)
+  const authHeader = req.headers.authorization || req.headers.Authorization || '';
+  const token = (authHeader || '').replace(/^Bearer\s+/i, '').trim();
 
   // If ADMIN_TOKEN isn't configured, allow DEBUG_TOKEN for quick testing (remove or set DEBUG_ADMIN_TOKEN in production!)
   if (!ADMIN_TOKEN && !DEBUG_TOKEN) {
@@ -17,21 +33,17 @@ export default async function handler(req, res) {
     return res.status(500).json({ ok: false, error: 'Server misconfiguration: ADMIN_TOKEN is not set' });
   }
   if (!ADMIN_TOKEN && DEBUG_TOKEN) {
-    console.warn('ADMIN_TOKEN missing — running with DEBUG_ADMIN_TOKEN fallback. Remove this after testing.');
+    console.warn('ADMIN_TOKEN missing — running with DEBUG_ADMIN_TOKEN fallback. Remove this after testing.' );
   }
-
-  // Extract token robustly from header (supports `Bearer <token>` or just `<token>`)
-  const authHeader = req.headers.authorization || req.headers.Authorization || '';
-  const token = (authHeader || '').replace(/^Bearer\s+/i, '').trim();
 
   if (!token) return unauthorized(res);
 
-  // Compare the raw token value to configured admin/debug tokens
+  // Compare the raw token value to configured admin/debug tokens (trim server tokens before comparing)
   const validTokens = new Set();
-  if (ADMIN_TOKEN) validTokens.add(ADMIN_TOKEN);
-  if (DEBUG_TOKEN) validTokens.add(DEBUG_TOKEN);
+  if (ADMIN_TOKEN) validTokens.add(ADMIN_TOKEN.trim());
+  if (DEBUG_TOKEN) validTokens.add(DEBUG_TOKEN.trim());
 
-  if (!validTokens.has(token)) {
+  if (!validTokens.has(token.trim())) {
     return unauthorized(res);
   }
 
